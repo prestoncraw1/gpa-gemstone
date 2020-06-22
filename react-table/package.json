@@ -1,0 +1,56 @@
+{
+  "name": "@gpa-gemstone/react-table",
+  "version": "1.0.1",
+  "description": "",
+  "main": "/lib/index.js",
+  "types": "/lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
+  "scripts": {
+    "test": "jest --config jestconfig.json",
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.tsx\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wbernest/react-table.git"
+  },
+  "keywords": [
+    "React",
+    "Table",
+    "GSF",
+    "Gemstone",
+    "GridProtectionAlliance"
+  ],
+  "author": "GridProtectionAlliance",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wbernest/react-table/issues"
+  },
+  "homepage": "https://github.com/wbernest/react-table#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.0",
+    "jest": "^26.0.1",
+    "prettier": "^2.0.5",
+    "ts-jest": "^26.1.1",
+    "tslint": "^6.1.2",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.156",
+    "@types/react": "^16.9.38",
+    "lodash": "^4.17.15",
+    "react": "^16.13.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
