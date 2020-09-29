@@ -22,7 +22,6 @@
 //  ******************************************************************************************************
 
 import * as React from 'react';
-import * as _ from 'lodash';
 
 const AngleIcon: React.FunctionComponent<{ ascending: boolean }> = (props) => (
   <span
@@ -103,7 +102,7 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
       const cells = this.props.cols.map((colData) => {
         let css;
         if (colData.rowStyle === undefined) css = {};
-        else css = _.clone(colData.rowStyle);
+        else css = { ...colData.rowStyle };
 
         return (
           <td
@@ -119,7 +118,7 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
       let style;
 
       if (this.props.rowStyle !== undefined) {
-        style = _.clone(this.props.rowStyle);
+        style = { ...this.props.rowStyle };
       } else style = {};
 
       if (style.cursor === undefined) style.cursor = 'pointer';
