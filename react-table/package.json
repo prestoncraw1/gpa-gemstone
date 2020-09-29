@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wbernest/react-table.git"
+    "url": "git+https://github.com/GridProtectionAlliance/gpa-gemstone/react-table.git"
   },
   "keywords": [
     "React",
@@ -32,9 +32,9 @@
   "author": "GridProtectionAlliance",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wbernest/react-table/issues"
+    "url": "https://github.com/GridProtectionAlliance/gpa-gemstone/react-table/issues"
   },
-  "homepage": "https://github.com/wbernest/react-table#readme",
+  "homepage": "https://github.com/GridProtectionAlliance/gpa-gemstone/react-table#readme",
   "devDependencies": {
     "@types/jest": "^26.0.0",
     "jest": "^26.0.1",
