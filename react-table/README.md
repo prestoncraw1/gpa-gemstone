@@ -25,7 +25,7 @@ This library includes helpful npm package component for creating strongly typed 
     ]}
     tableClass="table table-hover"
     theadStyle={{ fontSize: 'smaller', display: 'table', tableLayout: 'fixed', width: '100%', height: 50 }}
-    tbodyStyle={{ display: 'block', overflowY: 'scroll', maxHeight: window.innerHeight - 90, height: window.innerHeight - 90, width: '100%' }}
+    tbodyStyle={{ display: 'block', overflowY: 'scroll', width: '100%' }}
     rowStyle={{ fontSize: 'smaller', display: 'table', tableLayout: 'fixed', width: '100%' }}
     sortField={''}
     onClick={() => { }}
