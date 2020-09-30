@@ -23,8 +23,7 @@
 
 import * as React from 'react';
 
-export default class FormInput<T> extends React.Component<
-  {
+export default function FormInput<T>(props:  {
     Record: T;
     Field: keyof T;
     Setter: (record: T) => void;
@@ -32,32 +31,24 @@ export default class FormInput<T> extends React.Component<
     Label?: string;
     Feedback?: string;
     Disabled?: boolean;
-  },
-  {},
-  {}
-> {
-  render() {
+    Type?: 'number' | 'text' | 'password' | 'email' | 'color'
+  }){
     return (
       <div className="form-group">
-        <label>{this.props.Label == null ? this.props.Field : this.props.Label}</label>
+        <label>{props.Label == null ? props.Field : props.Label}</label>
         <input
-          className={this.props.Valid(this.props.Field) ? 'form-control' : 'form-control is-invalid'}
-          onChange={(evt) => {
-            const record: T = { ...this.props.Record };
-            if (evt.target.value !== '') record[this.props.Field] = evt.target.value as any;
-            else record[this.props.Field] = null as any;
-
-            this.props.Setter(record);
-          }}
+          type={props.Type === undefined ? 'text': props.Type}
+          className={props.Valid(props.Field) ? 'form-control' : 'form-control is-invalid'}
+          onChange={(evt) => props.Setter({ ...props.Record, [props.Field]:  evt.target.value !== '' ? evt.target.value : null})}
           value={
-            this.props.Record[this.props.Field] == null ? '' : (this.props.Record[this.props.Field] as any).toString()
+            props.Record[props.Field] == null ? '' : (props.Record[props.Field] as any).toString()
           }
-          disabled={this.props.Disabled == null ? false : this.props.Disabled}
+          disabled={props.Disabled == null ? false : props.Disabled}
         />
         <div className="invalid-feedback">
-          {this.props.Feedback == null ? this.props.Field + ' is a required field.' : this.props.Feedback}
+          {props.Feedback == null ? props.Field + ' is a required field.' : props.Feedback}
         </div>
       </div>
     );
   }
-}
+
