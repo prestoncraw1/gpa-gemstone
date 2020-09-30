@@ -1,6 +1,6 @@
 # react-table
 
-![gemstone logo >](img/gemstone-wide-600.png)
+![gemstone logo](https://raw.githubusercontent.com/gemstone/web/master/docs/img/gemstone-wide-600.png)
 
 The Gemstone Web Library organizes all Gemstone functionality related to web.
 

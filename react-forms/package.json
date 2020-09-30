@@ -1,11 +1,12 @@
 {
   "name": "@gpa-gemstone/react-forms",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "",
   "main": "/lib/index.js",
   "types": "/lib/index.d.ts",
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "img/**/*"
   ],
   "scripts": {
     "test": "jest --config jestconfig.json",
@@ -20,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GridProtectionAlliance/gpa-gemstone/react-forms.git"
+    "url": "https://github.com/GridProtectionAlliance/gpa-gemstone.git"
   },
   "keywords": [
     "React",
@@ -32,9 +33,9 @@
   "author": "GridProtectionAlliance",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/GridProtectionAlliance/gpa-gemstone/react-forms/issues"
+    "url": "https://github.com/GridProtectionAlliance/gpa-gemstone/issues"
   },
-  "homepage": "https://github.com/GridProtectionAlliance/gpa-gemstone/react-forms#readme",
+  "homepage": "https://github.com/GridProtectionAlliance/gpa-gemstone#readme",
   "devDependencies": {
     "@types/jest": "^26.0.0",
     "jest": "^26.0.1",
