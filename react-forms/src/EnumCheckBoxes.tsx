@@ -1,5 +1,5 @@
 // ******************************************************************************************************
-//  TextArea.tsx - Gbtc
+//  EnumCheckBoxes.tsx - Gbtc
 //
 //  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
 //
@@ -20,37 +20,39 @@
 //       Generated original version of source code.
 //
 // ******************************************************************************************************
+
 import * as React from 'react';
 
-export default function TextArea<T>(props: {
-  Rows: number;
+export default function EnumCheckBoxes<T>(props: {
   Record: T;
   Field: keyof T;
   Setter: (record: T) => void;
-  Valid: (field: keyof T) => boolean;
+  Enum: string[];
   Label?: string;
-  Feedback?: string;
-  Disabled?: boolean;
 }) {
+  /* tslint:disable-next-line:no-bitwise */
+  const EquateFlag = (index: number) => (((props.Record[props.Field] as any) / Math.pow(2, index)) & 1) !== 0;
+
+  const DecrementFlag = (index: number) => (props.Record[props.Field] as any) - Math.pow(2, index);
+  const IncrementFlag = (index: number) => (props.Record[props.Field] as any) + Math.pow(2, index);
+
   return (
     <div className="form-group">
       <label>{props.Label == null ? props.Field : props.Label}</label>
-      <textarea
-        rows={props.Rows}
-        className={props.Valid(props.Field) ? 'form-control' : 'form-control is-invalid'}
-        onChange={(evt) => {
-          const record: T = { ...props.Record };
-          if (evt.target.value !== '') record[props.Field] = evt.target.value as any;
-          else record[props.Field] = null as any;
-
-          props.Setter(record);
-        }}
-        value={props.Record[props.Field] == null ? '' : (props.Record[props.Field] as any).toString()}
-        disabled={props.Disabled == null ? false : props.Disabled}
-      />
-      <div className="invalid-feedback">
-        {props.Feedback == null ? props.Field + ' is a required field.' : props.Feedback}
-      </div>
+      <br />
+      {props.Enum.map((flag, i) => (
+        <div key={i} className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            checked={EquateFlag(i)}
+            onChange={(evt) =>
+              props.Setter({ ...props.Record, [props.Field]: evt.target.checked ? IncrementFlag(i) : DecrementFlag(i) })
+            }
+          />
+          <label className="form-check-label">{flag}</label>
+        </div>
+      ))}
     </div>
   );
 }

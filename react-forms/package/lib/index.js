@@ -1,5 +1,6 @@
+"use strict";
 // ******************************************************************************************************
-//  TextArea.tsx - Gbtc
+//  index.tsx - Gbtc
 //
 //  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
 //
@@ -16,41 +17,23 @@
 //
 //  Code Modification History:
 //  ----------------------------------------------------------------------------------------------------
-//  01/22/2020 - Billy Ernest
+//  09/25/2020 - Billy Ernest
 //       Generated original version of source code.
 //
 // ******************************************************************************************************
-import * as React from 'react';
-
-export default function TextArea<T>(props: {
-  Rows: number;
-  Record: T;
-  Field: keyof T;
-  Setter: (record: T) => void;
-  Valid: (field: keyof T) => boolean;
-  Label?: string;
-  Feedback?: string;
-  Disabled?: boolean;
-}) {
-  return (
-    <div className="form-group">
-      <label>{props.Label == null ? props.Field : props.Label}</label>
-      <textarea
-        rows={props.Rows}
-        className={props.Valid(props.Field) ? 'form-control' : 'form-control is-invalid'}
-        onChange={(evt) => {
-          const record: T = { ...props.Record };
-          if (evt.target.value !== '') record[props.Field] = evt.target.value as any;
-          else record[props.Field] = null as any;
-
-          props.Setter(record);
-        }}
-        value={props.Record[props.Field] == null ? '' : (props.Record[props.Field] as any).toString()}
-        disabled={props.Disabled == null ? false : props.Disabled}
-      />
-      <div className="invalid-feedback">
-        {props.Feedback == null ? props.Field + ' is a required field.' : props.Feedback}
-      </div>
-    </div>
-  );
-}
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EnumCheckBoxes = exports.DateRangePicker = exports.TextArea = exports.Select = exports.DatePicker = exports.Input = exports.CheckBox = void 0;
+var CheckBox_1 = require("./CheckBox");
+exports.CheckBox = CheckBox_1.default;
+var Input_1 = require("./Input");
+exports.Input = Input_1.default;
+var DatePicker_1 = require("./DatePicker");
+exports.DatePicker = DatePicker_1.default;
+var Select_1 = require("./Select");
+exports.Select = Select_1.default;
+var TextArea_1 = require("./TextArea");
+exports.TextArea = TextArea_1.default;
+var DateRangePicker_1 = require("./DateRangePicker");
+exports.DateRangePicker = DateRangePicker_1.default;
+var EnumCheckBoxes_1 = require("./EnumCheckBoxes");
+exports.EnumCheckBoxes = EnumCheckBoxes_1.default;

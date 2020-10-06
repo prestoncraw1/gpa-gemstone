@@ -23,7 +23,7 @@
 
 import * as React from 'react';
 
-export default function FormSelect<T>(props: {
+export default function Select<T>(props: {
   Record: T;
   Field: keyof T;
   Options: { Value: string; Label: string }[];

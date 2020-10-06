@@ -23,32 +23,31 @@
 
 import * as React from 'react';
 
-export default function FormInput<T>(props:  {
-    Record: T;
-    Field: keyof T;
-    Setter: (record: T) => void;
-    Valid: (field: keyof T) => boolean;
-    Label?: string;
-    Feedback?: string;
-    Disabled?: boolean;
-    Type?: 'number' | 'text' | 'password' | 'email' | 'color'
-  }){
-    return (
-      <div className="form-group">
-        <label>{props.Label == null ? props.Field : props.Label}</label>
-        <input
-          type={props.Type === undefined ? 'text': props.Type}
-          className={props.Valid(props.Field) ? 'form-control' : 'form-control is-invalid'}
-          onChange={(evt) => props.Setter({ ...props.Record, [props.Field]:  evt.target.value !== '' ? evt.target.value : null})}
-          value={
-            props.Record[props.Field] == null ? '' : (props.Record[props.Field] as any).toString()
-          }
-          disabled={props.Disabled == null ? false : props.Disabled}
-        />
-        <div className="invalid-feedback">
-          {props.Feedback == null ? props.Field + ' is a required field.' : props.Feedback}
-        </div>
+export default function Input<T>(props: {
+  Record: T;
+  Field: keyof T;
+  Setter: (record: T) => void;
+  Valid: (field: keyof T) => boolean;
+  Label?: string;
+  Feedback?: string;
+  Disabled?: boolean;
+  Type?: 'number' | 'text' | 'password' | 'email' | 'color';
+}) {
+  return (
+    <div className="form-group">
+      <label>{props.Label == null ? props.Field : props.Label}</label>
+      <input
+        type={props.Type === undefined ? 'text' : props.Type}
+        className={props.Valid(props.Field) ? 'form-control' : 'form-control is-invalid'}
+        onChange={(evt) =>
+          props.Setter({ ...props.Record, [props.Field]: evt.target.value !== '' ? evt.target.value : null })
+        }
+        value={props.Record[props.Field] == null ? '' : (props.Record[props.Field] as any).toString()}
+        disabled={props.Disabled == null ? false : props.Disabled}
+      />
+      <div className="invalid-feedback">
+        {props.Feedback == null ? props.Field + ' is a required field.' : props.Feedback}
       </div>
-    );
-  }
-
+    </div>
+  );
+}
