@@ -1,5 +1,5 @@
 // ******************************************************************************************************
-//  index.tsx - Gbtc
+//  ArrayMultiSelect.tsx - Gbtc
 //
 //  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
 //
@@ -16,29 +16,46 @@
 //
 //  Code Modification History:
 //  ----------------------------------------------------------------------------------------------------
-//  09/25/2020 - Billy Ernest
+//  01/22/2020 - Billy Ernest
 //       Generated original version of source code.
 //
 // ******************************************************************************************************
 
-import CheckBox from './CheckBox';
-import Input from './Input';
-import DatePicker from './DatePicker';
-import Select from './Select';
-import TextArea from './TextArea';
-import DateRangePicker from './DateRangePicker';
-import EnumCheckBoxes from './EnumCheckBoxes';
-import ArrayMultiSelect from './ArrayMultiSelect';
-import ArrayCheckBoxes from './ArrayCheckBoxes';
+import * as React from 'react';
 
-export {
-  CheckBox,
-  Input,
-  DatePicker,
-  Select,
-  TextArea,
-  DateRangePicker,
-  EnumCheckBoxes,
-  ArrayMultiSelect,
-  ArrayCheckBoxes,
-};
+export default function ArrayMultiSelect<T>(props: {
+  Record: T;
+  Field: keyof T;
+  Setter: (record: T) => void;
+  Options: { Value: string; Label: string }[];
+  Label?: string;
+  Disabled?: boolean;
+  Style?: React.CSSProperties;
+}) {
+  return (
+    <div className="form-group">
+      <label>{props.Label == null ? props.Field : props.Label}</label>
+      <select
+        multiple
+        className="form-control"
+        onChange={(evt) => {
+          const record: T = {
+            ...props.Record,
+            [props.Field]: Array.from(evt.target.selectedOptions).map((a) => parseInt(a.value, 10)),
+          };
+
+          props.Setter(record);
+        }}
+        value={(props.Record[props.Field] as any) ?? ([] as any)}
+        disabled={props.Disabled == null ? false : props.Disabled}
+        style={props.Style}
+      >
+        {props.Options.map((a, i) => (
+          <option key={i} value={a.Value}>
+            {a.Label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}

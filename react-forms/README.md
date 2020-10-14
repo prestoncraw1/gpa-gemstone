@@ -15,6 +15,8 @@ This library includes helpful npm package for creating strongly typed form compo
 * Select
 * EnumCheckBoxes
 * DateRangePicker
+* ArrayCheckBoxes
+* ArrayMultiSelect
 
 ## Usage
 
