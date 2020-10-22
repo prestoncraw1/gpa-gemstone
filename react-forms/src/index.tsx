@@ -30,6 +30,7 @@ import DateRangePicker from './DateRangePicker';
 import EnumCheckBoxes from './EnumCheckBoxes';
 import ArrayMultiSelect from './ArrayMultiSelect';
 import ArrayCheckBoxes from './ArrayCheckBoxes';
+import MultiCheckBoxSelect from './MutliCheckBoxSelect';
 
 export {
   CheckBox,
@@ -41,4 +42,5 @@ export {
   EnumCheckBoxes,
   ArrayMultiSelect,
   ArrayCheckBoxes,
+  MultiCheckBoxSelect
 };
