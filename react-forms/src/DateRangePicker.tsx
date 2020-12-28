@@ -43,35 +43,35 @@ export default function DateRangePicker<T>(props: {
   const [EndInput, setEndInput] = React.useState<string>(Tend != null? ToString(Tend) : '');
 
   React.useEffect(() => {
-      let propsStart = ToDate(props.Record[props.FromField]);
-      let propsEnd = ToDate(props.Record[props.ToField]);
+      const propsStart = ToDate(props.Record[props.FromField]);
+      const propsEnd = ToDate(props.Record[props.ToField]);
 
       if (propsStart == null || Tstart == null) {
     		if (!(propsStart == null && Tstart == null ))
                setTstart(propsStart);
   	   }
-      else if (propsStart.getTime() != Tstart.getTime())
+      else if (propsStart.getTime() !== Tstart.getTime())
         setTstart(propsStart);
 
       if (propsEnd == null || Tend == null) {
 			     if (!(propsEnd == null && Tend == null ))
 				       setTstart(propsEnd);
      }
-      else if (propsEnd.getTime() != Tend.getTime())
+      else if (propsEnd.getTime() !== Tend.getTime())
         setTend(propsEnd);
 
   },[props.Record]);
 
   React.useEffect(() => {
-      let days = (Tstart != null && Tend != null? Math.round((Tend.getTime() - Tstart.getTime()) / (1000 * 60 * 60 * 24)) : 0)
-      if (ToRange(days) != range)
+      const days = (Tstart != null && Tend != null? Math.round((Tend.getTime() - Tstart.getTime()) / (1000 * 60 * 60 * 24)) : 0)
+      if (ToRange(days) !== range)
         setRange(ToRange(days));
       UpdateTime();
   },[Tstart, Tend]);
 
   React.useEffect(() => {
 
-    let days = GetDays(range);
+    const days = GetDays(range);
       if (days > 0) {
 		if (Tstart != null)
 			setTend(new Date(Tstart.valueOf() + 1000*24*60*60*days))
@@ -86,26 +86,26 @@ export default function DateRangePicker<T>(props: {
   }, [range]);
 
   function GetDays(val: Duration) {
-    if (val == '1 Day')
+    if (val === '1 Day')
       return 1;
-    if (val == '7 Days')
+    if (val === '7 Days')
       return 7;
-    if (val == '30 Days')
+    if (val === '30 Days')
       return 30;
-    if (val == '90 Days')
+    if (val === '90 Days')
       return 90;
-    if (val == '180 Days')
+    if (val === '180 Days')
       return 180;
-    if (val == '365 Days')
+    if (val === '365 Days')
       return 365;
     return 0;
   }
 
   function ToDate(str: any) {
-      if (str == undefined)
+      if (str === null)
         return null;
 
-      let dt = new Date(str);
+      const dt = new Date(str);
 
       if (isNaN(dt.getTime()))
         return null;
@@ -119,7 +119,7 @@ export default function DateRangePicker<T>(props: {
   }, [Tstart])
 
   React.useEffect(() => {
-      //only if InputStart is a valid ToString
+      // only if InputStart is a valid ToString
       if (StartInput.match('^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-2][0-9])') != null)
         setTstart(ToDate(StartInput));
       else
@@ -132,7 +132,7 @@ export default function DateRangePicker<T>(props: {
   }, [Tend])
 
   React.useEffect(() => {
-      //only if EndInput is a valid ToString
+      // only if EndInput is a valid ToString
       if (EndInput.match('^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-2][0-9])') != null)
         setTend(ToDate(EndInput));
       else
@@ -141,9 +141,9 @@ export default function DateRangePicker<T>(props: {
 
   function UpdateTime() {
 
-    let to = (Tend != undefined? ToString(Tend) : '')
+    const to = (Tend !== null? ToString(Tend) : '')
 
-    let from = (Tstart != undefined? ToString(Tstart) : '')
+    const from = (Tstart !== null? ToString(Tstart) : '')
 
     const record: T = {
       ...props.Record,
@@ -160,20 +160,20 @@ export default function DateRangePicker<T>(props: {
   }
 
   function ToRange(days: number) {
-    if (days == 1) return ('1 Day');
-    else if (days == 7) return('7 Days');
-    else if (days == 30) return('30 Days');
-    else if (days == 90) return('90 Days');
-    else if (days == 180) return('180 Days');
-    else if (days == 365) return('365 Days');
+    if (days === 1) return ('1 Day');
+    else if (days === 7) return('7 Days');
+    else if (days === 30) return('30 Days');
+    else if (days === 90) return('90 Days');
+    else if (days === 180) return('180 Days');
+    else if (days === 365) return('365 Days');
     else return('Custom');
   }
 
-  let startValid = (Tstart != null) && (!isNaN(Tstart.getTime()));
-  let endValid = (Tend != null) && (!isNaN(Tend.getTime())) && (!startValid || ((Tstart != null) && (Tstart.getTime() < Tend.getTime())));
+  let startValid = (Tstart !== null) && (!isNaN(Tstart.getTime()));
+  let endValid = (Tend !== null) && (!isNaN(Tend.getTime())) && (!startValid || ((Tstart !== null) && (Tstart.getTime() < Tend.getTime())));
 
-  startValid = (props.Valid == undefined? startValid : props.Valid);
-  endValid = (props.Valid == undefined? endValid : props.Valid);
+  startValid = (props.Valid === undefined? startValid : props.Valid);
+  endValid = (props.Valid === undefined? endValid : props.Valid);
   return (
     <div className="form-group">
       <label>{props.Label}</label>
