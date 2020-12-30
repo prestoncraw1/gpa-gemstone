@@ -9,16 +9,19 @@ The Gemstone Web Library organizes all Gemstone functionality related to web.
 This library includes helpful npm package component for creating interactive components in react.
 
 ## Usage
-### General Modals
+### General Modal
 
 ```ts
-    <Modal Title='Title of Modal' ShowX={false} Callback={(canceled) => setShow(false)} Show={show} Size={'lg'} ShowCancel={true} CancelText={'Cancel'} ConfirmText={'Ok'} >
+    <Modal Title='Title of Modal' ShowX={false} Callback={(confirmed) => setShow(false)} Show={show} Size={'lg'} ShowCancel={true} CancelText={'Cancel'} ConfirmText={'Ok'} >
 		<p> Content of the Modal should go here </p>
 		<p> Multiple Fields will work </p>
 	</Modal >
 ```
 
 ### Confirmation Dialog Modal
+```ts
+    <Warning Title='Please Confirm' Callback={(confirmed) => setShow(false)} Show={show}  Message={'Are you sure you want to Continue?'} />
+```
 
-### Wizard Footer
+### Wizard ToolTip
 

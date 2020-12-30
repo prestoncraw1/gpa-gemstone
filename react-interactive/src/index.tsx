@@ -22,7 +22,9 @@
 // ******************************************************************************************************
 
 import Modal from './Modal';
+import Warning from './Warning';
 
 export {
   Modal,
+  Warning
 };
