@@ -1,4 +1,4 @@
-//******************************************************************************************************
+// ******************************************************************************************************
 //  Modal.tsx - Gbtc
 //
 //  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
@@ -18,7 +18,7 @@
 //  ----------------------------------------------------------------------------------------------------
 //  12/29/2020 - Christoph Lackner
 //       Generated original version of source code.
-//******************************************************************************************************
+// ******************************************************************************************************
 
 import * as React from 'react';
 
@@ -51,16 +51,16 @@ interface IProps {
 const Modal: React.FunctionComponent<IProps> = (props) => {
 
 
-    const confirmBtn = (props.ConfirmText == undefined ? 'Save' : props.ConfirmText);
-    const cxnBtn = (props.CancelText == undefined ? 'Cancel' : props.CancelText);
+    const confirmBtn = (props.ConfirmText === undefined ? 'Save' : props.ConfirmText);
+    const cxnBtn = (props.CancelText === undefined ? 'Cancel' : props.CancelText);
 
-    const cxnbtnCls = 'btn ' + (props.CancelBtnClass == undefined ? 'btn-danger' : props.CancelBtnClass);
-    const confirmbtnCls = 'btn ' + (props.ConfirmBtnClass == undefined ? 'btn-primary' : props.ConfirmBtnClass)
+    const cxnbtnCls = 'btn ' + (props.CancelBtnClass === undefined ? 'btn-danger' : props.CancelBtnClass);
+    const confirmbtnCls = 'btn ' + (props.ConfirmBtnClass === undefined ? 'btn-primary' : props.ConfirmBtnClass)
 
     return (
         <>
         <div className={"modal" + (props.Show ? " show" : '')} style={props.Show ? {display: 'block', zIndex: 9990} : {}} id = "Test" >
-            <div className={"modal-dialog" + (props.Size == undefined? '' : (" modal-"  + props.Size))}>
+            <div className={"modal-dialog" + (props.Size === undefined? '' : (" modal-"  + props.Size))}>
                 <div className="modal-content">
                     <div className="modal-header">
                         <h4 className="modal-title">{props.Title}</h4>
@@ -69,8 +69,8 @@ const Modal: React.FunctionComponent<IProps> = (props) => {
                         {props.children}
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className={confirmbtnCls} disabled={!(props.DisableConfirm == undefined || !props.DisableConfirm)} onClick={() => props.CallBack(true)}>{confirmBtn}</button>
-                        {props.ShowCancel == undefined || props.ShowCancel ?
+                        <button type="button" className={confirmbtnCls} disabled={!(props.DisableConfirm === undefined || !props.DisableConfirm)} onClick={() => props.CallBack(true)}>{confirmBtn}</button>
+                        {props.ShowCancel === undefined || props.ShowCancel ?
                             <button type="button" className={cxnbtnCls} onClick={() => props.CallBack(false)}>{cxnBtn}</button>
                             : null}
                     </div>
