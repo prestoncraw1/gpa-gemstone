@@ -18,6 +18,7 @@ This library includes helpful npm package for creating strongly typed form compo
 * ArrayCheckBoxes
 * ArrayMultiSelect
 * MultiCheckBoxSelect
+* DoubleInput
 
 ## Usage
 
@@ -33,4 +34,5 @@ This library includes helpful npm package for creating strongly typed form compo
     <DatePicker<iType> Record={record} Field="Field5" Setter={(event) => record.Field1 = event.target.value}>
     <DateRangePicker<iType> Record={record} FromField="FromField" ToField="ToField" Label="Date Range" Setter={(event) => record.Field1 = event.target.value}>
     <EnumCheckBoxes<iType> Record={record} Field="EnumField" Setter={(event) => record.Field3 = event.target.value}} Enum={['Monday', 'Tuesday','Wednesday']}>
+	<DoubleInput<iType> Record={record} Field1="Field4" Field1="Field5" Setter={(r) => record = r} Valid={(field) => /*some criteria*/}>
 ```
