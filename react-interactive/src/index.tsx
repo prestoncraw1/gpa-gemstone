@@ -23,8 +23,12 @@
 
 import Modal from './Modal';
 import Warning from './Warning';
+import SearchBar from './SearchBar';
+import { Search } from './SearchBar';
 
 export {
   Modal,
-  Warning
+  Warning,
+  SearchBar,
+  Search
 };
