@@ -64,6 +64,7 @@ const Modal: React.FunctionComponent<IProps> = (props) => {
                 <div className="modal-content">
                     <div className="modal-header">
                         <h4 className="modal-title">{props.Title}</h4>
+						{props.ShowX? <button type="button" className="close" onClick={() => props.CallBack(false) }>&times;</button> : null}
                     </div>
                     <div className="modal-body">
                         {props.children}
