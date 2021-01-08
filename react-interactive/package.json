@@ -46,6 +46,7 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
+    "@gpa-gemstone/react-forms": "^1.1.4",
     "react": "^16.13.1"
   },
   "publishConfig": {
