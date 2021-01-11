@@ -26,11 +26,12 @@ import { Select, CheckBox } from '@gpa-gemstone/react-forms';
 
 interface IProps<T> {
     CollumnList: Array<Search.IField<T>>,
-    Id: string,
     SetFilter: (filters: Search.IFilter<T>[]) => void,
     defaultCollumn?: Search.IField<T>,
     Direction?: 'left' | 'right',
-    children: string
+    Width?: string|number,
+    Label?: string,
+    children: React.ReactNode
   }
 
 export namespace Search {
@@ -40,7 +41,7 @@ export namespace Search {
   export interface IFilter<T> { FieldName: keyof T, SearchText: string, Operator: Search.OperatorType, Type: Search.FieldType }
 }
 
-export default function SearchBar<T> (props: IProps<T>) {
+export default function SearchBar<T> (props: IProps<T>)  {
   const [hover, setHover] = React.useState<boolean>(false);
   const [show, setShow] = React.useState<boolean>(false);
 
@@ -65,6 +66,13 @@ export default function SearchBar<T> (props: IProps<T>) {
       return () => { if (handle != undefined) clearTimeout(handle); };
   }, [search]);
 
+  React.useEffect(() => {
+    if (searchFilter != null)
+      props.SetFilter([...filters, searchFilter]);
+    if (searchFilter == null && props.defaultCollumn == undefined)
+      props.SetFilter(filters);
+  }, [searchFilter])
+
   function deleteFilter(f: Search.IFilter<T>) {
       let index = filters.findIndex(fs => fs == f);
       let filts = [...filters];
@@ -88,34 +96,47 @@ export default function SearchBar<T> (props: IProps<T>) {
           props.SetFilter(oldFilters);
   }
 
+  const content = (
+    <>
+    <form>
+    <div className="row">
+    {props.defaultCollumn != undefined ?
+        <div className="col">
+          <input className="form-control mr-sm-2" type="search" placeholder={"Search " + props.defaultCollumn.label} onChange={(event) => setSearch(event.target.value as string)} />
+        </div> : null}
+      <div style={{ position: 'relative', display: 'inline-block' }} className='col'>
+          <button className="btn btn-primary" onClick={(evt) => { evt.preventDefault(); setShow(!show);}} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>Add Filter</button>
+          <div style={{ width: window.innerWidth / 3, display: hover ? 'block' : 'none', position: 'absolute', backgroundColor: '#f1f1f1', boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)', zIndex: 1, right: (props.Direction == 'right' ? 0 : undefined), left: (props.Direction == 'left' ? 0: undefined) }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+              <table className='table'>
+                  <thead>
+                      <tr><th>Column</th><th>Operator</th><th>Search Text</th><th>Remove</th></tr>
+                  </thead>
+                  <tbody>
+                      {filters.map((f, i) => <tr key={i}><td>{f.FieldName}</td><td>{f.Operator}</td><td>{f.SearchText}</td><td><button className="btn btn-sm" onClick={(e) => deleteFilter(f)}><span><i className="fa fa-trash"></i></span></button></td></tr>)}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+    </div>
+    </form>
+  </>)
+
   return (
       <div style={{ width: '100%' }}>
           <nav className="navbar navbar-expand-lg navbar-light bg-light">
               <div className="collapse navbar-collapse" style={{ width: '100%' }}>
                   <ul className="navbar-nav mr-auto" style={{ width: '100%' }}>
                       {props.Direction == 'right' ? props.children : null }
-                      <li className="nav-item" style={{ minWidth: '30px', paddingRight: 10 }}>
-                          <div style={{ position: 'relative', display: 'inline-block' }}>
-                              <button className="btn btn-primary" onClick={(evt) => { evt.preventDefault(); setShow(!show);}} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>Add Filter</button>
-                              <div style={{ width: window.innerWidth / 3, display: hover ? 'block' : 'none', position: 'absolute', backgroundColor: '#f1f1f1', boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)', zIndex: 1, right: (props.Direction == 'right' ? 0 : undefined), left: (props.Direction == 'left' ? 0: undefined) }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-                                  <table className='table'>
-                                      <thead>
-                                          <tr><th>Column</th><th>Operator</th><th>Search Text</th><th>Remove</th></tr>
-                                      </thead>
-                                      <tbody>
-                                          {filters.map((f, i) => <tr key={i}><td>{f.FieldName}</td><td>{f.Operator}</td><td>{f.SearchText}</td><td><button className="btn btn-sm" onClick={(e) => deleteFilter(f)}><span><i className="fa fa-trash"></i></span></button></td></tr>)}
-                                      </tbody>
-s
-                                  </table>
-                              </div>
-                          </div>
-                      </li>
-                      <li className="nav-item" style={{ minWidth: '150px', paddingRight: 10 }}>
-                          {props.defaultCollumn != undefined ?
-                              <div className="form-inline my-2 my-lg-0">
-                                  <input className="form-control mr-sm-2" type="search" placeholder={"Search " + props.defaultCollumn.label} onChange={(event) => setSearch(event.target.value as string)} />
-                              </div> : null}
-                      </li>
+                      {props.Label != undefined?
+                      <li className="nav-item" style={{ minWidth: (props.Width == undefined? '150px' : undefined), width: props.Width, paddingRight: 10 }}>
+                        <fieldset className="border" style={{ padding: '10px', height: '100%' }}>
+                        <legend className="w-auto" style={{ fontSize: 'large' }}>{props.Label}:</legend>
+                        {content}
+                        </fieldset>
+                        </li>:
+                        <li className="nav-item" style={{ minWidth: (props.Width == undefined? '150px' : undefined), width: props.Width, paddingRight: 10 }}>
+                          {content}
+                        </li>}
                       {props.Direction == 'left' ? props.children : null }
                   </ul>
               </div>
