@@ -1,5 +1,5 @@
 // ******************************************************************************************************
-//  index.tsx - Gbtc
+//  LoadingScreen.tsx - Gbtc
 //
 //  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
 //
@@ -16,23 +16,29 @@
 //
 //  Code Modification History:
 //  ----------------------------------------------------------------------------------------------------
-//  12/29/2020 - C. Lackner Ernest
+//  01/11/2020 - Christoph Lackner
 //       Generated original version of source code.
-//
 // ******************************************************************************************************
 
-import Modal from './Modal';
-import Warning from './Warning';
-import SearchBar from './SearchBar';
-import { Search } from './SearchBar';
-import LoadingScreen from './LoadingScreen';
-import LoadingIcon from './LoadingIcon';
+import * as React from 'react';
+import LoadingIcon from './LoadingIcon'
+interface IProps {
+  Show: boolean
+}
 
-export {
-  Modal,
-  Warning,
-  SearchBar,
-  Search,
-  LoadingScreen,
-  LoadingIcon
-};
+const LoadingScreen: React.FunctionComponent<IProps> = (props) => {
+  return (props.Show ? < div style={{
+                width: '100%',
+                height: '100%',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                opacity: 0.5,
+                backgroundColor: '#ffffff',
+                zIndex: 9980,
+                }}>
+                  <LoadingIcon Show={true}/>
+                </div> : null)
+}
+
+export default LoadingScreen;

@@ -1,5 +1,5 @@
 // ******************************************************************************************************
-//  index.tsx - Gbtc
+//  LoadingIcon.tsx - Gbtc
 //
 //  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
 //
@@ -16,23 +16,51 @@
 //
 //  Code Modification History:
 //  ----------------------------------------------------------------------------------------------------
-//  12/29/2020 - C. Lackner Ernest
+//  01/11/2020 - Christoph Lackner
 //       Generated original version of source code.
-//
 // ******************************************************************************************************
 
-import Modal from './Modal';
-import Warning from './Warning';
-import SearchBar from './SearchBar';
-import { Search } from './SearchBar';
-import LoadingScreen from './LoadingScreen';
-import LoadingIcon from './LoadingIcon';
+import * as React from 'react';
+import styled, { keyframes, css} from "styled-components";
 
-export {
-  Modal,
-  Warning,
-  SearchBar,
-  Search,
-  LoadingScreen,
-  LoadingIcon
-};
+interface IProps {
+    Show: boolean,
+    Label?: string,
+    Center?: boolean,
+    Height?: number|string,
+    Width?: number|string
+}
+
+const spin = keyframes`
+ 0% { transform: rotate(0deg); }
+ 100% { transform: rotate(360deg); }
+`;
+
+
+
+const LoadingIcon: React.FunctionComponent<IProps> = (props) => {
+
+const h = (props.Height === undefined? '25px': props.Height);
+const w = (props.Width === undefined? '25px': props.Width);
+
+  const Icon = styled.div`
+animation: ${spin} 1s linear infinite;
+border: 5px solid #f3f3f3;
+border-Top: 5px solid #555;
+border-Radius: 50%;
+width: ${w};
+height: ${h}
+`;
+
+  const center = (props.Center === undefined? false : props.Center);
+    return (
+      <div>
+          <div style={{ width: (props.Label === undefined? w: undefined), margin: 'auto' }} hidden={!props.Show}>
+              <Icon/>
+              {props.Label !== undefined? <span>{props.Label}</span> : null}
+          </div>
+      </div>
+    )
+}
+
+export default LoadingIcon;
