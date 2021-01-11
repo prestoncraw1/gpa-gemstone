@@ -25,7 +25,7 @@ import Modal from './Modal';
 import { Select, CheckBox } from '@gpa-gemstone/react-forms';
 
 interface IProps<T> {
-    CollumnList: Array<Search.IField<T>>,
+    CollumnList: Search.IField<T>[],
     SetFilter: (filters: Search.IFilter<T>[]) => void,
     defaultCollumn?: Search.IField<T>,
     Direction?: 'left' | 'right',
@@ -63,34 +63,34 @@ export default function SearchBar<T> (props: IProps<T>)  {
               setSearchFilter(null)
           }, 500);
 
-      return () => { if (handle != undefined) clearTimeout(handle); };
+      return () => { if (handle !== null) clearTimeout(handle); };
   }, [search]);
 
   React.useEffect(() => {
-    if (searchFilter != null)
+    if (searchFilter !== null)
       props.SetFilter([...filters, searchFilter]);
-    if (searchFilter == null && props.defaultCollumn == undefined)
+    if (searchFilter === null && props.defaultCollumn === undefined)
       props.SetFilter(filters);
   }, [searchFilter])
 
   function deleteFilter(f: Search.IFilter<T>) {
-      let index = filters.findIndex(fs => fs == f);
-      let filts = [...filters];
+      const index = filters.findIndex(fs => fs === f);
+      const filts = [...filters];
       filts.splice(index, 1);
       setFilters(filts);
       setHover(false);
-      if (props.defaultCollumn != undefined && searchFilter != undefined)
+      if (props.defaultCollumn !== undefined && searchFilter !== null)
           props.SetFilter([...filts, searchFilter]);
       else
           props.SetFilter(filts);
   }
 
   function addFilter() {
-      let oldFilters = [...filters];
+      const oldFilters = [...filters];
       oldFilters.push(filter);
       setFilters(oldFilters);
       setFilter({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: 'LIKE', Type: props.CollumnList[0].type });
-      if (props.defaultCollumn != undefined && searchFilter != undefined)
+      if (props.defaultCollumn !== undefined && searchFilter !== null)
           props.SetFilter([...oldFilters, searchFilter]);
       else
           props.SetFilter(oldFilters);
@@ -100,13 +100,13 @@ export default function SearchBar<T> (props: IProps<T>)  {
     <>
     <form>
     <div className="row">
-    {props.defaultCollumn != undefined ?
+    {props.defaultCollumn !== undefined ?
         <div className="col">
           <input className="form-control mr-sm-2" type="search" placeholder={"Search " + props.defaultCollumn.label} onChange={(event) => setSearch(event.target.value as string)} />
         </div> : null}
       <div style={{ position: 'relative', display: 'inline-block' }} className='col'>
           <button className="btn btn-primary" onClick={(evt) => { evt.preventDefault(); setShow(!show);}} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>Add Filter</button>
-          <div style={{ width: window.innerWidth / 3, display: hover ? 'block' : 'none', position: 'absolute', backgroundColor: '#f1f1f1', boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)', zIndex: 1, right: (props.Direction == 'right' ? 0 : undefined), left: (props.Direction == 'left' ? 0: undefined) }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+          <div style={{ width: window.innerWidth / 3, display: hover ? 'block' : 'none', position: 'absolute', backgroundColor: '#f1f1f1', boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)', zIndex: 1, right: (props.Direction === 'right' ? 0 : undefined), left: (props.Direction === 'left' ? 0: undefined) }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
               <table className='table'>
                   <thead>
                       <tr><th>Column</th><th>Operator</th><th>Search Text</th><th>Remove</th></tr>
@@ -126,18 +126,18 @@ export default function SearchBar<T> (props: IProps<T>)  {
           <nav className="navbar navbar-expand-lg navbar-light bg-light">
               <div className="collapse navbar-collapse" style={{ width: '100%' }}>
                   <ul className="navbar-nav mr-auto" style={{ width: '100%' }}>
-                      {props.Direction == 'right' ? props.children : null }
-                      {props.Label != undefined?
-                      <li className="nav-item" style={{ minWidth: (props.Width == undefined? '150px' : undefined), width: props.Width, paddingRight: 10 }}>
+                      {props.Direction === 'right' ? props.children : null }
+                      {props.Label !== undefined?
+                      <li className="nav-item" style={{ minWidth: (props.Width === undefined? '150px' : undefined), width: props.Width, paddingRight: 10 }}>
                         <fieldset className="border" style={{ padding: '10px', height: '100%' }}>
                         <legend className="w-auto" style={{ fontSize: 'large' }}>{props.Label}:</legend>
                         {content}
                         </fieldset>
                         </li>:
-                        <li className="nav-item" style={{ minWidth: (props.Width == undefined? '150px' : undefined), width: props.Width, paddingRight: 10 }}>
+                        <li className="nav-item" style={{ minWidth: (props.Width === undefined? '150px' : undefined), width: props.Width, paddingRight: 10 }}>
                           {content}
                         </li>}
-                      {props.Direction == 'left' ? props.children : null }
+                      {props.Direction === 'left' ? props.children : null }
                   </ul>
               </div>
           </nav>
@@ -145,14 +145,14 @@ export default function SearchBar<T> (props: IProps<T>)  {
           <Modal Title={'Add Filter'} Show={show} CallBack={(conf: boolean) => { if (conf) addFilter(); setShow(false)}} ConfirmText={'Add'} CancelText={'Close'}>
             <Select<Search.IFilter<T>> Record={filter} Field='FieldName' Options={props.CollumnList.map(fl => ({ Value: fl.key as string, Label: fl.label }))} Setter={(record) => {
                 let operator = "IN" as any;
-                let column = props.CollumnList.find(fl => fl.key == record.FieldName);
+                const column = props.CollumnList.find(fl => fl.key === record.FieldName);
 
-                if (column != undefined && column.type == 'string')
+                if (column !== undefined && column.type === 'string')
                     operator = "LIKE";
 
-                  setFilter((prevFilter) => ({ ...prevFilter, FieldName: record.FieldName, SearchText: '', Operator: operator, Type: (column != undefined ? column.type : 'string') }))
+                  setFilter((prevFilter) => ({ ...prevFilter, FieldName: record.FieldName, SearchText: '', Operator: operator, Type: (column !== undefined ? column.type : 'string') }))
             }} Label='Column' />
-            <FilterCreator Filter={filter} Field={props.CollumnList.find(fl => fl.key == filter.FieldName)} Setter={(record) => setFilter(record)} />
+            <FilterCreator Filter={filter} Field={props.CollumnList.find(fl => fl.key === filter.FieldName)} Setter={(record) => setFilter(record)} />
           </Modal>
       </div>
   );
@@ -163,16 +163,16 @@ interface IPropsFilterCreator<T> { Filter: Search.IFilter<T>, Setter: (filter: R
 
 function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
 
-    if (props.Field == undefined)
+    if (props.Field === undefined)
         return null;
-    if (props.Field.type == "string") {
+    if (props.Field.type === "string") {
         return (
             <>
                 <label>Column type is string. Wildcard (*) can be used with 'LIKE' and 'NOT LIKE'</label>
                 <div className='row'>
                     <div className='col-4'>
                         <select className='form-control' value={props.Filter.Operator} onChange={(evt) => {
-                            let value = evt.target.value as 'LIKE' | 'NOT LIKE' | '=';
+                            const value = evt.target.value as 'LIKE' | 'NOT LIKE' | '=';
                             props.Setter((prevState) => ({ ...prevState, Operator: value }));
                         }}>
                             <option value='LIKE'>LIKE</option>
@@ -181,7 +181,7 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
                     </div>
                     <div className='col'>
                         <input className='form-control' value={props.Filter.SearchText} onChange={(evt) => {
-                            let value = evt.target.value as string;
+                            const value = evt.target.value as string;
                             props.Setter((prevState) => ({ ...prevState, SearchText: value }));
                         }} />
                     </div>
@@ -190,14 +190,14 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
             </>
         );
     }
-    else if (props.Field.type == "integer" || props.Field.type == "number" || props.Field.type == "datetime") {
+    else if (props.Field.type === "integer" || props.Field.type === "number" || props.Field.type === "datetime") {
         return (
             <>
                 <label>Column type is {props.Field.type}.</label>
                 <div className='row'>
                     <div className='col-4'>
                         <select className='form-control' value={props.Filter.Operator} onChange={(evt) => {
-                            let value = evt.target.value as '=' | '<>' | '>' | '<' | '>=' | '<=';
+                            const value = evt.target.value as '=' | '<>' | '>' | '<' | '>=' | '<=';
                             props.Setter((prevState) => ({ ...prevState, Operator: value }));
                         }}>
                             <option value='='>=</option>
@@ -209,8 +209,8 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
                         </select>
                     </div>
                     <div className='col'>
-                        <input className='form-control' value={props.Filter.SearchText} onChange={(evt) => {
-                            let value = evt.target.value as string;
+                        <input type={'number'}className='form-control' value={props.Filter.SearchText} onChange={(evt) => {
+                            const value = evt.target.value as string;
                             props.Setter((prevState) => ({ ...prevState, SearchText: value }));
                         }} />
                     </div>
@@ -219,15 +219,15 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
             </>
         );
     }
-    else if (props.Field.type == "boolean") {
+    else if (props.Field.type === "boolean") {
         return <CheckBox Record={props.Filter} Field='SearchText' Setter={(filter: Search.IFilter<T>) => {
-            props.Setter((prevFilter) => ({ ...prevFilter, Operator: '=', SearchText: filter.SearchText.toString() == 'true' ? '1' : '0' }))
+            props.Setter((prevFilter) => ({ ...prevFilter, Operator: '=', SearchText: filter.SearchText.toString() === 'true' ? '1' : '0' }))
         }} Label="Column type is boolean. Yes/On is checked." />
     }
     else {
-        if (props.Field.enum == undefined)
+        if (props.Field.enum === undefined)
           return null;
-        let valueList: Array<{ID: number, Text: string }> = [];
+        const valueList: {ID: number, Text: string }[] = [];
         props.Field.enum.forEach((value, key) => valueList.push({ ID: key, Text: value }));
         return (
             <>
@@ -247,16 +247,16 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
                         <input type="checkbox" className="form-check-input" style={{ zIndex: 1 }} onChange={(evt) => {
                             if (evt.target.checked) {
                                 let list = props.Filter.SearchText.replace('(', '').replace(')', '').split(',');
-                                list = list.filter(x => x != "")
+                                list = list.filter(x => x !== "")
                                 list.push(vli.Text)
-                                let text = `(${list.join(',')})`;
+                                const text = `(${list.join(',')})`;
                                 props.Setter(prevSetter => ({ ...prevSetter, SearchText: text }));
                             }
                             else {
                                 let list = props.Filter.SearchText.replace('(', '').replace(')', '').split(',');
-                                list = list.filter(x => x != "")
-                                list = list.filter(x => x != vli.Text)
-                                let text = `(${list.join(',')})`;
+                                list = list.filter(x => x !== "")
+                                list = list.filter(x => x !== vli.Text)
+                                const text = `(${list.join(',')})`;
                                 props.Setter(prevSetter => ({ ...prevSetter, SearchText: text }));
                             }
 
