@@ -21,13 +21,13 @@
 //
 // ******************************************************************************************************
 
-function GetTextWidth(font: string, fontSize: number, word: string): number {
+function GetTextWidth(font: string, fontSize: string, word: string): number {
 
     const text = document.createElement("span");
     document.body.appendChild(text);
 
     text.style.font = font;
-    text.style.fontSize = 16 + "px";
+    text.style.fontSize = fontSize;
     text.style.height = 'auto';
     text.style.width = 'auto';
     text.style.position = 'absolute';
