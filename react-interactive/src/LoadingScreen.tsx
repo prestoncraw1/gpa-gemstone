@@ -27,6 +27,8 @@ interface IProps {
 }
 
 const LoadingScreen: React.FunctionComponent<IProps> = (props) => {
+
+  const x = window.innerHeight /2 - 20;
   return (props.Show ? < div style={{
                 width: '100%',
                 height: '100%',
@@ -34,10 +36,12 @@ const LoadingScreen: React.FunctionComponent<IProps> = (props) => {
                 top: 0,
                 left: 0,
                 opacity: 0.5,
-                backgroundColor: '#ffffff',
+                backgroundColor: '#000000',
                 zIndex: 9980,
                 }}>
-                  <LoadingIcon Show={true}/>
+                <div style={{height: '40px', width: '40px', margin:'auto', marginTop: x}}>
+                  <LoadingIcon Show={true} Size={40}/>
+                </div>
                 </div> : null)
 }
 

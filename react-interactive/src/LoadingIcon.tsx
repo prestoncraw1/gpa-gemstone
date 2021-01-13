@@ -26,9 +26,7 @@ import styled, { keyframes, css} from "styled-components";
 interface IProps {
     Show: boolean,
     Label?: string,
-    Center?: boolean,
-    Height?: number|string,
-    Width?: number|string
+    Size?: number,
 }
 
 const spin = keyframes`
@@ -40,22 +38,20 @@ const spin = keyframes`
 
 const LoadingIcon: React.FunctionComponent<IProps> = (props) => {
 
-const h = (props.Height === undefined? '25px': props.Height);
-const w = (props.Width === undefined? '25px': props.Width);
+const h = (props.Size === undefined? 25 : props.Size);
 
   const Icon = styled.div`
 animation: ${spin} 1s linear infinite;
-border: 5px solid #f3f3f3;
-border-Top: 5px solid #555;
+border: ${h/5}px solid #f3f3f3;
+border-Top: ${h/5}px solid #555;
 border-Radius: 50%;
-width: ${w};
-height: ${h}
+width: ${h}px;
+height: ${h}px
 `;
 
-  const center = (props.Center === undefined? false : props.Center);
     return (
       <div>
-          <div style={{ width: (props.Label === undefined? w: undefined), margin: 'auto' }} hidden={!props.Show}>
+          <div style={{ width: (props.Label === undefined? h: undefined), margin: 'auto' }} hidden={!props.Show}>
               <Icon/>
               {props.Label !== undefined? <span>{props.Label}</span> : null}
           </div>
