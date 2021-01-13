@@ -1,7 +1,7 @@
-﻿// ******************************************************************************************************
-//  Store.ts - Gbtc
+// ******************************************************************************************************
+//  global.d.ts - Gbtc
 //
-//  Copyright © 2021, Grid Protection Alliance.  All Rights Reserved.
+//  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
 //
 //  Licensed to the Grid Protection Alliance (GPA) under one or more contributor license agreements. See
 //  the NOTICE file distributed with this work for additional information regarding copyright ownership.
@@ -16,22 +16,34 @@
 //
 //  Code Modification History:
 //  ----------------------------------------------------------------------------------------------------
-//  01/11/2021 - Billy Ernest
+//  06/15/2020 - Billy Ernest
 //       Generated original version of source code.
 //
 // ******************************************************************************************************
 
-import { configureStore } from '@reduxjs/toolkit';
-import LegendReducer from './LegendSlice';
-import YAxisReducer from './YAxisSlice';
-import XAxisReducer from './XAxisSlice';
+import { ScaleLinear, ScaleLogarithmic, ScaleOrdinal } from "d3";
 
-const reducer = {
-    Legend: LegendReducer,
-    YAxis: YAxisReducer,
-    XAxis: XAxisReducer,
 
-};
+export interface State{
+        Legend: LegendSeries[],
+        YAxis: AxisMap[],
+        XAxis: AxisMap[],
+}
 
-const store = configureStore({reducer});
-export default store;
+export interface LegendSeries {
+    Label: string,
+    Color: string,
+    Show: boolean,
+    Width: number
+}
+
+export type AxisType = 'DateTime' | 'Linear' | 'Log' | 'Ordinal';
+export interface AxisMap {
+    ID: string,
+    Domain: any[],
+    Type: AxisType,
+    Range: any[],
+    Start: number,
+    End: number,
+    Scale?: ScaleLinear<number, number> | ScaleLogarithmic<number, number> | ScaleOrdinal<string, any>
+}

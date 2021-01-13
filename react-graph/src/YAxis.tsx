@@ -1,4 +1,4 @@
-﻿//******************************************************************************************************
+﻿// ******************************************************************************************************
 //  YAxis.tsx - Gbtc
 //
 //  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
@@ -19,19 +19,20 @@
 //  12/30/2020 - Billy Ernest
 //       Generated original version of source code.
 //
-//******************************************************************************************************
+// ******************************************************************************************************
 import { useSelector, useDispatch } from 'react-redux';
 import { Add, SelectYAxis, SetRange } from './Store/YAxisSlice';
 
-import React, { ReactElement } from 'react';
+import * as React from 'react';
 import { scaleLog, scaleLinear, scaleOrdinal, min, max } from 'd3';
-import { PlotContext, AxisMap } from './Plot';
+import { PlotContext } from './Plot';
 import { CreateGuid } from '@gpa-gemstone/helper-functions';
 import { SeriesProps } from './Series';
-import { GetScale } from './Helper';
+import { State } from './global';
+
 
 export interface YAxisProps {
-    children?: ReactElement<SeriesProps<any>> | ReactElement<SeriesProps<any>>[] /*JSX.Element | JSX.Element[]*/,
+    children?: React.ReactElement<SeriesProps<any>> | React.ReactElement<SeriesProps<any>>[] /*JSX.Element | JSX.Element[]*/,
     Label: string,
     Grid?: boolean,
     Type?: 'DateTime' | 'Linear' | 'Log' | 'Ordinal',
@@ -47,27 +48,27 @@ const YAxis = (props: YAxisProps) => {
     const { margin, svgWidth, svgHeight, top, bottom} = React.useContext(PlotContext);
     const [guid] = React.useState(CreateGuid());
     const dispatch = useDispatch();
-    const series = useSelector(state => SelectYAxis(state, guid));
+    const series = useSelector((state: State) => SelectYAxis(state, guid));
 
     React.useEffect(() => {
-        let range = getRange();
+        const range = getRange();
 
         if (series === undefined) 
-            dispatch(Add({ ID: guid, Type: props.Type, Range: range, Domain: range, Start: bottom, End: top  }));
+            dispatch(Add({ ID: guid, Type: props.Type ?? 'Linear', Range: range, Domain: range, Start: bottom, End: top  }));
         else 
             dispatch(SetRange({ ID: guid, Range: range}));
     },[props.children]);
 
     function getRange(): any[] {
         if (props.Range !== undefined) return props.Range;
-        else if ((props.children as ReactElement<SeriesProps<any>>) === undefined) {
+        else if ((props.children as React.ReactElement<SeriesProps<any>>) === undefined) {
             return [0, 10]
         }
         else if ((props.children as JSX.Element[]).length === 0) {
             return [0, 10]
         }
         else if ((props.children as JSX.Element[]).length === undefined) {
-            let range = ((props.children as JSX.Element).props as SeriesProps<any>).Data.map(d => d[(props.children as JSX.Element).props.YField]);
+            const range = ((props.children as JSX.Element).props as SeriesProps<any>).Data.map(d => d[(props.children as JSX.Element).props.YField]);
 
             if (props.Type === 'Ordinal') {
                 return range;
@@ -77,9 +78,8 @@ const YAxis = (props: YAxisProps) => {
             }
         }
         else {
-            let children: ReactElement<SeriesProps<any>>[] = [].concat(...props.children as ReactElement<SeriesProps<any>>[])
-
-            let range = [... new Set([].concat(...children.map(c => (c.props as SeriesProps<any>).Data.map(d => d[(c.props as SeriesProps<any>).YField]))))];
+            const children: React.ReactElement<SeriesProps<any>>[] = [].concat(...props.children as any)
+            const range = [... new Set([].concat(...children.map(c => (c.props as SeriesProps<any>).Data.map(d => d[(c.props as SeriesProps<any>).YField])) as any))];
 
             if (props.Type === 'Ordinal') {
                 return range;
@@ -98,13 +98,13 @@ const YAxis = (props: YAxisProps) => {
     }
 
     function GenerateLogAxis(): JSX.Element[] {
-        let y = scaleLog().rangeRound([svgHeight, margin.top]).domain(series.Domain);
+        const y = scaleLog().rangeRound([svgHeight, margin.top]).domain(series?.Domain ?? []);
 
-        let i = parseFloat(Math.pow(10, Math.floor(Math.log(series.Domain[0]) / Math.log(10))).toPrecision(1));
-        let ticks: JSX.Element[] = []
-        let logDomain = y.domain().map(l => Math.log(l) / Math.log(10));
-        let ldDiff = logDomain[1] - logDomain[0];
-        for (; i <= series.Domain[1]; i = i * 10) {
+        let i = parseFloat(Math.pow(10, Math.floor(Math.log(series?.Domain[0] ?? 1) / Math.log(10))).toPrecision(1));
+        const ticks: JSX.Element[] = []
+        const logDomain = y.domain().map(l => Math.log(l) / Math.log(10));
+        const ldDiff = logDomain[1] - logDomain[0];
+        for (; i <= series?.Domain[1] ?? 10; i = i * 10) {
             ticks.push(
                 <g key={i} className="tick" transform={`translate(${margin.left},${y(i)})`} style={{ opacity: i < y.domain()[0] || i > y.domain()[1] ? 0 : 1 }}>
                     {props.Grid ? <path stroke='black' d={`M -6,0 H -${svgHeight - margin.top}`} strokeWidth={0.25}></path> : null}
@@ -122,16 +122,16 @@ const YAxis = (props: YAxisProps) => {
     }
 
     function GenerateLinearAxis(): JSX.Element[] {
-        let y = scaleLinear().rangeRound([svgHeight, margin.top]).domain(series.Domain);
+        const y = scaleLinear().rangeRound([svgHeight, margin.top]).domain(series?.Domain ?? []);
 
-        let ticks: JSX.Element[] = []
+        const ticks: JSX.Element[] = []
         let step = 0.1;
         if (y.domain()[1] - y.domain()[0] >  5)
             step = Math.round((y.domain()[1] - y.domain()[0]) / (props.TickNumber != null ? props.TickNumber : 10));
         else 
             step = (y.domain()[1] - y.domain()[0]) / (props.TickNumber != null ? props.TickNumber : 10);
 
-        for (let i = Math.floor(series.Domain[0]); i <= series.Domain[1]; i = step + i) {
+        for (let i = Math.floor(series?.Domain[0] ?? 1); i <= series?.Domain[1] ?? 10; i = step + i) {
             ticks.push(
                 <g key={i} className="tick" transform={`translate(${margin.left},${y(i)})`} style={{ opacity: i < y.domain()[0] || i > y.domain()[1] ? 0 : 1 }}>
                     {props.Grid ? <path stroke='black' d={`M -6,0 H ${svgWidth}`} strokeWidth={0.25}></path> : null }
@@ -145,10 +145,10 @@ const YAxis = (props: YAxisProps) => {
     }
 
     function GenerateOrdinalAxis(): JSX.Element[] {
-        if (props.Ticks === null || props.Ticks.length === 0) return null;
+        if (props.Ticks === null || props.Ticks?.length === 0) return [];
 
-        let scale = scaleOrdinal().domain(props.Ticks).range(props.Ticks.map((tick, i) => i * (svgHeight) / props.Ticks.length + margin.top + (svgHeight) / props.Ticks.length / 2));
-        return props.Ticks.map(tick => (
+        const scale = scaleOrdinal().domain(props?.Ticks ?? []).range((props?.Ticks ?? []).map((tick, i) => i * (svgHeight) /(props?.Ticks?.length ?? 10) + margin.top + (svgHeight) / (props?.Ticks?.length ?? 10)  / 2));
+        return (props?.Ticks ?? []).map(tick => (
             <g key={tick} className="tick" transform={`translate(${margin.left},${scale(tick)})`}>
                 {props.Grid ? <path stroke='black' d={`M -6,0 H ${svgWidth}`} strokeWidth={0.25}></path> : null}
                 <text fill="black" fontSize="small" x="-15" dy="0.32em" textAnchor='middle'>{tick}</text>

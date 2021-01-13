@@ -1,4 +1,4 @@
-﻿//******************************************************************************************************
+﻿// ******************************************************************************************************
 //  LegendSlice.ts - Gbtc
 //
 //  Copyright © 2021, Grid Protection Alliance.  All Rights Reserved.
@@ -19,24 +19,20 @@
 //  01/11/2021 - Billy Ernest
 //       Generated original version of source code.
 //
-//******************************************************************************************************
+// ******************************************************************************************************
 import { createSlice } from '@reduxjs/toolkit';
-export interface LegendSeries {
-    Label: string,
-    Color: string,
-    Show: boolean,
-    Width: number
-};
+import { LegendSeries, State } from '../global';
+
 
 // #region [ Slice ]
 export const LegendSlice = createSlice({
     name: 'Legend',
     initialState: [] as LegendSeries[],
     reducers: {
-        Add: (state, action: { payload: LegendSeries, type: string } ) => {
+        Add: (state: LegendSeries[], action: { payload: LegendSeries, type: string } ) => {
             state.push(action.payload)
         },
-        Show: (state, action: { payload: {Index: number, Show: boolean}, type: string}) => {
+        Show: (state: LegendSeries[], action: { payload: {Index: number, Show: boolean}, type: string}) => {
             state[action.payload.Index].Show = action.payload.Show;
         },
     }
@@ -46,8 +42,8 @@ export const LegendSlice = createSlice({
 // #region [ Selectors ]
 export const { Add, Show} = LegendSlice.actions;
 export default LegendSlice.reducer;
-export const SelectLegend = (state) => state.Legend;
-export const SelectLegendSeries = (state: { Legend: LegendSeries[]}, key: string) => state.Legend.find(l => l.Label === key) ;
+export const SelectLegend = (state: State) => state.Legend;
+export const SelectLegendSeries = (state: State, key: string) => state.Legend.find(l => l.Label === key) ;
 
 // #endregion
 

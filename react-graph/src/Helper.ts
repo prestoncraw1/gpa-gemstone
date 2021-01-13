@@ -1,10 +1,10 @@
 ﻿// ******************************************************************************************************
-//  Store.ts - Gbtc
+//  Helper.ts - Gbtc
 //
-//  Copyright © 2021, Grid Protection Alliance.  All Rights Reserved.
+//  Copyend © 2021, Grid Protection Alliance.  All ends Reserved.
 //
 //  Licensed to the Grid Protection Alliance (GPA) under one or more contributor license agreements. See
-//  the NOTICE file distributed with this work for additional information regarding copyright ownership.
+//  the NOTICE file distributed with this work for additional information regarding copyend ownership.
 //  The GPA licenses this file to you under the MIT License (MIT), the "License"; you may not use this
 //  file except in compliance with the License. You may obtain a copy of the License at:
 //
@@ -16,22 +16,24 @@
 //
 //  Code Modification History:
 //  ----------------------------------------------------------------------------------------------------
-//  01/11/2021 - Billy Ernest
+//  01/12/2021 - Billy Ernest
 //       Generated original version of source code.
 //
 // ******************************************************************************************************
 
-import { configureStore } from '@reduxjs/toolkit';
-import LegendReducer from './LegendSlice';
-import YAxisReducer from './YAxisSlice';
-import XAxisReducer from './XAxisSlice';
 
-const reducer = {
-    Legend: LegendReducer,
-    YAxis: YAxisReducer,
-    XAxis: XAxisReducer,
+import { scaleLinear, scaleLog, scaleOrdinal } from "d3";
+import { AxisType } from "./global";
 
-};
+function GetScale(type: AxisType, start: number, end: number, domain: any[]) {
+    if (type === 'Linear')
+        return scaleLinear().rangeRound([start, end]).domain(domain);
+    else if (type === 'Log')
+        return scaleLog().rangeRound([start, end]).domain(domain);
+    else if (type === 'Ordinal')
+        return scaleOrdinal().domain(domain).range(domain.map((tick, i) => i * (end - start) / domain.length + start + (end - start) / domain.length / 2));
+    else
+        return scaleLinear().rangeRound([start, end]).domain(domain);
+}
 
-const store = configureStore({reducer});
-export default store;
+export { GetScale }

@@ -1,4 +1,4 @@
-﻿//******************************************************************************************************
+﻿// ******************************************************************************************************
 //  XAxisSlice.ts - Gbtc
 //
 //  Copyright © 2021, Grid Protection Alliance.  All Rights Reserved.
@@ -19,12 +19,11 @@
 //  01/11/2021 - Billy Ernest
 //       Generated original version of source code.
 //
-//******************************************************************************************************
+// ******************************************************************************************************
 
 import { createSlice } from '@reduxjs/toolkit';
-import { ScaleLogarithmic, ScaleLinear, ScaleOrdinal } from 'd3';
-import { AxisMap, AxisType } from '../Plot';
 import { GetScale } from '../Helper';
+import { State, AxisMap, AxisType  } from '../global';
 
 // #region [ Slice ]
 export const XAxisSlice = createSlice({
@@ -35,14 +34,24 @@ export const XAxisSlice = createSlice({
             state.push(action.payload)
         },
         SetType: (state, action: { payload: { ID: string, Type: AxisType }, type: string }) => {
-            state.find(s => s.ID === action.payload.ID).Type = action.payload.Type;
+            const axis = state.find(s => s.ID === action.payload.ID);
+            
+            if(axis)
+                axis.Type = action.payload.Type ;
         },
         SetDomain: (state, action: { payload: { ID: string, Domain: any[] }, type: string }) => {
-            state.find(s => s.ID === action.payload.ID).Domain = action.payload.Domain;
+            const axis = state.find(s => s.ID === action.payload.ID);
+            
+            if(axis)
+                axis.Domain = action.payload.Domain;
         },
         SetRange: (state, action: { payload: { ID: string, Range: any[] }, type: string }) => {
-            state.find(s => s.ID === action.payload.ID).Range = action.payload.Range;
-            state.find(s => s.ID === action.payload.ID).Domain = action.payload.Range;
+            const axis = state.find(s => s.ID === action.payload.ID);
+            
+            if(axis){
+                axis.Range = action.payload.Range;
+                axis.Domain = action.payload.Range;
+            }
         },
         ResetZoom: (state) => {
             state.forEach(s => { s.Domain = s.Range });
@@ -67,12 +76,12 @@ export const XAxisSlice = createSlice({
 // #region [ Selectors ]
 export const { Add, SetType, SetDomain, SetRange, ResetZoom, Drag, Zoom  } = XAxisSlice.actions;
 export default XAxisSlice.reducer;
-export const SelectXAxes = (state) => state.XAxis;
-export const SelectXAxis = (state, key: string) => {
-    let axis = state.XAxis.find(l => l.ID === key);
+export const SelectXAxes = (state: State) => state.XAxis;
+export const SelectXAxis = (state: State, key: string) => {
+    const axis = state.XAxis.find(l => l.ID === key);
     if (axis === undefined) return axis;
     return { ...axis, Scale: GetScale(axis.Type, axis.Start, axis.End, axis.Domain) };
 };
-export const SelectXAxesReset = (state) => state.XAxis.every(a => a.Domain.every((d,i) => d === a.Range[i]))
+export const SelectXAxesReset = (state: State) => state.XAxis.every(a => a.Domain.every((d,i) => d === a.Range[i]))
 // #endregion
 

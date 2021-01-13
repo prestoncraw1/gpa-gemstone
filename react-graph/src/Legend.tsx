@@ -1,4 +1,4 @@
-﻿//******************************************************************************************************
+﻿// ******************************************************************************************************
 //  Legend.tsx - Gbtc
 //
 //  Copyright © 2021, Grid Protection Alliance.  All Rights Reserved.
@@ -19,12 +19,13 @@
 //  01/07/2021 - Billy Ernest
 //       Generated original version of source code.
 //
-//******************************************************************************************************
+// ******************************************************************************************************
 import { useSelector, useDispatch } from 'react-redux';
-import { Show, SelectLegend, LegendSeries } from './Store/LegendSlice';
-import React from 'react';
+import { Show, SelectLegend } from './Store/LegendSlice';
+import * as React from 'react';
 import { PlotContext } from './Plot';
-import { GetTextWidth } from '@gpa-gemstone/helper-functions';
+import { LegendSeries } from './global';
+
 
 export interface LegendProps {
     Position: 'topleft' | 'topright' | 'bottomright' | 'bottomleft' | 'topcenter' | 'bottomcenter',
@@ -44,7 +45,7 @@ function Legend(props: LegendProps) {
                     return (
                         <g
                             key={index}
-                            transform={`translate(${(props.ShowLabels === true ? (legend.map(l => l.Width).slice(0, index).length === 0 ? 0 : legend.map(l => l.Width + 30).slice(0, index).reduce((a, b) => a + b)) : index * 20)},${0})`}
+                            transform={`translate(${(props.ShowLabels === true ? (legend.map(a => a.Width).slice(0, index).length === 0 ? 0 : legend.map(a => a.Width + 30).slice(0, index).reduce((a, b) => a + b)) : index * 20)},${0})`}
                         >
                             <rect
                                 stroke='black'

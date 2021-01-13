@@ -1,4 +1,4 @@
-﻿//******************************************************************************************************
+﻿// ******************************************************************************************************
 //  YAxisSlice.ts - Gbtc
 //
 //  Copyright © 2021, Grid Protection Alliance.  All Rights Reserved.
@@ -19,10 +19,10 @@
 //  01/11/2021 - Billy Ernest
 //       Generated original version of source code.
 //
-//******************************************************************************************************
+// ******************************************************************************************************
 
 import { createSlice } from '@reduxjs/toolkit';
-import { AxisMap, AxisType } from '../Plot';
+import { AxisMap, AxisType, State } from '../global';
 import { GetScale } from '../Helper';
 
 // #region [ Slice ]
@@ -33,16 +33,25 @@ export const YAxisSlice = createSlice({
         Add: (state, action: { payload: AxisMap, type: string } ) => {
             state.push(action.payload)
         },
-        SetType: (state, action: { payload: {ID: string, Type: AxisType}, type: string}) => {
-            state.find(s => s.ID === action.payload.ID).Type = action.payload.Type;
+        SetType: (state, action: { payload: { ID: string, Type: AxisType }, type: string }) => {
+            const axis = state.find(s => s.ID === action.payload.ID);
+            
+            if(axis)
+                axis.Type = action.payload.Type ;
         },
         SetDomain: (state, action: { payload: { ID: string, Domain: any[] }, type: string }) => {
-            state.find(s => s.ID === action.payload.ID).Domain = action.payload.Domain;
+            const axis = state.find(s => s.ID === action.payload.ID);
+            
+            if(axis)
+                axis.Domain = action.payload.Domain;
         },
         SetRange: (state, action: { payload: { ID: string, Range: any[] }, type: string }) => {
-            state.find(s => s.ID === action.payload.ID).Range = action.payload.Range;
-            state.find(s => s.ID === action.payload.ID).Domain = action.payload.Range;
-
+            const axis = state.find(s => s.ID === action.payload.ID);
+            
+            if(axis){
+                axis.Range = action.payload.Range;
+                axis.Domain = action.payload.Range;
+            }
         },
         ResetZoom: (state) => {
             state.forEach(s => { s.Domain = s.Range });
@@ -68,12 +77,12 @@ export const YAxisSlice = createSlice({
 // #region [ Selectors ]
 export const { Add, SetType, SetDomain, SetRange, ResetZoom, Drag, Zoom } = YAxisSlice.actions;
 export default YAxisSlice.reducer;
-export const SelectYAxes = (state) => state.YAxis;
-export const SelectYAxis = (state, key: string) => {
-    let axis = state.YAxis.find(l => l.ID === key);
+export const SelectYAxes = (state: State) => state.YAxis;
+export const SelectYAxis = (state: State, key: string) => {
+    const axis = state.YAxis.find(l => l.ID === key);
     if (axis === undefined) return axis;
     return { ...axis, Scale: GetScale(axis.Type, axis.Start, axis.End, axis.Domain)  };
 };
-export const SelectYAxesReset = (state) => state.YAxis.every(a => a.Domain[0] === a.Range[0] && a.Domain[1] === a.Range[1])
+export const SelectYAxesReset = (state: State) => state.YAxis.every(a => a.Domain[0] === a.Range[0] && a.Domain[1] === a.Range[1])
 // #endregion
 

@@ -1,4 +1,4 @@
-﻿//******************************************************************************************************
+﻿// ******************************************************************************************************
 //  Series.tsx - Gbtc
 //
 //  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
@@ -19,19 +19,21 @@
 //  12/31/2020 - Billy Ernest
 //       Generated original version of source code.
 //
-//******************************************************************************************************
+// ******************************************************************************************************
 
 import { useSelector, useDispatch } from 'react-redux';
-import React from 'react';
-import { scaleLog, scaleLinear, scaleOrdinal, line, min, max } from 'd3';
+import * as React from 'react';
+import { line } from 'd3';
 import { XAxisContext } from './XAxis';
-import { PlotContext, AxisMap } from './Plot';
+import { PlotContext } from './Plot';
 import { Add, SelectLegendSeries } from './Store/LegendSlice';
 import { YAxisContext } from './YAxis';
 import { SelectYAxis } from './Store/YAxisSlice';
 import { SelectXAxis } from './Store/XAxisSlice';
 import { GetTextWidth } from '@gpa-gemstone/helper-functions';
 import { GetScale } from './Helper';
+import { AxisMap, State } from './global';
+
 export interface SeriesProps<T> {
     Label: string,
     XField: keyof T,
@@ -50,9 +52,9 @@ function Series<T>(props: SeriesProps<T>) {
     const xGuid = React.useContext(XAxisContext);
 
     const dispatch = useDispatch();
-    const series = useSelector(state => SelectLegendSeries(state, props.Label));
-    const yAxis: AxisMap = useSelector(state => SelectYAxis(state, yGuid));
-    const xAxis: AxisMap = useSelector(state => SelectXAxis(state, xGuid));
+    const series = useSelector((state: State) => SelectLegendSeries(state, props.Label));
+    const yAxis = useSelector((state: State) => SelectYAxis(state, yGuid as string)) as AxisMap;
+    const xAxis = useSelector((state: State) => SelectXAxis(state, xGuid as string)) as AxisMap;
 
     React.useEffect(() => {
         if (series === undefined)
@@ -60,8 +62,8 @@ function Series<T>(props: SeriesProps<T>) {
     },[]);
 
     if (yAxis === undefined || xAxis === undefined) return <></>;
-    let x = GetScale(xAxis.Type, left, right, xAxis.Domain );
-    let y = GetScale(yAxis.Type, bottom, top, yAxis.Domain);
+    const x = GetScale(xAxis.Type, left, right, xAxis.Domain );
+    const y = GetScale(yAxis.Type, bottom, top, yAxis.Domain);
 
     if (series !== undefined ? !series.Show : false) {
         return (
@@ -73,16 +75,16 @@ function Series<T>(props: SeriesProps<T>) {
     else if (props.Type === 'points') {
         return (
             <>
-                {props.Data.filter(point => point[props.YField] >= yAxis.Domain[0] && point[props.YField] <= yAxis.Domain[1] && point[props.XField] >= xAxis.Domain[0] && point[props.XField] <= xAxis.Domain[1]).map((point, index) => <circle  {...props.Style as React.SVGProps<SVGCircleElement>} key={index} className="dot" r={3} cx={xAxis.Scale(point[props.XField] as any) as number} cy={yAxis.Scale(point[props.YField] as any) as number} fill='blue' style={{ cursor: 'pointer' }} onClick={props.Click} />) }
+                {props.Data.filter(point => point[props.YField] >= yAxis.Domain[0] && point[props.YField] <= yAxis.Domain[1] && point[props.XField] >= xAxis.Domain[0] && point[props.XField] <= xAxis.Domain[1]).map((point, index) => <circle  {...props.Style as React.SVGProps<SVGCircleElement>} key={index} className="dot" r={3} cx={(xAxis.Scale ? xAxis.Scale(point[props.XField] as any) as number: 0)} cy={(yAxis.Scale ? yAxis.Scale(point[props.YField] as any) as number:0)} fill='blue' style={{ cursor: 'pointer' }} onClick={props.Click} />) }
             </>
         )
     }
     else if (props.Type === 'line') {
-        let linefunc = line<T>().x(d => x(d[props.XField] as any) as any).y(d => y(d[props.YField] as any) as any);
+        const linefunc = line<T>().x(d => x(d[props.XField] as any) as any).y(d => y(d[props.YField] as any) as any);
 
         return <path
             {...props.Style as React.SVGProps<SVGPathElement>}
-            d={linefunc(props.Data)}
+            d={linefunc(props.Data) as string}
             stroke={props.Color}
         />;
     }

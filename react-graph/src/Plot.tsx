@@ -1,4 +1,4 @@
-﻿//******************************************************************************************************
+﻿// ******************************************************************************************************
 //  Plot.tsx - Gbtc
 //
 //  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
@@ -19,13 +19,12 @@
 //  12/30/2020 - Billy Ernest
 //       Generated original version of source code.
 //
-//******************************************************************************************************
-import { useSelector, useDispatch } from 'react-redux';
+// ******************************************************************************************************
+import { useSelector, useDispatch, Provider } from 'react-redux';
 import { ResetZoom as yResetZoom, SelectYAxesReset, Drag as yDrag, Zoom as yZoom } from './Store/YAxisSlice';
 import { ResetZoom as xResetZoom, SelectXAxesReset, Drag as xDrag, Zoom as xZoom } from './Store/XAxisSlice';
 
-import React, { FunctionComponent } from 'react';
-import { Provider } from 'react-redux';
+import * as React from 'react';
 import store from './Store/Store';
 
 import { ScaleLinear, ScaleLogarithmic, ScaleOrdinal, dispatch} from 'd3';
@@ -48,16 +47,7 @@ interface Props {
     Drag?: boolean,
     Margin: { top: number, right: number, bottom: number, left: number}
 }
-export type AxisType = 'DateTime' | 'Linear' | 'Log' | 'Ordinal';
-export interface AxisMap {
-    ID: string,
-    Domain: any[],
-    Type: AxisType,
-    Range: any[],
-    Start: number,
-    End: number,
-    Scale?: ScaleLinear<number, number> | ScaleLogarithmic<number, number> | ScaleOrdinal<string, any>
-}
+
 
 
 const SvgStyle: React.CSSProperties = {
@@ -80,15 +70,15 @@ const PlotContext = React.createContext({
     right: 0,
 });
 
-const Plot: FunctionComponent<Props> = (props) => {
+const Plot: React.FunctionComponent<Props> = (props) => {
     const svgWidth = props.Width - props.Margin.left - props.Margin.right;
     const svgHeight = props.Height - props.Margin.top - props.Margin.bottom;
 
 
-    let value = {
+    const value = {
         margin: props.Margin,
-        svgWidth: svgWidth,
-        svgHeight: svgHeight,
+        svgWidth,
+        svgHeight,
         top: props.Margin.top,
         bottom: svgHeight,
         left: props.Margin.left,
@@ -111,12 +101,13 @@ const Plot: FunctionComponent<Props> = (props) => {
 
 const Graph = (props: Props) => {
     const ref = React.useRef(null);
+    // tslint:disable-next-line:no-shadowed-variable
     const dispatch = useDispatch();
     const { svgWidth, svgHeight, top, left, right, bottom, margin } = React.useContext(PlotContext);
 
-    function handleZoom(evt) {
+    function handleZoom(evt: any) {
         if (!props.Zoom) return;
-        console.log(evt);
+
         let multiplier = 1.25;
 
         // event.deltaY positive is wheel down or out and negative is wheel up or in
@@ -127,7 +118,7 @@ const Graph = (props: Props) => {
 
     }
 
-    function handleDrag(evt) {
+    function handleDrag(evt: any) {
         if (!props.Drag) return;
         evt.preventDefault();
 
@@ -135,33 +126,33 @@ const Graph = (props: Props) => {
         if (evt.nativeEvent.offsetY < props.Margin.top || evt.nativeEvent.offsetY > svgHeight + props.Margin.top) return;
 
         evt.persist();
-        let timeout = null;
+        let timeout: any = null;
 
-        ref.current.onmousemove = (e) => {
+        (ref.current as unknown as SVGSVGElement).onmousemove = (e: any) => {
            
             if (timeout) clearTimeout(timeout);
             timeout = setTimeout(() => {
-                //console.log(e)
                 dispatch(yDrag({ Click: evt.nativeEvent.offsetY / 2, Drag: e.offsetY/2 }));
                 dispatch(xDrag({ Click: evt.nativeEvent.offsetX / 2, Drag: e.offsetX/2 }));
             }, 8);
         };
     }
 
-    function stopDrag(evt) {
+    function stopDrag(evt: any) {
         if (!props.Drag) return;
 
         evt.preventDefault();
-        ref.current.onmousemove = null;
+        (ref.current as unknown as SVGSVGElement).onmousemove = null;
     }
 
     function XAxisNotExists(): boolean {
-        if (props.children === undefined) return true;
-        else if ((props.children as JSX.Element[]).length === undefined) {
-            if ((props.children as JSX.Element).type.name !== 'XAxis') return true;
+        const children = props.children;
+        if (children === undefined) return true;
+        else if ((children as JSX.Element[]).length === undefined) {
+            if ((children as JSX.Element).type.name !== 'XAxis') return true;
             else return false;
         }
-        else if ((props.children as JSX.Element[]).find(a => a.type.name == 'XAxis').type.name !== 'XAxis') return true;
+        else if ((children as JSX.Element[]).find(a => a.type.name === 'XAxis')?.type.name !== 'XAxis') return true;
         else return false;
     }
 
@@ -188,6 +179,7 @@ const Graph = (props: Props) => {
 }
 
 const ResetButton = () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const dispatch = useDispatch();
     const xHideReset = useSelector(SelectXAxesReset);
     const yHideReset = useSelector(SelectYAxesReset);
