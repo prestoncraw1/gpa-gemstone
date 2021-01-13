@@ -1,7 +1,7 @@
-// ******************************************************************************************************
-//  index.tsx - Gbtc
+﻿//******************************************************************************************************
+//  Store.ts - Gbtc
 //
-//  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
+//  Copyright © 2021, Grid Protection Alliance.  All Rights Reserved.
 //
 //  Licensed to the Grid Protection Alliance (GPA) under one or more contributor license agreements. See
 //  the NOTICE file distributed with this work for additional information regarding copyright ownership.
@@ -16,23 +16,22 @@
 //
 //  Code Modification History:
 //  ----------------------------------------------------------------------------------------------------
-//  12/29/2020 - C. Lackner Ernest
+//  01/11/2021 - Billy Ernest
 //       Generated original version of source code.
 //
-// ******************************************************************************************************
+//******************************************************************************************************
 
-import Modal from './Modal';
-import Warning from './Warning';
-import SearchBar from './SearchBar';
-import { Search } from './SearchBar';
-import LoadingScreen from './LoadingScreen';
-import LoadingIcon from './LoadingIcon';
+import { configureStore } from '@reduxjs/toolkit';
+import LegendReducer from './LegendSlice';
+import YAxisReducer from './YAxisSlice';
+import XAxisReducer from './XAxisSlice';
 
-export {
-  Modal,
-  Warning,
-  SearchBar,
-  Search,
-  LoadingScreen,
-  LoadingIcon
+const reducer = {
+    Legend: LegendReducer,
+    YAxis: YAxisReducer,
+    XAxis: XAxisReducer,
+
 };
+
+const store = configureStore({reducer});
+export default store;
