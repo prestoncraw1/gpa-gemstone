@@ -1,7 +1,7 @@
 {
   "name": "@gpa-gemstone/helper-functions",
-  "version": "0.0.3",
-  "description": "Interactive UI Components for GPA products",
+  "version": "0.0.4",
+  "description": "Helper Functions for gpa-gemstone packages",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
