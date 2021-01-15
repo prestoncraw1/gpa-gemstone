@@ -88,7 +88,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
   function addFilter() {
       const oldFilters = [...filters];
       const adjustedFilter = {...filter};
-      if (adjustedFilter.Type == 'string' && adjustedFilter.Operator == 'LIKE')
+      if (adjustedFilter.Type === 'string' && adjustedFilter.Operator === 'LIKE')
         adjustedFilter.SearchText = '*' + adjustedFilter.SearchText + '*';
       oldFilters.push(adjustedFilter);
 

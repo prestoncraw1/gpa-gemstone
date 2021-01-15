@@ -52,17 +52,17 @@ const WrapperDiv = styled.div<IWrapperProps>`
     transition: opacity 0.3s ease-out;
     z-index: 2000;
     opacity: ${props => props.Show ? "0.9" : "0"};
-    color: ${props => (props.Theme == 'dark' ? "#fff" :'#222')};
-    background: ${props => (props.Theme == 'dark' ? "#222" :'#fff')};
+    color: ${props => (props.Theme === 'dark' ? "#fff" :'#222')};
+    background: ${props => (props.Theme === 'dark' ? "#222" :'#fff')};
     top: ${props => `${props.Top}px`};
     left: ${props => `${props.Left}px`};
     border: 1px solid transparent;
   }
-  ${props => (props.Location == 'top'? `
+  ${props => (props.Location === 'top'? `
     &::after {
      border-left: 8px solid transparent;
      border-right: 8px solid transparent;
-     border-top: 8px solid ${(props.Theme == 'dark' ? "#222" :'#fff')};
+     border-top: 8px solid ${(props.Theme === 'dark' ? "#222" :'#fff')};
      left: 50%;
      bottom: -6px;
      margin-left: -8px;
@@ -72,11 +72,11 @@ const WrapperDiv = styled.div<IWrapperProps>`
      position: absolute
     }
   ` : '')}
-  ${props => (props.Location == 'bottom'? `
+  ${props => (props.Location === 'bottom'? `
     &::before {
      border-left: 8px solid transparent;
      border-right: 8px solid transparent;
-     border-bottom: 8px solid ${(props.Theme == 'dark' ? "#222" :'#fff')};
+     border-bottom: 8px solid ${(props.Theme === 'dark' ? "#222" :'#fff')};
      left: 50%;
      top: -6px;
      margin-left: -8px;
@@ -86,11 +86,11 @@ const WrapperDiv = styled.div<IWrapperProps>`
      position: absolute
     }
   `: '')}
-  ${props => (props.Location == 'left'? `
+  ${props => (props.Location === 'left'? `
     &::before {
      border-top: 8px solid transparent;
      border-bottom: 8px solid transparent;
-     border-left: 8px solid ${(props.Theme == 'dark' ? "#222" :'#fff')};
+     border-left: 8px solid ${(props.Theme === 'dark' ? "#222" :'#fff')};
      top: 50%;
      left: 100%;
      margin-top: -8px;
@@ -100,11 +100,11 @@ const WrapperDiv = styled.div<IWrapperProps>`
      position: absolute
     }
   `: '')}
-  ${props => (props.Location == 'right'? `
+  ${props => (props.Location === 'right'? `
     &::before {
      border-top: 8px solid transparent;
      border-bottom: 8px solid transparent;
-     border-right: 8px solid ${(props.Theme == 'dark' ? "#222" :'#fff')};
+     border-right: 8px solid ${(props.Theme === 'dark' ? "#222" :'#fff')};
      top: 50%;
      left: -6px;
      margin-top: -8px;
@@ -126,46 +126,46 @@ const ToolTip: React.FunctionComponent<IProps> = (props) => {
   }, []);
 
   React.useLayoutEffect(() => {
-    const [t,l] = UpdatePosition();
+    const [t,l]: [number, number] = UpdatePosition();
 
-    if (t != top)
+    if (t !== top)
       setTop(t);
-    if (l != left)
+    if (l !== left)
         setLeft(l);
 
   })
 
   function UpdatePosition() {
-    let target = document.querySelectorAll(`[data-tooltip${ props.Target === undefined? '' : `=${props.Target}`}]`);
+    const target = document.querySelectorAll(`[data-tooltip${ props.Target === undefined? '' : `=${props.Target}`}]`);
 
-    if (target.length == 0)
+    if (target.length === 0)
       return [-999,-999];
 
-    let targetLocation = GetNodeSize(target[0] as HTMLElement);
+    const targetLocation = GetNodeSize(target[0] as HTMLElement);
 
-    let toolTip = document.getElementById(guid);
+    const toolTip = document.getElementById(guid);
 
     if (toolTip === null)
       return [-999,-999];
-    let tipLocation = GetNodeSize(toolTip as HTMLElement);
+    const tipLocation = GetNodeSize(toolTip as HTMLElement);
 
     const offset = 5;
 
-    let result: [number,number] = [0,0];
+    const result: [number,number] = [0,0];
 
-    if (props.Position == 'left') {
+    if (props.Position === 'left') {
       result[0] = targetLocation.top + 0.5*targetLocation.height - 0.5*tipLocation.height;
       result[1] = targetLocation.left - tipLocation.width - offset;
     }
-    else if (props.Position == 'right') {
+    else if (props.Position === 'right') {
       result[0] = targetLocation.top + 0.5*targetLocation.height - 0.5*tipLocation.height
       result[1] = targetLocation.left + targetLocation.width + offset;
     }
-    else if (props.Position == 'top') {
+    else if (props.Position === 'top') {
       result[0] = targetLocation.top - tipLocation.height - offset;
       result[1] = targetLocation.left + 0.5* targetLocation.width - 0.5* tipLocation.width;
     }
-    else if (props.Position == 'bottom') {
+    else if (props.Position === 'bottom') {
       result[0] = targetLocation.top + targetLocation.height + offset;
       result[1] = targetLocation.left + 0.5* targetLocation.width - 0.5* tipLocation.width;
     }
@@ -173,10 +173,10 @@ const ToolTip: React.FunctionComponent<IProps> = (props) => {
     return result;
   }
 
-  let theme = (props.Theme === undefined? 'dark' : props.Theme);
+  const theme = (props.Theme === undefined? 'dark' : props.Theme);
 
     return (
-      <WrapperDiv Show={props.Show} Theme={theme} Top={top} Left={left} id={guid} Location={props.Position == undefined? 'top' : props.Position}>
+      <WrapperDiv Show={props.Show} Theme={theme} Top={top} Left={left} id={guid} Location={props.Position === undefined? 'top' : props.Position}>
         {props.children}
       </WrapperDiv>
     )
