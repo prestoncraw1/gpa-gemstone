@@ -1,6 +1,6 @@
 {
-  "name": "@gpa-gemstone/react-interactive",
-  "version": "0.0.2",
+  "name": "@gpa-gemstone/react-graph",
+  "version": "0.0.1",
   "description": "Interactive UI Components for GPA products",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -36,8 +36,7 @@
   },
   "homepage": "https://github.com/GridProtectionAlliance/gpa-gemstone#readme",
   "devDependencies": {
-    "@types/react": "^16.9.38",
-    "@types/jest": "^26.0.0",
+    "@types/jest": "^26.0.20",
     "jest": "^26.0.1",
     "prettier": "^2.0.5",
     "ts-jest": "^26.1.1",
@@ -46,10 +45,14 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
-    "@gpa-gemstone/react-forms": "^1.1.4",
-    "@types/styled-components": "^5.1.7",
-    "react": "^16.13.1",
-    "styled-components": "^5.2.1"
+    "@types/react": "^16.9.38",
+    "@gpa-gemstone/helper-functions": "0.0.3",
+    "@reduxjs/toolkit": "^1.5.0",
+    "@types/d3": "^6.2.0",
+    "@types/react-redux": "^7.1.15",
+    "d3": "^6.3.1",
+    "react": "16.13.1",
+    "react-redux": "^7.2.2"
   },
   "publishConfig": {
     "access": "public"
