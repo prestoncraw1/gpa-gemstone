@@ -22,22 +22,24 @@
 
 import * as React from 'react';
 import Modal from './Modal';
-import styled, {css} from "styled-components";
+import styled from "styled-components";
+import { GetNodeSize, CreateGuid } from '@gpa-gemstone/helper-functions'
+
 interface IProps {
     Show: boolean,
 	  Position?: ('top'|'bottom'|'left'|'right'),
     Theme?: ('dark'|'light')
-
 }
 
 interface IWrapperProps {
   Show: boolean,
   Theme: ('dark'|'light'),
   Top: number,
-  Left: number
+  Left: number,
+  Location: ('top'|'bottom'|'left'|'right');
 }
-// The other element needs to be labeld as data-tooltip that will only be used for positioning
-// For now we will grab the first element matching data-tooltip
+
+
 const WrapperDiv = styled.div<IWrapperProps>`
   & {
     border-radius: 3px;
@@ -55,20 +57,65 @@ const WrapperDiv = styled.div<IWrapperProps>`
     left: ${props => `${props.Left}px`};
     border: 1px solid transparent;
   }
-   &::before {
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid ${props => (props.Theme == 'dark' ? "#222" :'#fff')};
-    bottom: -6px;
-    left: 50%;
-    margin-left: -8px;
-    content: "";
-   }
-`;
+  ${props => (props.Location == 'top'? `
+    &::after {
+     border-left: 8px solid transparent;
+     border-right: 8px solid transparent;
+     border-top: 8px solid ${(props.Theme == 'dark' ? "#222" :'#fff')};
+     left: 50%;
+     bottom: -6px;
+     margin-left: -8px;
+     content: "";
+     width: 0px;
+     height: 0px;
+     position: absolute
+    }
+  ` : '')}
+  ${props => (props.Location == 'bottom'? `
+    &::before {
+     border-left: 8px solid transparent;
+     border-right: 8px solid transparent;
+     border-bottom: 8px solid ${(props.Theme == 'dark' ? "#222" :'#fff')};
+     left: 50%;
+     top: -6px;
+     margin-left: -8px;
+     content: "";
+     width: 0px;
+     height: 0px;
+     position: absolute
+    }
+  `: '')}
+  ${props => (props.Location == 'left'? `
+    &::before {
+     border-top: 8px solid transparent;
+     border-bottom: 8px solid transparent;
+     border-left: 8px solid ${(props.Theme == 'dark' ? "#222" :'#fff')};
+     top: 50%;
+     left: 100%;
+     margin-top: -8px;
+     content: "";
+     width: 0px;
+     height: 0px;
+     position: absolute
+    }
+  `: '')}
+  ${props => (props.Location == 'right'? `
+    &::before {
+     border-top: 8px solid transparent;
+     border-bottom: 8px solid transparent;
+     border-right: 8px solid ${(props.Theme == 'dark' ? "#222" :'#fff')};
+     top: 50%;
+     left: -6px;
+     margin-top: -8px;
+     content: "";
+     width: 0px;
+     height: 0px;
+     position: absolute
+    }
+  `: '')}`
 
-//border: 'transparent';
-//arrow: ${props => props.Theme == 'dark' ? "#222" :'#fff'};
-
+// The other element needs to be labeld as data-tooltip that will only be used for positioning
+// For now we will grab the first element matching data-tooltip
 const ToolTip: React.FunctionComponent<IProps> = (props) => {
   const [top, setTop] = React.useState<number>(0);
   const [left, setLeft] = React.useState<number>(0);
@@ -89,19 +136,20 @@ const ToolTip: React.FunctionComponent<IProps> = (props) => {
   })
 
   function UpdatePosition() {
-    let target = getNodeByAttr("[data-tooltip]");
+    let target = document.querySelectorAll("[data-tooltip]");
 
     if (target.length == 0)
       return [-999,-999];
-    let targetLocation = getDimensions(target[0]);
+
+    let targetLocation = GetNodeSize(target[0] as HTMLElement);
 
     let toolTip = document.getElementById(guid);
 
     if (toolTip == null)
       return [-999,-999];
-    let tipLocation = getDimensions(toolTip);
+    let tipLocation = GetNodeSize(toolTip as HTMLElement);
 
-    const offset = 10;
+    const offset = 5;
 
     let result: [number,number] = [0,0];
 
@@ -126,34 +174,12 @@ const ToolTip: React.FunctionComponent<IProps> = (props) => {
   }
 
   let theme = (props.Theme == undefined? 'dark' : props.Theme);
-  // This will move to helper eventually but I need to add that later
-  function CreateGuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-        const r = Math.random() * 16 | 0;
-        const v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-  }
+
     return (
-      <WrapperDiv Show={props.Show} Theme={theme} Top={top} Left={left} id={guid}>
+      <WrapperDiv Show={props.Show} Theme={theme} Top={top} Left={left} id={guid} Location={props.Position == undefined? 'top' : props.Position}>
         {props.children}
       </WrapperDiv>
     )
-}
-
-const getDimensions = (node: any) => {
-  const { height, width, top, left } = node.getBoundingClientRect();
-  return {
-    height: parseInt(height, 10),
-    width: parseInt(width, 10),
-    top: parseInt(top, 10),
-    left: parseInt(left, 10),
-  };
-};
-
-const getNodeByAttr = (attr: string) => {
-  let nodeArray = document.querySelectorAll(attr);
-  return nodeArray;
 }
 
 

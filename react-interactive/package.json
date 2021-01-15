@@ -46,6 +46,7 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
+    "@gpa-gemstone/helper-functions": "0.0.4",
     "@gpa-gemstone/react-forms": "^1.1.4",
     "@types/styled-components": "^5.1.7",
     "react": "^16.13.1",
