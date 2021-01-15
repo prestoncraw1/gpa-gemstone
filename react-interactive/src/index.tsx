@@ -27,6 +27,7 @@ import SearchBar from './SearchBar';
 import { Search } from './SearchBar';
 import LoadingScreen from './LoadingScreen';
 import LoadingIcon from './LoadingIcon';
+import ToolTip from './ToolTip';
 
 export {
   Modal,
@@ -34,5 +35,6 @@ export {
   SearchBar,
   Search,
   LoadingScreen,
-  LoadingIcon
+  LoadingIcon,
+  ToolTip
 };
