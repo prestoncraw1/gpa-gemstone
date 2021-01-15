@@ -87,7 +87,11 @@ export default function SearchBar<T> (props: IProps<T>)  {
 
   function addFilter() {
       const oldFilters = [...filters];
-      oldFilters.push(filter);
+      const adjustedFilter = {...filter};
+      if (adjustedFilter.Type == 'string' && adjustedFilter.Operator == 'LIKE')
+        adjustedFilter.SearchText = '*' + adjustedFilter.SearchText + '*';
+      oldFilters.push(adjustedFilter);
+
       setFilters(oldFilters);
       setFilter({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: 'LIKE', Type: props.CollumnList[0].type });
       if (props.defaultCollumn !== undefined && searchFilter !== null)
@@ -176,6 +180,7 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
                             props.Setter((prevState) => ({ ...prevState, Operator: value }));
                         }}>
                             <option value='LIKE'>LIKE</option>
+                            <option value='='>=</option>
                             <option value='NOT LIKE'>NOT LIKE</option>
                         </select>
                     </div>
