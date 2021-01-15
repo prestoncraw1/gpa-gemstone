@@ -28,7 +28,8 @@ import { GetNodeSize, CreateGuid } from '@gpa-gemstone/helper-functions'
 interface IProps {
     Show: boolean,
 	  Position?: ('top'|'bottom'|'left'|'right'),
-    Theme?: ('dark'|'light')
+    Theme?: ('dark'|'light'),
+    Target?: string
 }
 
 interface IWrapperProps {
@@ -115,7 +116,6 @@ const WrapperDiv = styled.div<IWrapperProps>`
   `: '')}`
 
 // The other element needs to be labeld as data-tooltip that will only be used for positioning
-// For now we will grab the first element matching data-tooltip
 const ToolTip: React.FunctionComponent<IProps> = (props) => {
   const [top, setTop] = React.useState<number>(0);
   const [left, setLeft] = React.useState<number>(0);
@@ -136,7 +136,7 @@ const ToolTip: React.FunctionComponent<IProps> = (props) => {
   })
 
   function UpdatePosition() {
-    let target = document.querySelectorAll("[data-tooltip]");
+    let target = document.querySelectorAll(`[data-tooltip${ props.Target === undefined? '' : `=${props.Target}`}]`);
 
     if (target.length == 0)
       return [-999,-999];
@@ -145,7 +145,7 @@ const ToolTip: React.FunctionComponent<IProps> = (props) => {
 
     let toolTip = document.getElementById(guid);
 
-    if (toolTip == null)
+    if (toolTip === null)
       return [-999,-999];
     let tipLocation = GetNodeSize(toolTip as HTMLElement);
 
@@ -173,7 +173,7 @@ const ToolTip: React.FunctionComponent<IProps> = (props) => {
     return result;
   }
 
-  let theme = (props.Theme == undefined? 'dark' : props.Theme);
+  let theme = (props.Theme === undefined? 'dark' : props.Theme);
 
     return (
       <WrapperDiv Show={props.Show} Theme={theme} Top={top} Left={left} id={guid} Location={props.Position == undefined? 'top' : props.Position}>
