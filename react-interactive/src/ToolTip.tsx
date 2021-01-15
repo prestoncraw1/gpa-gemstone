@@ -126,7 +126,7 @@ const ToolTip: React.FunctionComponent<IProps> = (props) => {
   }, []);
 
   React.useLayoutEffect(() => {
-    const [t,l]: [number, number] = UpdatePosition();
+    const [t,l] = UpdatePosition();
 
     if (t !== top)
       setTop(t);
