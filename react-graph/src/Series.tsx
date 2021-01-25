@@ -98,13 +98,15 @@ function Series<T>(props: SeriesProps<T>) {
               d3.range(props?.bins ?? 10).map(t => min + (t / (props?.bins ?? 10)) * (max - min))
             ).value(d => d[props.XField]);
         const bars = histogram(props.Data);
+        const length = d3.max(bars, (bar) => bar.length) as number;
+        const histY = d3.scaleLinear().range([top, bottom]).domain([0, length])
         return (
             <>
                 {bars.map(bar => (
                 <rect
                     {...props.Style as React.SVGProps<SVGRectElement>}
                     x={0}
-                    transform={`translate(${x(bar.x0 as any)},${y(bar.length as any)})`}
+                    transform={`translate(${x(bar.x0 as any)},${histY(bar.length)})`}
                     width={(x(bar.x1) as number) - (x(bar.x0) as number) - 1}
                 ></rect>
                 ))}
