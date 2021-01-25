@@ -23,7 +23,7 @@
 
 import { useSelector, useDispatch } from 'react-redux';
 import * as React from 'react';
-import { line } from 'd3';
+import * as d3 from 'd3';
 import { XAxisContext } from './XAxis';
 import { PlotContext } from './Plot';
 import { Add, SelectLegendSeries } from './Store/LegendSlice';
@@ -34,19 +34,24 @@ import { GetTextWidth } from '@gpa-gemstone/helper-functions';
 import { GetScale } from './Helper';
 import { AxisMap, State } from './global';
 
+
 export interface SeriesProps<T> {
     Label: string,
     XField: keyof T,
     YField: keyof T,
     Type: 'points' | 'line' | 'histogram' | 'stacked',
-    Style?: React.SVGProps<SVGCircleElement> | React.SVGProps<SVGPathElement>  ,
+    Style?: React.SVGProps<SVGCircleElement | SVGRectElement | SVGPathElement>,
     Click?: () => void,
     Color: string,
     Data: T[],
-    ShowInitially?:boolean
+    ShowInitially?:boolean,
+    bins?: number
 
 }
 function Series<T>(props: SeriesProps<T>) {
+    /*
+      Used to show data on plot.
+    */
     const { svgWidth, left, right, top, bottom, margin } = React.useContext(PlotContext);
     const yGuid = React.useContext(YAxisContext);
     const xGuid = React.useContext(XAxisContext);
@@ -80,7 +85,7 @@ function Series<T>(props: SeriesProps<T>) {
         )
     }
     else if (props.Type === 'line') {
-        const linefunc = line<T>().x(d => x(d[props.XField] as any) as any).y(d => y(d[props.YField] as any) as any);
+        const linefunc = d3.line<T>().x(d => x(d[props.XField] as any) as any).y(d => y(d[props.YField] as any) as any);
 
         return <path
             {...props.Style as React.SVGProps<SVGPathElement>}
@@ -89,8 +94,20 @@ function Series<T>(props: SeriesProps<T>) {
         />;
     }
     else if (props.Type === 'histogram') {
+        const histogram = d3.bin<T, any>().thresholds((data, min, max) => 
+              d3.range(props?.bins ?? 10).map(t => min + (t / (props?.bins ?? 10)) * (max - min))
+            ).value(d => d[props.XField]);
+        const bars = histogram(props.Data);
         return (
             <>
+                {bars.map(bar => (
+                <rect
+                    {...props.Style as React.SVGProps<SVGRectElement>}
+                    x={0}
+                    transform={`translate(${x(bar.x0 as any)},${y(bar.length as any)})`}
+                    width={(x(bar.x1) as number) - (x(bar.x0) as number) - 1}
+                ></rect>
+                ))}
             </>
         )
     }
