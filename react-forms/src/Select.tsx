@@ -31,6 +31,7 @@ export default function Select<T>(props: {
   Label?: string;
   Disabled?: boolean;
   EmptyOption?: boolean;
+  EmptyLabel?: string;
 }) {
   return (
     <div className="form-group">
@@ -47,7 +48,7 @@ export default function Select<T>(props: {
         value={props.Record[props.Field] == null ? '' : (props.Record[props.Field] as any).toString()}
         disabled={props.Disabled == null ? false : props.Disabled}
       >
-        {props.EmptyOption ? <option value=""></option> : null}
+        {props.EmptyOption ? <option value="">{props.EmptyLabel !== undefined? props.EmptyLabel : ''}</option> : null}
         {props.Options.map((a, i) => (
           <option key={i} value={a.Value}>
             {a.Label}
