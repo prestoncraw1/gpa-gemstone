@@ -1,7 +1,7 @@
 // ******************************************************************************************************
-//  index.ts - Gbtc
+//  RandomColor.tsx - Gbtc
 //
-//  Copyright � 2021, Grid Protection Alliance.  All Rights Reserved.
+//  Copyright © 2021, Grid Protection Alliance.  All Rights Reserved.
 //
 //  Licensed to the Grid Protection Alliance (GPA) under one or more contributor license agreements. See
 //  the NOTICE file distributed with this work for additional information regarding copyright ownership.
@@ -13,19 +13,16 @@
 //  Unless agreed to in writing, the subject software distributed under the License is distributed on an
 //  "AS-IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. Refer to the
 //  License for the specific language governing permissions and limitations.
-//  
-//  https://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid
 //
 //  Code Modification History:
 //  ----------------------------------------------------------------------------------------------------
-//  01/04/2021 - Billy Ernest
+//  01/15/2021 - C. Lackner
 //       Generated original version of source code.
 //
 // ******************************************************************************************************
 
-import {CreateGuid} from './CreateGuid';
-import {GetTextWidth} from './GetTextWidth';
-import {GetNodeSize} from './GetNodeSize';
-import { RandomColor } from './RandomColor';
+function RandomColor(){
+    return '#' + Math.random().toString(16).substr(2, 6).toUpperCase();
+}
 
-export {CreateGuid, GetTextWidth, GetNodeSize, RandomColor}
+export {RandomColor}
