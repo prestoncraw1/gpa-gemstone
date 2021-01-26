@@ -29,7 +29,8 @@ interface IProps {
     Show: boolean,
 	  Position?: ('top'|'bottom'|'left'|'right'),
     Theme?: ('dark'|'light'),
-    Target?: string
+    Target?: string,
+	Zindex?: number,
 }
 
 interface IWrapperProps {
@@ -37,7 +38,9 @@ interface IWrapperProps {
   Theme: ('dark'|'light'),
   Top: number,
   Left: number,
-  Location: ('top'|'bottom'|'left'|'right');
+  Location: ('top'|'bottom'|'left'|'right'),
+  Zindex: number,
+  
 }
 
 
@@ -50,7 +53,7 @@ const WrapperDiv = styled.div<IWrapperProps>`
     position: fixed;
     pointer-events: none;
     transition: opacity 0.3s ease-out;
-    z-index: 2000;
+    z-index: ${props => props.Zindex};
     opacity: ${props => props.Show ? "0.9" : "0"};
     color: ${props => (props.Theme === 'dark' ? "#fff" :'#222')};
     background: ${props => (props.Theme === 'dark' ? "#222" :'#fff')};
@@ -135,6 +138,8 @@ const ToolTip: React.FunctionComponent<IProps> = (props) => {
 
   })
 
+  const zIndex = (props.Zindex === undefined? 2000: props.Zindex);
+  
   function UpdatePosition() {
     const target = document.querySelectorAll(`[data-tooltip${ props.Target === undefined? '' : `=${props.Target}`}]`);
 
@@ -176,7 +181,7 @@ const ToolTip: React.FunctionComponent<IProps> = (props) => {
   const theme = (props.Theme === undefined? 'dark' : props.Theme);
 
     return (
-      <WrapperDiv Show={props.Show} Theme={theme} Top={top} Left={left} id={guid} Location={props.Position === undefined? 'top' : props.Position}>
+      <WrapperDiv Show={props.Show} Theme={theme} Top={top} Left={left} id={guid} Location={props.Position === undefined? 'top' : props.Position} Zindex={zIndex}>
         {props.children}
       </WrapperDiv>
     )
