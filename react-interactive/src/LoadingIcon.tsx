@@ -34,25 +34,28 @@ const spin = keyframes`
  100% { transform: rotate(360deg); }
 `;
 
+interface IconProps {size: number}
+
+const Icon = styled.div<IconProps>`
+	animation: ${spin} 1s linear infinite;
+	border: ${props => props.size/5}px solid #f3f3f3;
+	border-Top: ${props => props.size/5}px solid #555;
+	border-Radius: 50%;
+	width: ${props => props.size}px;
+	height: ${props => props.size}px
+`;
 
 
 const LoadingIcon: React.FunctionComponent<IProps> = (props) => {
 
 const h = (props.Size === undefined? 25 : props.Size);
 
-  const Icon = styled.div`
-animation: ${spin} 1s linear infinite;
-border: ${h/5}px solid #f3f3f3;
-border-Top: ${h/5}px solid #555;
-border-Radius: 50%;
-width: ${h}px;
-height: ${h}px
-`;
+
 
     return (
       <div>
           <div style={{ width: (props.Label === undefined? h: undefined), margin: 'auto' }} hidden={!props.Show}>
-              <Icon/>
+              <Icon size={h}/>
               {props.Label !== undefined? <span>{props.Label}</span> : null}
           </div>
       </div>
