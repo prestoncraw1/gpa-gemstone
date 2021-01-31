@@ -31,14 +31,18 @@ interface IProps<T> {
     Direction?: 'left' | 'right',
     Width?: string|number,
     Label?: string,
-    children: React.ReactNode
+    children: React.ReactNode,
+    GetEnum?: EnumSetter<T>
   }
+
+interface IOptions {Value: string, Label: string}
+type EnumSetter<T> = (setOptions: (options: IOptions[]) => void, field: Search.IField<T>) => () => void
 
 export namespace Search {
   export type FieldType = ('string' | 'number' | 'enum' | 'integer' | 'datetime' | 'boolean')
-  export interface IField<T> { label: string, key: keyof T, type: FieldType, enum?: Map<number, string> }
+  export interface IField<T> { label: string, key: string, type: FieldType, enum?: IOptions[]}
   export type OperatorType = ('=' | '<>' | '>' | '<' | '>=' | '<=' | 'LIKE' | 'NOT LIKE' | 'IN' | 'NOT IN')
-  export interface IFilter<T> { FieldName: keyof T, SearchText: string, Operator: Search.OperatorType, Type: Search.FieldType }
+  export interface IFilter<T> { FieldName: string, SearchText: string, Operator: Search.OperatorType, Type: Search.FieldType }
 }
 
 export default function SearchBar<T> (props: IProps<T>)  {
@@ -156,17 +160,30 @@ export default function SearchBar<T> (props: IProps<T>)  {
 
                   setFilter((prevFilter) => ({ ...prevFilter, FieldName: record.FieldName, SearchText: '', Operator: operator, Type: (column !== undefined ? column.type : 'string') }))
             }} Label='Column' />
-            <FilterCreator Filter={filter} Field={props.CollumnList.find(fl => fl.key === filter.FieldName)} Setter={(record) => setFilter(record)} />
+            <FilterCreator Filter={filter} Field={props.CollumnList.find(fl => fl.key === filter.FieldName)} Setter={(record) => setFilter(record)} Enum={(props.GetEnum === undefined? undefined : props.GetEnum)}/>
           </Modal>
       </div>
   );
 
 }
 
-interface IPropsFilterCreator<T> { Filter: Search.IFilter<T>, Setter: (filter: React.SetStateAction<Search.IFilter<T>>) => void, Field: Search.IField<T>|undefined }
+interface IPropsFilterCreator<T> { Filter: Search.IFilter<T>, Setter: (filter: React.SetStateAction<Search.IFilter<T>>) => void, Field: Search.IField<T>|undefined, Enum?: EnumSetter<T> }
 
 function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
 
+	const [options, setOptions] = React.useState<IOptions[]>([]);
+	
+	React.useEffect(() => {
+		if (props.Field === undefined)
+			return;
+		if (props.Field.enum !== undefined)
+			setOptions(props.Field.enum);
+		if (props.Enum !== undefined)
+			return props.Enum(setOptions,props.Field);
+		if (props.Field.enum === undefined)
+		setOptions([]);
+	},[props.Field, props.Enum]);
+	
     if (props.Field === undefined)
         return null;
     if (props.Field.type === "string") {
@@ -230,10 +247,7 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
         }} Label="Column type is boolean. Yes/On is checked." />
     }
     else {
-        if (props.Field.enum === undefined)
-          return null;
-        const valueList: {ID: number, Text: string }[] = [];
-        props.Field.enum.forEach((value, key) => valueList.push({ ID: key, Text: value }));
+       
         return (
             <>
                 <label>Column type is enumerable. Select from below.</label>
@@ -241,32 +255,32 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
                     <li ><div className="form-check">
                         <input type="checkbox" className="form-check-input" style={{ zIndex: 1 }} onChange={(evt) => {
                             if (evt.target.checked)
-                                props.Setter(prevSetter => ({ ...prevSetter, SearchText: `(${valueList.map(x => x.Text).join(',')})` }));
+                                props.Setter(prevSetter => ({ ...prevSetter, SearchText: `(${options.map(x => x.Value).join(',')})` }));
                             else
                                 props.Setter(prevSetter => ({ ...prevSetter, SearchText: '' }));
                         }} defaultValue='off' />
                         <label className="form-check-label" >Select All</label>
 
                     </div></li>
-                    {valueList.map(vli => <li key={vli.ID} ><div className="form-check">
+                    {options.map((vli,index) => <li key={index} ><div className="form-check">
                         <input type="checkbox" className="form-check-input" style={{ zIndex: 1 }} onChange={(evt) => {
                             if (evt.target.checked) {
                                 let list = props.Filter.SearchText.replace('(', '').replace(')', '').split(',');
                                 list = list.filter(x => x !== "")
-                                list.push(vli.Text)
+                                list.push(vli.Value)
                                 const text = `(${list.join(',')})`;
                                 props.Setter(prevSetter => ({ ...prevSetter, SearchText: text }));
                             }
                             else {
                                 let list = props.Filter.SearchText.replace('(', '').replace(')', '').split(',');
                                 list = list.filter(x => x !== "")
-                                list = list.filter(x => x !== vli.Text)
+                                list = list.filter(x => x !== vli.Value)
                                 const text = `(${list.join(',')})`;
                                 props.Setter(prevSetter => ({ ...prevSetter, SearchText: text }));
                             }
 
-                        }} value={props.Filter.SearchText.indexOf(vli.Text) >= 0 ? 'on' : 'off'} checked={props.Filter.SearchText.indexOf(vli.Text) >= 0 ? true : false} />
-                        <label className="form-check-label" >{vli.Text}</label>
+                        }} value={props.Filter.SearchText.indexOf(vli.Value) >= 0 ? 'on' : 'off'} checked={props.Filter.SearchText.indexOf(vli.Value) >= 0 ? true : false} />
+                        <label className="form-check-label" >{vli.Label}</label>
 
                     </div></li>)}
                 </ul>
