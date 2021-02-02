@@ -25,7 +25,7 @@ import * as React from 'react';
 interface IProps {
     Title: string,   
     ShowX?: boolean,
-    CallBack: ((confirmed: boolean) => void),
+    CallBack: ((confirmed: boolean, isButton?: boolean) => void),
     Show: boolean,
     Size?: ('lg' | 'sm'),
     ShowCancel?: boolean,
@@ -62,12 +62,12 @@ const Modal: React.FunctionComponent<IProps> = (props) => {
 
     return (
         <>
-        <div className={"modal" + (props.Show ? " show" : '')} style={props.Show ? {display: 'block', zIndex: 9990} : {}} id = "Test" >
+        <div className={"modal" + (props.Show ? " show" : '')} style={props.Show ? {display: 'block', zIndex: 9990} : {}}>
             <div className={"modal-dialog" + (props.Size === undefined? '' : (" modal-"  + props.Size))}>
                 <div className="modal-content">
                     <div className="modal-header">
                         <h4 className="modal-title">{props.Title}</h4>
-						{props.ShowX? <button type="button" className="close" onClick={() => props.CallBack(false) }>&times;</button> : null}
+						{props.ShowX? <button type="button" className="close" onClick={() => props.CallBack(false,false) }>&times;</button> : null}
                     </div>
                     <div className="modal-body">
                         {props.children}
@@ -77,7 +77,7 @@ const Modal: React.FunctionComponent<IProps> = (props) => {
 						className={confirmbtnCls} 
 						data-tooltip={props.ConfirmToolTip !== undefined? props.ConfirmToolTip: ''}
 						disabled={!(props.DisableConfirm === undefined || !props.DisableConfirm)}
-						onClick={() => props.CallBack(true)}
+						onClick={() => props.CallBack(true,true)}
 						onMouseEnter={() => (props.OnHover !== undefined? props.OnHover('Confirm') : {})}
 						onMouseLeave={() => (props.OnHover !== undefined? props.OnHover('None') : {})}
 						>{confirmBtn}</button>
@@ -85,7 +85,7 @@ const Modal: React.FunctionComponent<IProps> = (props) => {
                             <button type="button" 
 							className={cxnbtnCls} 
 							data-tooltip={props.CancelToolTip !== undefined? props.CancelToolTip: ''}
-							onClick={() => props.CallBack(false)}
+							onClick={() => props.CallBack(false,true)}
 							onMouseEnter={() => (props.OnHover !== undefined? props.OnHover('Cancel') : {})}
 							onMouseLeave={() => (props.OnHover !== undefined? props.OnHover('None') : {})}
 							>{cxnBtn}</button>
