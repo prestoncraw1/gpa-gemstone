@@ -46,6 +46,7 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
+    "@gpa-gemstone/gpa-symbols": "0.0.1",
     "@gpa-gemstone/helper-functions": "0.0.4",
     "@gpa-gemstone/react-forms": "^1.1.5",
     "@types/styled-components": "^5.1.7",
