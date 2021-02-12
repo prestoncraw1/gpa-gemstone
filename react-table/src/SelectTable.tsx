@@ -1,4 +1,4 @@
-﻿//******************************************************************************************************
+﻿// ******************************************************************************************************
 //  SelectTable.tsx - Gbtc
 //
 //  Copyright © 2021, Grid Protection Alliance.  All Rights Reserved.
@@ -19,7 +19,7 @@
 //  01/22/2021 - C. Lackner
 //       Generated original version of source code.
 //
-//******************************************************************************************************
+// ******************************************************************************************************
 
 import * as React from 'react';
 import * as _ from 'lodash';
@@ -56,12 +56,12 @@ export function SelectTable<T>(props: ISelectTableProps<T>) {
     const [ascending, setAscending] = React.useState<boolean>(props.ascending);
 
     React.useEffect(() => {
-        if (props.data.length != data.length)
+        if (props.data.length !== data.length)
             setData(props.data);
     }, [props.data]);
 
     React.useEffect(() => {
-        setSelected((d) => d.filter(keyItem => data.findIndex(item => item[props.KeyField] == keyItem) > -1))
+        setSelected((d) => d.filter(keyItem => data.findIndex(item => item[props.KeyField] === keyItem) > -1))
     }, [data]);
 
     React.useEffect(() => {
@@ -69,38 +69,38 @@ export function SelectTable<T>(props: ISelectTableProps<T>) {
     }, [ascending, sortField]);
 
     React.useEffect(() => {
-        props.onSelection(data.filter(item => selected.findIndex(key => key == item[props.KeyField]) > -1));
+        props.onSelection(data.filter(item => selected.findIndex(key => key === item[props.KeyField]) > -1));
     }, [selected])
 
     function handleClick(
         d: { col: keyof T; row: T; data: any },
         event: React.MouseEvent < HTMLTableHeaderCellElement, MouseEvent >,
     ) {
-        let sIndex = selected.findIndex(item => item == d.row[props.KeyField]);
-        if (sIndex == -1)
+        const sIndex = selected.findIndex(item => item === d.row[props.KeyField]);
+        if (sIndex === -1)
             setSelected((od) => [...od, d.row[props.KeyField]])
         else
-            setSelected((od) => od.filter(item => item != d.row[props.KeyField]));
+            setSelected((od) => od.filter(item => item !== d.row[props.KeyField]));
     }
 
     function handleSort(
-        data: { col: keyof T; ascending: boolean },
+        d: { col: keyof T; ascending: boolean },
     ) {
-        if (data.col == sortField)
+        if (d.col === sortField)
             setAscending(!ascending);
         else 
-            setSortField(data.col as string);
+            setSortField(d.col as string);
     }
 
     const tableProps: TableProps<T> = {
         cols: [
-            { key: props.KeyField, label: '', headerStyle: { width: '4em' }, rowStyle: { width: '4em' }, content: (item: T, key: keyof T, style: React.CSSProperties) => (selected.findIndex(i => i == item[props.KeyField]) > -1 ? <div style={{ marginTop: '16px', textAlign: 'center' }}><i className="fa fa-check-square-o fa-3x" aria-hidden="true"></i></div> : null) },
+            { key: props.KeyField, label: '', headerStyle: { width: '4em' }, rowStyle: { width: '4em' }, content: (item: T, key: keyof T, style: React.CSSProperties) => (selected.findIndex(i => i === item[props.KeyField]) > -1 ? <div style={{ marginTop: '16px', textAlign: 'center' }}><i className="fa fa-check-square-o fa-3x" aria-hidden="true"></i></div> : null) },
             ...props.cols
         ],
-        data: data,
+        data,
         onClick: handleClick,
-        sortField: sortField,
-        ascending: ascending,
+        sortField,
+        ascending,
         onSort: handleSort,
         tableClass: props.tableClass,
         tableStyle: props.tableStyle,
