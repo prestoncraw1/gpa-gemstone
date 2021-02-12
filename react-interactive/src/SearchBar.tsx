@@ -23,6 +23,7 @@
 import * as React from 'react';
 import Modal from './Modal';
 import { Select, CheckBox } from '@gpa-gemstone/react-forms';
+import {TrashCan, Pencil} from '@gpa-gemstone/gpa-symbols';
 
 interface IProps<T> {
     CollumnList: Search.IField<T>[],
@@ -32,7 +33,8 @@ interface IProps<T> {
     Width?: string|number,
     Label?: string,
     children: React.ReactNode,
-    GetEnum?: EnumSetter<T>
+    GetEnum?: EnumSetter<T>,
+	Result?: JSX.Element|string
   }
 
 interface IOptions {Value: string, Label: string}
@@ -49,6 +51,8 @@ export default function SearchBar<T> (props: IProps<T>)  {
   const [hover, setHover] = React.useState<boolean>(false);
   const [show, setShow] = React.useState<boolean>(false);
 
+  const [isNew, setIsNew] = React.useState<boolean>(false);
+  
   const [filters, setFilters] = React.useState<Search.IFilter<T>[]>([]);
   const [filter, setFilter] = React.useState<Search.IFilter<T>>({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: 'LIKE', Type: props.CollumnList[0].type });
 
@@ -104,6 +108,26 @@ export default function SearchBar<T> (props: IProps<T>)  {
           props.SetFilter(oldFilters);
   }
 
+  function editFilter(index: number) {
+	  setIsNew(false);
+	  const oldFilters = [...filters];
+	  const filt = oldFilters[index];
+      oldFilters.splice(index,1);
+	  setShow(true);
+      setFilters(oldFilters);
+      setFilter(filt);
+      if (props.defaultCollumn !== undefined && searchFilter !== null)
+          props.SetFilter([...oldFilters, searchFilter]);
+      else
+          props.SetFilter(oldFilters);
+  };
+  
+  function createFilter() {
+	setShow(!show); 
+	setIsNew(true);
+	setFilter({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: 'LIKE', Type: props.CollumnList[0].type });
+  }
+  
   const content = (
     <>
     <form>
@@ -111,19 +135,21 @@ export default function SearchBar<T> (props: IProps<T>)  {
     {props.defaultCollumn !== undefined ?
         <div className="col">
           <input className="form-control mr-sm-2" type="search" placeholder={"Search " + props.defaultCollumn.label} onChange={(event) => setSearch(event.target.value as string)} />
-        </div> : null}
+		  <p style={{marginTop: 2, marginBottom: 2}}>{props.Result}</p>
+		</div> : null}
       <div style={{ position: 'relative', display: 'inline-block' }} className='col'>
-          <button className="btn btn-primary" onClick={(evt) => { evt.preventDefault(); setShow(!show);}} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>Add Filter</button>
+          <button className="btn btn-primary" onClick={(evt) => { evt.preventDefault(); createFilter(); }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>Add Filter</button>
           <div style={{ width: window.innerWidth / 3, display: hover ? 'block' : 'none', position: 'absolute', backgroundColor: '#f1f1f1', boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)', zIndex: 1, right: (props.Direction === 'right' ? 0 : undefined), left: (props.Direction === 'left' ? 0: undefined) }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
               <table className='table'>
                   <thead>
-                      <tr><th>Column</th><th>Operator</th><th>Search Text</th><th>Remove</th></tr>
+                      <tr><th>Column</th><th>Operator</th><th>Search Text</th><th>Edit</th><th>Remove</th></tr>
                   </thead>
                   <tbody>
-                      {filters.map((f, i) => <tr key={i}><td>{f.FieldName}</td><td>{f.Operator}</td><td>{f.SearchText}</td><td><button className="btn btn-sm" onClick={(e) => deleteFilter(f)}><span><i className="fa fa-trash"></i></span></button></td></tr>)}
+                      {filters.map((f, i) => <tr key={i}><td>{f.FieldName}</td><td>{f.Operator}</td><td>{f.SearchText}</td><td><button className="btn btn-sm" onClick={(e) => editFilter(i)}><span>{Pencil}</span></button></td><td><button className="btn btn-sm" onClick={(e) => deleteFilter(f)}><span>{TrashCan}</span></button></td></tr>)}
                   </tbody>
               </table>
           </div>
+		  
       </div>
     </div>
     </form>
@@ -150,7 +176,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
               </div>
           </nav>
 
-          <Modal Title={'Add Filter'} Show={show} CallBack={(conf: boolean) => { if (conf) addFilter(); setShow(false)}} ConfirmText={'Add'} CancelText={'Close'}>
+          <Modal Title={'Add Filter'} Show={show} CallBack={(conf: boolean) => { if (conf) addFilter(); setShow(false)}} ConfirmText={isNew? 'Add' : 'Save'} CancelText={isNew? 'Close' : 'Delete'}>
             <Select<Search.IFilter<T>> Record={filter} Field='FieldName' Options={props.CollumnList.map(fl => ({ Value: fl.key as string, Label: fl.label }))} Setter={(record) => {
                 let operator = "IN" as any;
                 const column = props.CollumnList.find(fl => fl.key === record.FieldName);
