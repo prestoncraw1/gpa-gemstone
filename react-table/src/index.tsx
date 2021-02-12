@@ -1,5 +1,5 @@
 //  ******************************************************************************************************
-//  Table.tsx - Gbtc
+//  index.tsx - Gbtc
 //
 //  Copyright © 2018, Grid Protection Alliance.  All Rights Reserved.
 //
@@ -18,132 +18,16 @@
 //  ----------------------------------------------------------------------------------------------------
 //  08/02/2018 - Billy Ernest
 //       Generated original version of source code.
+//  02/12/2021 - C. lackner
+//       Moved table to seperate File.
 //
 //  ******************************************************************************************************
 
-import * as React from 'react';
+import Table, {TableProps} from './Table';
+import {SelectTable, ISelectTableProps} from './SelectTable';
 
-const AngleIcon: React.FunctionComponent<{ ascending: boolean }> = (props) => (
-  <span
-    style={{ width: 10, height: 10, margin: 3 }}
-    className={'fa fa-angle-' + (props.ascending ? 'up' : 'down')}
-  ></span>
-);
-
-export interface TableProps<T> {
-  cols: {
-    key: keyof T;
-    label: string;
-    headerStyle?: React.CSSProperties;
-    rowStyle?: React.CSSProperties;
-    content?(item: T, key: keyof T, style: React.CSSProperties): React.ReactNode;
-  }[];
-  data: T[];
-  onClick: (data: { col: keyof T; row: T; data: T[keyof T] }, event: any) => void;
-  sortField: string;
-  ascending: boolean;
-  onSort(data: { col: keyof T; ascending: boolean }): void;
-  tableClass?: string;
-  tableStyle?: React.CSSProperties;
-  theadStyle?: React.CSSProperties;
-  theadClass?: string;
-  tbodyStyle?: React.CSSProperties;
-  tbodyClass?: string;
-  selected?(data: T): boolean;
-  rowStyle?: React.CSSProperties;
+export {
+	TableProps, SelectTable, ISelectTableProps
 }
 
-export default class Table<T> extends React.Component<TableProps<T>, {}> {
-  constructor(props: TableProps<T>) {
-    super(props);
-  }
-
-  render() {
-    const rowComponents = this.generateRows();
-    const headerComponents = this.generateHeaders();
-    return (
-      <table className={this.props.tableClass !== undefined ? this.props.tableClass : ''} style={this.props.tableStyle}>
-        <thead style={this.props.theadStyle}>{headerComponents}</thead>
-        <tbody style={this.props.tbodyStyle}>{rowComponents}</tbody>
-      </table>
-    );
-  }
-
-  generateHeaders() {
-    if (this.props.cols.length === 0) return null;
-
-    const cells = this.props.cols.map((colData, index) => {
-      let style;
-      if (colData.headerStyle !== undefined) {
-        style = colData.headerStyle;
-      } else style = {};
-
-      if (style.cursor === undefined) style.cursor = 'pointer';
-
-      return (
-        <th
-          key={index}
-          style={style}
-          onClick={(e) => this.handleSort({ col: colData.key, ascending: this.props.ascending }, e)}
-        >
-          {colData.label}
-          {this.props.sortField === colData.key ? <AngleIcon ascending={this.props.ascending} /> : null}
-        </th>
-      );
-    });
-
-    return <tr>{cells}</tr>;
-  }
-
-  generateRows() {
-    if (this.props.data.length === 0) return null;
-
-    return this.props.data.map((item, index) => {
-      const cells = this.props.cols.map((colData) => {
-        let css;
-        if (colData.rowStyle === undefined) css = {};
-        else css = { ...colData.rowStyle };
-
-        return (
-          <td
-            key={index.toString() + item[colData.key] + colData.key}
-            style={css}
-            onClick={this.handleClick.bind(this, { col: colData.key, row: item, data: item[colData.key] })}
-          >
-            {colData.content !== undefined ? colData.content(item, colData.key, css) : item[colData.key]}
-          </td>
-        );
-      });
-
-      let style;
-
-      if (this.props.rowStyle !== undefined) {
-        style = { ...this.props.rowStyle };
-      } else style = {};
-
-      if (style.cursor === undefined) style.cursor = 'pointer';
-
-      if (this.props.selected !== undefined && this.props.selected(item)) style.backgroundColor = 'yellow';
-
-      return (
-        <tr style={style} key={index.toString()}>
-          {cells}
-        </tr>
-      );
-    });
-  }
-
-  handleClick(
-    data: { col: keyof T; row: T; data: any },
-    event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>,
-  ) {
-    this.props.onClick(data, event);
-  }
-
-  handleSort(
-    data: { col: keyof T; ascending: boolean },
-    event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>,
-  ) {
-    this.props.onSort(data);
-  }
-}
+export default Table;

@@ -46,6 +46,8 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.168",
+    "lodash": "^4.17.20",
     "react": "^16.13.1"
   },
   "publishConfig": {
