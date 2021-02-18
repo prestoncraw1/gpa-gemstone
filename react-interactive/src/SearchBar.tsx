@@ -240,7 +240,7 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
             </>
         );
     }
-    else if (props.Field.type === "integer" || props.Field.type === "number" || props.Field.type === "datetime") {
+    else if (props.Field.type === "integer" || props.Field.type === "number") {
         return (
             <>
                 <label>Column type is {props.Field.type}.</label>
@@ -262,6 +262,39 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
                         <input type={'number'}className='form-control' value={props.Filter.SearchText} onChange={(evt) => {
                             const value = evt.target.value as string;
                             props.Setter((prevState) => ({ ...prevState, SearchText: value }));
+                        }} />
+                    </div>
+
+                </div>
+            </>
+        );
+    }
+	else if (props.Field.type === "datetime") {
+        return (
+            <>
+                <label>Column type is {props.Field.type}.</label>
+                <div className='row'>
+                    <div className='col-4'>
+                        <select className='form-control' value={props.Filter.Operator} onChange={(evt) => {
+                            const value = evt.target.value as '=' | '<>' | '>' | '<' | '>=' | '<=';
+                            props.Setter((prevState) => ({ ...prevState, Operator: value }));
+                        }}>
+                            <option value='='>=</option>
+                            <option value='<>'>!=</option>
+                            <option value='>'>{`>`}</option>
+                            <option value='>='>{`>=`}</option>
+                            <option value='<'>{`<`}</option>
+                            <option value='>='>{`>=`}</option>
+                        </select>
+                    </div>
+                    <div className='col'>
+                        <input type={'date'} className='form-control' value={props.Filter.SearchText.split(' ')[0]} onChange={(evt) => {
+                            const value = evt.target.value as string;
+                            props.Setter((prevState) => ({ ...prevState, SearchText: (value + ' ' + (prevState.SearchText.split(' ').length > 1? prevState.SearchText.split(' ')[1]: '0:00')) }));
+                        }} />
+						<input type={'time'}className='form-control' value={props.Filter.SearchText.split(' ').length > 1? props.Filter.SearchText.split(' ')[1]: '0:00'} onChange={(evt) => {
+                            const value = evt.target.value as string;
+                            props.Setter((prevState) => ({ ...prevState, SearchText: (prevState.SearchText.split(' ')[0] + ' ' + value) }));
                         }} />
                     </div>
 
