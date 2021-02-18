@@ -127,7 +127,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
   function createFilter() {
 	setShow(!show); 
 	setIsNew(true);
-	setFilter({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: 'LIKE', Type: props.CollumnList[0].type });
+	setFilter({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: props.CollumnList[0].type === 'string'? 'LIKE' : '=', Type: props.CollumnList[0].type });
   }
   
   const content = (
