@@ -54,7 +54,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
   const [isNew, setIsNew] = React.useState<boolean>(false);
   
   const [filters, setFilters] = React.useState<Search.IFilter<T>[]>([]);
-  const [filter, setFilter] = React.useState<Search.IFilter<T>>({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: 'LIKE', Type: props.CollumnList[0].type });
+  const [filter, setFilter] = React.useState<Search.IFilter<T>>({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: props.CollumnList[0].type === 'string'? 'LIKE' : '=', Type: props.CollumnList[0].type });
 
   const [search, setSearch] = React.useState<string>("");
   const [searchFilter, setSearchFilter] = React.useState<Search.IFilter<T>|null>(null);
@@ -101,7 +101,8 @@ export default function SearchBar<T> (props: IProps<T>)  {
       oldFilters.push(adjustedFilter);
 
       setFilters(oldFilters);
-      setFilter({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: 'LIKE', Type: props.CollumnList[0].type });
+      setFilter({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: props.CollumnList[0].type === 'string'? 'LIKE': '=', Type: props.CollumnList[0].type });
+      setFilter({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: props.CollumnList[0].type === 'string'? 'LIKE': '=', Type: props.CollumnList[0].type });
       if (props.defaultCollumn !== undefined && searchFilter !== null)
           props.SetFilter([...oldFilters, searchFilter]);
       else
@@ -127,7 +128,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
   function createFilter() {
 	setShow(!show); 
 	setIsNew(true);
-	setFilter({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: props.CollumnList[0].type === 'string'? 'LIKE' : '=', Type: props.CollumnList[0].type });
+	setFilter({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: props.CollumnList[0].type === 'string'? 'LIKE': '=', Type: props.CollumnList[0].type });
   }
   
   const content = (
