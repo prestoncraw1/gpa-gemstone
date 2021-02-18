@@ -77,7 +77,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
   React.useEffect(() => {
     if (searchFilter !== null)
       props.SetFilter([...filters, searchFilter]);
-    if (searchFilter === null && props.defaultCollumn === undefined)
+    if (searchFilter === null)
       props.SetFilter(filters);
   }, [searchFilter])
 
