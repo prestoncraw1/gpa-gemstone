@@ -27,7 +27,7 @@ interface IProps {
     ShowX?: boolean,
     CallBack: ((confirmed: boolean, isButton?: boolean) => void),
     Show: boolean,
-    Size?: ('lg' | 'sm'),
+    Size?: ('lg' | 'sm' | 'xlg'),
     ShowCancel?: boolean,
     DisableConfirm?: boolean,
     CancelText?: string,
@@ -63,7 +63,7 @@ const Modal: React.FunctionComponent<IProps> = (props) => {
     return (
         <>
         <div className={"modal" + (props.Show ? " show" : '')} style={props.Show ? {display: 'block', zIndex: 9990} : {}}>
-            <div className={"modal-dialog" + (props.Size === undefined? '' : (" modal-"  + props.Size))}>
+            <div className={"modal-dialog" + (props.Size === undefined? '' : props.Size === 'xlg'? '' :(" modal-"  + props.Size))} style={props.Size === 'xlg'? {maxWidth: window.innerWidth - 100} : {}}>
                 <div className="modal-content">
                     <div className="modal-header">
                         <h4 className="modal-title">{props.Title}</h4>
