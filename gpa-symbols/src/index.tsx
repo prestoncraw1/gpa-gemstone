@@ -29,5 +29,7 @@ const Warning = '⚠️';
 const Spinner = '🔄';
 const Wrench = '🔧';
 const Flag = '🚩';
+const UpArrow = '⬆️';
+const DownArrow = '⬇️';
 
-export { HeavyCheckMark, Pencil, TrashCan, CrossMark, Plus, Warning, Spinner, Wrench,Flag };
+export { HeavyCheckMark, Pencil, TrashCan, CrossMark, Plus, Warning, Spinner, Wrench,Flag, UpArrow, DownArrow };
