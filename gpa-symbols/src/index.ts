@@ -34,4 +34,4 @@ const DownArrow = '⬇️';
 const DNA = '🧬';
 const InputNumbers = '🔢';
 
-export { HeavyCheckMark, Pencil, TrashCan, CrossMark, Plus, Warning, Spinner, Wrench,Flag, UpArrow, DownArrow };
+export { HeavyCheckMark, Pencil, TrashCan, CrossMark, Plus, Warning, Spinner, Wrench,Flag, UpArrow, DownArrow,DNA,InputNumbers };
