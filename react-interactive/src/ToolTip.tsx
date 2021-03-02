@@ -141,7 +141,7 @@ const ToolTip: React.FunctionComponent<IProps> = (props) => {
   const zIndex = (props.Zindex === undefined? 2000: props.Zindex);
   
   function UpdatePosition() {
-    const target = document.querySelectorAll(`[data-tooltip${ props.Target === undefined? '' : `=${props.Target}`}]`);
+    const target = document.querySelectorAll(`[data-tooltip${ props.Target === undefined? '' : `="${props.Target}"`}]`);
 
     if (target.length === 0)
       return [-999,-999];
