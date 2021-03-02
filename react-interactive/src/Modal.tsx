@@ -21,22 +21,26 @@
 // ******************************************************************************************************
 
 import * as React from 'react';
+import ToolTip from './ToolTip';
+import {CreateGuid} from '@gpa-gemstone/helper-functions';
 
 interface IProps {
-    Title: string,   
+    Title: string,
     ShowX?: boolean,
     CallBack: ((confirmed: boolean, isButton?: boolean) => void),
     Show: boolean,
     Size?: ('lg' | 'sm' | 'xlg'),
     ShowCancel?: boolean,
     DisableConfirm?: boolean,
+    DisableCancel?: boolean,
     CancelText?: string,
     ConfirmText?: string,
     ConfirmBtnClass?: string,
-    CancelBtnClass?: string
-	ConfirmToolTip?: string,
-	CancelToolTip?: string,
-	OnHover?: (hover: 'Cancel'|'Confirm'|'None') => void
+    CancelBtnClass?: string,
+    ConfirmShowToolTip?: boolean,
+    CancelShowToolTip?: boolean,
+  	ConfirmToolTipContent?: React.ReactNode,
+  	CancelToolTipContent?: React.ReactNode,
 }
 
 // Props Description:
@@ -53,12 +57,21 @@ interface IProps {
 // CancelBtnClass =>> Class of the Cancel Button
 const Modal: React.FunctionComponent<IProps> = (props) => {
 
+    const [hover, setHover] = React.useState<'confirm'|'cancel'|'none'>('none');
+    const [guid, setGuid] = React.useState<string>('')
+
+    React.useEffect(() => {
+        setGuid(CreateGuid());
+    }, [])
 
     const confirmBtn = (props.ConfirmText === undefined ? 'Save' : props.ConfirmText);
     const cxnBtn = (props.CancelText === undefined ? 'Cancel' : props.CancelText);
 
     const cxnbtnCls = 'btn ' + (props.CancelBtnClass === undefined ? 'btn-danger' : props.CancelBtnClass);
-    const confirmbtnCls = 'btn ' + (props.ConfirmBtnClass === undefined ? 'btn-primary' : props.ConfirmBtnClass)
+    const confirmbtnCls = 'btn ' + (props.ConfirmBtnClass === undefined ? 'btn-primary' : props.ConfirmBtnClass);
+
+    const showConfirmToolTip = (props.ConfirmShowToolTip !== undefined && props.ConfirmShowToolTip) && hover === 'confirm';
+    const showCxnToolTip = (props.CancelShowToolTip !== undefined && props.CancelShowToolTip) && hover === 'cancel';
 
     return (
         <>
@@ -70,26 +83,31 @@ const Modal: React.FunctionComponent<IProps> = (props) => {
 						{props.ShowX? <button type="button" className="close" onClick={() => props.CallBack(false,false) }>&times;</button> : null}
                     </div>
                     <div className="modal-body">
-                        {props.children}
+                        {props.Show? props.children : null}
                     </div>
                     <div className="modal-footer">
-                        <button type="button" 
-						className={confirmbtnCls} 
-						data-tooltip={props.ConfirmToolTip !== undefined? props.ConfirmToolTip: ''}
-						disabled={!(props.DisableConfirm === undefined || !props.DisableConfirm)}
-						onClick={() => props.CallBack(true,true)}
-						onMouseEnter={() => (props.OnHover !== undefined? props.OnHover('Confirm') : {})}
-						onMouseLeave={() => (props.OnHover !== undefined? props.OnHover('None') : {})}
-						>{confirmBtn}</button>
+                        <button type="button"
+                						className={confirmbtnCls + (!(props.DisableConfirm === undefined || !props.DisableConfirm)? ' disabled' : '')}
+                						data-tooltip={guid + '-confirm'}
+                						onClick={() => { if (!(props.DisableConfirm === undefined || !props.DisableConfirm)) return; props.CallBack(true,true)}}
+                						onMouseEnter={() => setHover('confirm')}
+                						onMouseLeave={() => setHover('none')}
+                						>{confirmBtn}</button>
                         {props.ShowCancel === undefined || props.ShowCancel ?
-                            <button type="button" 
-							className={cxnbtnCls} 
-							data-tooltip={props.CancelToolTip !== undefined? props.CancelToolTip: ''}
-							onClick={() => props.CallBack(false,true)}
-							onMouseEnter={() => (props.OnHover !== undefined? props.OnHover('Cancel') : {})}
-							onMouseLeave={() => (props.OnHover !== undefined? props.OnHover('None') : {})}
+                            <button type="button"
+							className={cxnbtnCls  + (!(props.DisableCancel === undefined || !props.DisableCancel)? ' disabled' : '')}
+							data-tooltip={guid + '-cancel'}
+              onClick={() => { if (!(props.DisableCancel === undefined || !props.DisableCancel)) return; props.CallBack(false,true)}}
+							onMouseEnter={() => setHover('cancel') }
+							onMouseLeave={() => setHover('none')}
 							>{cxnBtn}</button>
                             : null}
+                      <ToolTip Show={showConfirmToolTip} Position={'top'} Theme={'dark'} Target={guid + '-confirm'} Zindex={9999}>
+                        {props.ConfirmToolTipContent}
+                      </ToolTip>
+                      <ToolTip Show={showCxnToolTip} Position={'top'} Theme={'dark'} Target={guid + '-cancel'} Zindex={9999}>
+                        {props.CancelToolTipContent}
+                      </ToolTip>
                     </div>
                 </div>
             </div>
