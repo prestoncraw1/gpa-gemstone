@@ -22,6 +22,7 @@
 
 import * as React from 'react';
 import Modal from './Modal';
+import LoadingIcon from './LoadingIcon';
 import { Select, CheckBox } from '@gpa-gemstone/react-forms';
 import {TrashCan, Pencil} from '@gpa-gemstone/gpa-symbols';
 
@@ -34,7 +35,8 @@ interface IProps<T> {
     Label?: string,
     children: React.ReactNode,
     GetEnum?: EnumSetter<T>,
-	Result?: JSX.Element|string
+    ShowLoading?: boolean,
+	  ResultNote?: string
   }
 
 interface IOptions {Value: string, Label: string}
@@ -52,7 +54,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
   const [show, setShow] = React.useState<boolean>(false);
 
   const [isNew, setIsNew] = React.useState<boolean>(false);
-  
+
   const [filters, setFilters] = React.useState<Search.IFilter<T>[]>([]);
   const [filter, setFilter] = React.useState<Search.IFilter<T>>({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: props.CollumnList[0].type === 'string'? 'LIKE' : '=', Type: props.CollumnList[0].type });
 
@@ -124,21 +126,24 @@ export default function SearchBar<T> (props: IProps<T>)  {
       else
           props.SetFilter(oldFilters);
   };
-  
+
   function createFilter() {
-	setShow(!show); 
+	setShow(!show);
 	setIsNew(true);
 	setFilter({ FieldName: props.CollumnList[0].key, SearchText: '', Operator: props.CollumnList[0].type === 'string'? 'LIKE': '=', Type: props.CollumnList[0].type });
   }
-  
+
   const content = (
     <>
     <form>
     <div className="row">
     {props.defaultCollumn !== undefined ?
         <div className="col">
+        <div className="input-group">
           <input className="form-control mr-sm-2" type="search" placeholder={"Search " + props.defaultCollumn.label} onChange={(event) => setSearch(event.target.value as string)} />
-		  <p style={{marginTop: 2, marginBottom: 2}}>{props.Result}</p>
+          {props.ShowLoading!== undefined && props.ShowLoading? <div className="input-group-append"> <LoadingIcon Show={true}/> </div>: null}
+        </div>
+      <p style={{marginTop: 2, marginBottom: 2}}>{props.ResultNote}</p>
 		</div> : null}
       <div style={{ position: 'relative', display: 'inline-block' }} className='col'>
           <button className="btn btn-primary" onClick={(evt) => { evt.preventDefault(); createFilter(); }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>Add Filter</button>
@@ -152,7 +157,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
                   </tbody>
               </table>
           </div>
-		  
+
       </div>
     </div>
     </form>
@@ -201,7 +206,7 @@ interface IPropsFilterCreator<T> { Filter: Search.IFilter<T>, Setter: (filter: R
 function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
 
 	const [options, setOptions] = React.useState<IOptions[]>([]);
-	
+
 	React.useEffect(() => {
 		if (props.Field === undefined)
 			return;
@@ -212,7 +217,7 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
 		if (props.Field.enum === undefined)
 		setOptions([]);
 	},[props.Field, props.Enum]);
-	
+
     if (props.Field === undefined)
         return null;
     if (props.Field.type === "string") {
@@ -309,7 +314,7 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
         }} Label="Column type is boolean. Yes/On is checked." />
     }
     else {
-       
+
         return (
             <>
                 <label>Column type is enumerable. Select from below.</label>
