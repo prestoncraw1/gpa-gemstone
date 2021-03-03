@@ -40,6 +40,17 @@ export default function EnumCheckBoxes<T>(props: {
     <div className="form-group">
       <label>{props.Label == null ? props.Field : props.Label}</label>
       <br />
+      <div className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            checked={(props.Record[props.Field] as any) === (Math.pow(2,props.Enum.length) - 1)}
+            onChange={(evt) =>
+              props.Setter({ ...props.Record, [props.Field]: evt.target.checked ? Math.pow(2,props.Enum.length) -1 : 0 })
+            }
+          />
+          <label className="form-check-label">All</label>
+        </div>
       {props.Enum.map((flag, i) => (
         <div key={i} className="form-check form-check-inline">
           <input
