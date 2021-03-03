@@ -41,7 +41,7 @@ export default function ArrayMultiSelect<T>(props: {
         onChange={(evt) => {
           const record: T = {
             ...props.Record,
-            [props.Field]: Array.from(evt.target.selectedOptions).map((a) => parseInt(a.value, 10)),
+            [props.Field]: Array.from(evt.target.selectedOptions).map((a) => a.value),
           };
 
           props.Setter(record);
