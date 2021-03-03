@@ -47,6 +47,17 @@ export default function ArrayCheckBoxes<T>(props: {
     <div className="form-group">
       <label>{props.Label == null ? props.Field : props.Label}</label>
       <br />
+      <div className="form-check form-check-inline">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            checked={JSON.stringify(props.Record[props.Field]) === JSON.stringify(props.Checkboxes.map(x => x.ID))}
+            onChange={(evt) =>
+              props.Setter({ ...props.Record, [props.Field]: evt.target.checked ? props.Checkboxes.map(x => x.ID): [] })
+            }
+          />
+          <label className="form-check-label">All</label>
+        </div>
       {props.Checkboxes.map((cb, i) => (
         <div key={i} className="form-check form-check-inline">
           <input
