@@ -102,16 +102,17 @@ const Modal: React.FunctionComponent<IProps> = (props) => {
 							onMouseLeave={() => setHover('none')}
 							>{cxnBtn}</button>
                             : null}
-                      <ToolTip Show={showConfirmToolTip} Position={'top'} Theme={'dark'} Target={guid + '-confirm'} Zindex={9999}>
-                        {props.ConfirmToolTipContent}
-                      </ToolTip>
-                      <ToolTip Show={showCxnToolTip} Position={'top'} Theme={'dark'} Target={guid + '-cancel'} Zindex={9999}>
-                        {props.CancelToolTipContent}
-                      </ToolTip>
+                      
                     </div>
                 </div>
             </div>
             </div>
+			<ToolTip Show={showConfirmToolTip} Position={'top'} Theme={'dark'} Target={guid + '-confirm'} Zindex={9999}>
+				{props.ConfirmToolTipContent}
+			  </ToolTip>
+			  <ToolTip Show={showCxnToolTip} Position={'top'} Theme={'dark'} Target={guid + '-cancel'} Zindex={9999}>
+				{props.CancelToolTipContent}
+			  </ToolTip>
             {props.Show ? < div style={{
                 width: '100%',
                 height: '100%',
