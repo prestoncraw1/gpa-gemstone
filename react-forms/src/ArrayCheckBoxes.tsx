@@ -27,17 +27,17 @@ export default function ArrayCheckBoxes<T>(props: {
   Record: T;
   Field: keyof T;
   Setter: (record: T) => void;
-  Checkboxes: { ID: number; Label: string }[];
+  Checkboxes: { ID: string; Label: string }[];
   Label?: string;
 }) {
-  const Remove = (cb: { ID: number; Label: string }) => {
-    const a = [...((props.Record[props.Field] as any) as number[])];
+  const Remove = (cb: { ID: string; Label: string }) => {
+    const a = [...((props.Record[props.Field] as any) as string[])];
     const i = a.indexOf(cb.ID);
     a.splice(i, 1);
     return a;
   };
-  const Add = (cb: { ID: number; Label: string }) => {
-    const a = [...((props.Record[props.Field] as any) as number[])];
+  const Add = (cb: { ID: string; Label: string }) => {
+    const a = [...((props.Record[props.Field] as any) as string[])];
     const i = a.indexOf(cb.ID);
     if (i < 0) a.push(cb.ID);
     a.sort();
@@ -63,7 +63,7 @@ export default function ArrayCheckBoxes<T>(props: {
           <input
             className="form-check-input"
             type="checkbox"
-            checked={(props.Record[props.Field] as any).find((x: number) => cb.ID === x) !== undefined}
+            checked={(props.Record[props.Field] as any).find((x: string) => cb.ID === x) !== undefined}
             onChange={(evt) =>
               props.Setter({ ...props.Record, [props.Field]: evt.target.checked ? Add(cb) : Remove(cb) })
             }
