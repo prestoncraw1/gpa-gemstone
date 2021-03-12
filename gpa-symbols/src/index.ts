@@ -34,4 +34,13 @@ const DownArrow = '⬇️';
 const DNA = '🧬';
 const InputNumbers = '🔢';
 
-export { HeavyCheckMark, Pencil, TrashCan, CrossMark, Plus, Warning, Spinner, Wrench,Flag, UpArrow, DownArrow,DNA,InputNumbers };
+export const FourWayArrow = '☩';
+export const MagnifyingGlass = '🔍';
+export const House = '🏠';
+
+export { HeavyCheckMark, Pencil, TrashCan,
+ CrossMark, Plus, Warning, 
+ Spinner, Wrench, Flag,
+ UpArrow, DownArrow, DNA,
+ InputNumbers, MagnifyingGlass, House,
+ FourWayArrow };
