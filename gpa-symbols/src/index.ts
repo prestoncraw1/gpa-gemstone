@@ -33,10 +33,9 @@ const UpArrow = '⬆️';
 const DownArrow = '⬇️';
 const DNA = '🧬';
 const InputNumbers = '🔢';
-
-export const FourWayArrow = '☩';
-export const MagnifyingGlass = '🔍';
-export const House = '🏠';
+const FourWayArrow = '☩';
+const MagnifyingGlass = '🔍';
+const House = '🏠';
 
 export { HeavyCheckMark, Pencil, TrashCan,
  CrossMark, Plus, Warning, 
