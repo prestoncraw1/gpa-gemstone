@@ -9,4 +9,21 @@ The Gemstone Web Library organizes all Gemstone functionality related to web.
 This library includes helpful npm package component for standarsizing Symbols.
 
 ## Usage
-
+```ts
+    {HeavyCheckMark}
+	{Pencil}
+	{TrashCan}
+	{CrossMark}
+	{Plus}
+	{Warning}
+	{Spinner}
+	{Wrench}
+	{Flag}
+	{UpArrow}
+	{DownArrow}
+	{DNA}
+	{InputNumbers}
+	{FourWayArrow}
+	{MagnifyingGlass}
+	{House}
+```
