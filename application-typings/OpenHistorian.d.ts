@@ -21,13 +21,13 @@
 //
 // ******************************************************************************************************
 
-export namespace OpenHistorian {
-    interface iHistorian {
+declare module "OpenHistorian" {
+    export interface iHistorian {
         NodeID: string, ID: string, Acronym: string, Name: string,
         AssemblyName: string, TypeName: string, ConnectionString: string, IsLocal: boolean, MeasurementReportingInterval: number, Description: string,
         LoadOrder: number, Enabled: boolean, CreatedOn: string, CreatedBy: string, UpdatedOn: string, UpdatedBy: string
     }
-    interface iActiveMeasurement {
+    export interface iActiveMeasurement {
         NodeID: string, SourceNodeID: string, ID: string, SignalID: string, PointTag: string, AlternateTag: string,
         SignalReference: string, Internal: boolean, Subscribed: boolean, Device: string, DeviceID: number, FramesPerSecond: number,
         Protocol: string, SignalType: SignalType, EngineeringUnits: string, PhasorID: number, PhasorType: string, Phase: Phase,
@@ -35,6 +35,6 @@ export namespace OpenHistorian {
         UpdatedOn: string
     }
 
-    type SignalType = 'IPHM' | 'IPHA' | 'VPHM' | 'VPHA' | 'FREQ' | 'DFDT' | 'ALOG' | 'FLAG' | 'DIGI' | 'CALC' | 'STAT' | 'ALARM' | 'QUAL'
-    type Phase = 'A' | 'B' | 'C' | '+' | '-' | '0' | 'None'
+    export type SignalType = 'IPHM' | 'IPHA' | 'VPHM' | 'VPHA' | 'FREQ' | 'DFDT' | 'ALOG' | 'FLAG' | 'DIGI' | 'CALC' | 'STAT' | 'ALARM' | 'QUAL'
+    export type Phase = 'A' | 'B' | 'C' | '+' | '-' | '0' | 'None'
 }

@@ -21,7 +21,9 @@
 //
 // ******************************************************************************************************
 
-import { OpenHistorian } from "./OpenHistorian";
-import { OpenXDA } from "./OpenXDA";
+/// <reference path="OpenHistorian.d.ts"/>
+/// <reference path="OpenXDA.d.ts"/>
+import * as OpenHistorian from 'OpenHistorian';
+import * as OpenXDA from 'OpenXDA';
 
 export { OpenXDA, OpenHistorian };
