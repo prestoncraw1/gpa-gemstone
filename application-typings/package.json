@@ -1,0 +1,40 @@
+{
+  "name": "@gpa-gemstone/application-typings",
+  "version": "0.0.1",
+  "description": "Application typings for GPA products",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GridProtectionAlliance/gpa-gemstone.git"
+  },
+  "keywords": [
+    "Symbols",
+    "Interactive",
+    "GSF",
+    "Gemstone",
+    "GridProtectionAlliance"
+  ],
+  "author": "GridProtectionAlliance",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GridProtectionAlliance/gpa-gemstone/issues"
+  },
+  "homepage": "https://github.com/GridProtectionAlliance/gpa-gemstone#readme",
+  "devDependencies": {
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {},
+  "publishConfig": {
+    "access": "public"
+  }
+}
