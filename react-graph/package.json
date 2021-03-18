@@ -45,14 +45,10 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
+    "@gpa-gemstone/gpa-symbols": "0.0.6",
+    "@gpa-gemstone/helper-functions": "0.0.5",
     "@types/react": "^16.9.38",
-    "@gpa-gemstone/helper-functions": "0.0.3",
-    "@reduxjs/toolkit": "^1.5.0",
-    "@types/d3": "^6.2.0",
-    "@types/react-redux": "^7.1.15",
-    "d3": "^6.3.1",
-    "react": "16.13.1",
-    "react-redux": "^7.2.2"
+    "react": "16.13.1"
   },
   "publishConfig": {
     "access": "public"
