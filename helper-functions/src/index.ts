@@ -25,7 +25,8 @@
 
 import {CreateGuid} from './CreateGuid';
 import {GetTextWidth} from './GetTextWidth';
+import {GetTextHeight} from './GetTextHeight';
 import {GetNodeSize} from './GetNodeSize';
 import { RandomColor } from './RandomColor';
 
-export {CreateGuid, GetTextWidth, GetNodeSize, RandomColor}
+export {CreateGuid, GetTextWidth, GetNodeSize, RandomColor, GetTextHeight}
