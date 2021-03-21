@@ -25,6 +25,7 @@ import * as React from 'react';
 import {GraphContext} from './GraphContext'
 import * as moment from 'moment';
 import {GetTextHeight} from '@gpa-gemstone/helper-functions';
+import { cloneDeep } from 'lodash';
 
 export interface IProps {
   offsetLeft: number,
@@ -101,11 +102,187 @@ function TimeAxis(props: IProps) {
 
       const Tstart = moment(context.XDomain[0]);
       const Tend = moment(context.XDomain[1]);
-      const step = 10;
-      const stepType: TimeStep = 'y'
+      const Tdiff = moment.duration(moment(context.XDomain[1]).diff(moment(context.XDomain[0])));
+      const Ttick = cloneDeep(Tstart);
+      let step = 10;
+      let stepType: TimeStep = 'y'
 
+      if (Tdiff.asYears() >= 70) {
+        step = 10;
+        stepType = 'y';
+        setTopOfYear(Ttick);
+        Ttick.year(Math.floor((Ttick.year()) / 10.0) * 10.0);
+      }
+      if (Tdiff.asYears() < 70 && Tdiff.asYears() >=40 ) {
+        step = 5;
+        setTopOfYear(Ttick);
+        Ttick.year(Math.floor((Ttick.year()) / 5.0) * 5.0);
+      }
+      if (Tdiff.asYears() < 40 && Tdiff.asYears() >=15 ) {
+        step = 2;
+        setTopOfYear(Ttick);
+        Ttick.year(Math.floor((Ttick.year()) / 2.0) * 2.0);
+      }
+      if (Tdiff.asYears() < 15 && Tdiff.asYears() >= 6) {
+        stepType = 'M';
+        step = 12;
+        setTopOfYear(Ttick);
+      }
+      if (Tdiff.asYears() < 6 && Tdiff.asYears() >= 4) {
+        stepType = 'M';
+        step = 6;
+        setTopOfMonth(Ttick);
+        Ttick.month(Math.floor((Ttick.month()) / 6.0) * 6.0);
+      }
+      if (Tdiff.asYears() < 4 && Tdiff.asYears() >= 1.5) {
+        stepType = 'M';
+        step = 3;
+        setTopOfMonth(Ttick);
+        Ttick.month(Math.floor((Ttick.month()) / 3.0) * 3.0);
+      }
+      if (Tdiff.asYears() < 1.5 && Tdiff.asMonths() >= 6) {
+        stepType = 'M';
+        step = 1;
+        setTopOfMonth(Ttick);
+      }
+      if (Tdiff.asMonths() < 6 && Tdiff.asMonths() >= 2) {
+        stepType = 'w';
+        step = 2;
+        setTopOfWeek(Ttick);
+      }
+      if (Tdiff.asMonths() < 2 && Tdiff.asMonths() >= 1) {
+        stepType = 'w';
+        step = 1;
+        setTopOfWeek(Ttick);
+      }
+      if (Tdiff.asMonths() < 1 && Tdiff.asDays() >= 16) {
+        stepType = 'd';
+        step = 2;
+        setTopOfDay(Ttick);
+      }
+      if (Tdiff.asDays() < 16 && Tdiff.asDays() >= 10) {
+        stepType = 'd';
+        step = 1;
+        setTopOfDay(Ttick);
+      }
+      if (Tdiff.asDays() < 10 && Tdiff.asDays() >= 3) {
+        stepType = 'h';
+        step = 12;
+        setTopOfHour(Ttick);
+        Ttick.hours(Math.floor((Ttick.hours()) / 12.0) * 12.0);
 
-      const newTicks = [Tstart.add(step, stepType)];
+      }
+      if (Tdiff.asDays() < 3 && Tdiff.asHours() >= 30) {
+        stepType = 'h';
+        step = 6;
+        setTopOfHour(Ttick);
+        Ttick.hours(Math.floor((Ttick.hours()) / 6.0) * 6.0)
+      }
+      if (Tdiff.asHours() < 30 && Tdiff.asHours() >= 18) {
+        stepType = 'h';
+        step = 3;
+        setTopOfHour(Ttick);
+        Ttick.hours(Math.floor((Ttick.hours()) / 3.0) * 3.0)
+      }
+      if (Tdiff.asHours() < 18 && Tdiff.asHours() >= 6) {
+        stepType = 'h';
+        step = 1;
+        setTopOfHour(Ttick);
+      }
+      if (Tdiff.asHours() < 6 && Tdiff.asHours() >= 3) {
+        stepType = 'm';
+        step = 30;
+        setTopOfMinute(Ttick);
+        Ttick.minutes(Math.floor((Ttick.minutes()) / 30.0) * 30.0)
+      }
+      if (Tdiff.asHours() < 3 && Tdiff.asHours() >= 1) {
+        stepType = 'm';
+        step = 15;
+        setTopOfMinute(Ttick);
+        Ttick.minutes(Math.floor((Ttick.minutes()) / 15.0) * 15.0)
+      }
+      if (Tdiff.asHours() < 1 && Tdiff.asMinutes() >= 20) {
+        stepType = 'm';
+        step = 5;
+        setTopOfMinute(Ttick);
+        Ttick.minutes(Math.floor((Ttick.minutes()) / 5.0) * 5.0)
+      }
+      if (Tdiff.asMinutes() < 20 && Tdiff.asMinutes() >= 10) {
+        stepType = 'm';
+        step = 2;
+        setTopOfMinute(Ttick);
+        Ttick.minutes(Math.floor((Ttick.minutes()) / 2.0) * 2.0)
+      }
+      if (Tdiff.asMinutes() < 10 && Tdiff.asMinutes() >= 5) {
+        stepType = 'm';
+        step = 1;
+        setTopOfMinute(Ttick);
+      }
+      if (Tdiff.asMinutes() < 5 && Tdiff.asMinutes() >= 2) {
+        stepType = 's';
+        step = 30;
+        setTopOfSecond(Ttick);
+        Ttick.second(Math.floor((Ttick.second()) / 30) * 30.0)
+      }
+      if (Tdiff.asMinutes() < 2 && Tdiff.asMinutes() >= 1) {
+        stepType = 's';
+        step = 15;
+        setTopOfSecond(Ttick);
+        Ttick.second(Math.floor((Ttick.second()) / 15) * 15.0)
+      }
+      if (Tdiff.asMinutes() < 1 && Tdiff.asSeconds() >= 30) {
+        stepType = 's';
+        step = 5;
+        setTopOfSecond(Ttick);
+        Ttick.second(Math.floor((Ttick.second()) / 5) * 5.0)
+      }
+      if (Tdiff.asSeconds() < 30 && Tdiff.asSeconds() >= 15) {
+        stepType = 's';
+        step = 2;
+        setTopOfSecond(Ttick);
+      }
+      if (Tdiff.asSeconds() < 15 && Tdiff.asSeconds() >= 5) {
+        stepType = 's';
+        step = 1;
+        setTopOfSecond(Ttick);
+      }
+      if (Tdiff.asSeconds() < 5 && Tdiff.asSeconds() >= 2) {
+        stepType = 'ms';
+        step = 500;
+        setTopOfms(Ttick);
+        Ttick.millisecond(Math.floor((Ttick.millisecond()) / 500) * 500.0)
+      }
+      if (Tdiff.asSeconds() < 2 && Tdiff.asSeconds() >= 1) {
+        stepType = 'ms';
+        step = 250;
+        setTopOfms(Ttick);
+        Ttick.millisecond(Math.floor((Ttick.millisecond()) / 250) * 250.0)
+      }
+      if (Tdiff.asSeconds() < 1 && Tdiff.asMilliseconds() >= 500) {
+        stepType = 'ms';
+        step = 100;
+        setTopOfms(Ttick);
+        Ttick.millisecond(Math.floor((Ttick.millisecond()) / 100) * 100.0)
+      }
+      if (Tdiff.asMilliseconds() < 500 && Tdiff.asMilliseconds() >= 100) {
+        stepType = 'ms';
+        step = 50;
+        setTopOfms(Ttick);
+        Ttick.millisecond(Math.floor((Ttick.millisecond()) / 50) * 50.0)
+      }
+      if (Tdiff.asMilliseconds() < 100 && Tdiff.asMilliseconds() >= 20) {
+        stepType = 'ms';
+        step = 10;
+        setTopOfms(Ttick);
+        Ttick.millisecond(Math.floor((Ttick.millisecond()) / 10) * 10.0)
+      }
+      if (Tdiff.asMilliseconds() < 20){
+        stepType = 'ms';
+        setTopOfms(Ttick);
+        step = 1;
+      }
+
+      const newTicks = [Ttick.add(step, stepType)];
       while (newTicks[newTicks.length - 1] < Tend)
         newTicks.push(newTicks[newTicks.length - 1].clone().add(step, stepType));
 
@@ -138,6 +315,39 @@ function TimeAxis(props: IProps) {
       return ""
 
     }
+
+    function setTopOfms(d: moment.Moment) {
+      d.milliseconds(Math.floor(d.millisecond()));
+    }
+    function setTopOfSecond(d: moment.Moment) {
+      setTopOfms(d);
+      d.milliseconds(0)
+    }
+    function setTopOfMinute(d: moment.Moment) {
+      setTopOfSecond(d);
+      d.seconds(0)
+    }
+    function setTopOfHour(d: moment.Moment) {
+      setTopOfMinute(d);
+      d.minutes(0)
+    }
+    function setTopOfDay(d: moment.Moment) {
+      setTopOfHour(d);
+      d.hours(0)
+    }
+    function setTopOfWeek(d: moment.Moment) {
+      setTopOfDay(d);
+      d.weekday(0)
+    }
+    function setTopOfMonth(d: moment.Moment) {
+      setTopOfDay(d);
+      d.date(1)
+    }
+    function setTopOfYear(d: moment.Moment) {
+      setTopOfDay(d);
+      d.dayOfYear(0)
+    }
+
 
     function formatTS(t: number): string {
       const TS = moment(t);
