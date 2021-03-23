@@ -42,7 +42,7 @@ export interface IProps {
     Tmax?: number,
     showBorder?: boolean,
     Tlabel?: string,
-    Xlabel?: string,
+    Ylabel?: string,
     legend?: 'hidden'| 'bottom' | 'right',
     showMouse: boolean
 }
@@ -94,7 +94,7 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
 
     // Constants
     const SVGHeight = props.height - (props.legend === 'bottom'? heightLegend : 0);
-    const SVGWidth = props.width - (props.legend === 'bottom'? widthLegend : 0);
+    const SVGWidth = props.width - (props.legend === 'right'? widthLegend : 0);
 
     // Adjust top and bottom Offset
     React.useEffect(() => {
@@ -118,7 +118,6 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
 
     // Adjust Y domain
     React.useEffect(() => {
-
      const yMin = Math.min(...[...data.values()].map(series => series.getMin(tDomain)));
      const yMax = Math.max(...[...data.values()].map(series => series.getMax(tDomain)));
      if (!isNaN(yMin) && !isNaN(yMax) && isFinite(yMin) && isFinite(yMax))
@@ -295,7 +294,7 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
                    <svg ref={SVGref} width={SVGWidth} height={SVGHeight} style={SvgStyle} viewBox={`0 0 ${SVGWidth} ${SVGHeight}`}>
                       {props.showBorder !== undefined && props.showBorder ? < path stroke='black' d={`M ${offsetLeft} ${offsetTop} H ${SVGWidth- offsetRight} V ${SVGWidth - offsetBottom} H ${offsetLeft} Z`} /> : null}
                       <TimeAxis label={props.Tlabel} offsetBottom={offsetBottom} offsetLeft={offsetLeft} offsetRight={offsetRight} width={SVGWidth} height={SVGHeight} setHeight={setHeightXLabel} heightAxis={heightXLabel}/>
-                      <ValueAxis label={props.Xlabel} offsetTop={offsetTop} offsetLeft={offsetLeft} offsetBottom={offsetBottom} witdh={SVGWidth} height={SVGHeight} setWidthAxis={setHeightYLabel} setHeightFactor={setHeightYFactor} hAxis={heightYLabel} hFactor={heightYFactor} />
+                      <ValueAxis label={props.Ylabel} offsetTop={offsetTop} offsetLeft={offsetLeft} offsetBottom={offsetBottom} witdh={SVGWidth} height={SVGHeight} setWidthAxis={setHeightYLabel} setHeightFactor={setHeightYFactor} hAxis={heightYLabel} hFactor={heightYFactor} />
                        <defs>
                            <clipPath id={"cp-" + guid}>
                                <path stroke={'none'} fill={'none'} d={` M ${offsetLeft},${offsetTop - 5} H  ${SVGWidth - offsetRight + 5} V ${SVGHeight - offsetBottom} H ${offsetLeft} Z`} />
@@ -316,8 +315,8 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
                           showReset={!(props.pan !== undefined && props.zoom !== undefined && !props.zoom && !props.pan)}
                            currentSelection={selectedMode}
                            setSelection={(s) => { if (s === "reset") Reset(); else setSelectedMode(s as ('zoom'|'pan'))}}
-                           x={offsetTop + 12}
-                           y={SVGWidth - offsetRight - 12} />
+                           x={SVGWidth - offsetRight - 12}
+                           y={22} />
 
                    </svg>
                </div>

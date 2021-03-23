@@ -23,7 +23,7 @@
 
 const MaxPoints = 20;
 
-class PointNode {
+export class PointNode {
     minT: number;
     maxT: number;
     minY: number;
@@ -97,8 +97,16 @@ class PointNode {
     }
 
     GetPoint(T: number): [number, number] {
-        if (T < this.minT || T < this.maxT)
-          return [NaN,NaN];
+        if (T < this.minT && this.points !== null)
+          return this.points[0];
+        if (T > this.maxT && this.points !== null)
+          return this.points[this.points.length - 1];
+
+        if (T < this.minT && this.points === null)
+          return this.children![0].GetPoint(T);
+        if (T > this.maxT && this.points === null)
+          return this.children![this.children!.length -1].GetPoint(T);
+
         if (this.points != null) {
           let upper = this.points.length -1;
           let lower = 0;
@@ -108,7 +116,7 @@ class PointNode {
 
           while (Tupper !== T && Tlower !== T && upper !== lower && Tupper !== Tlower)
           {
-            const center = Math.round(upper + lower)/2;
+            const center = Math.round((upper + lower)/2);
             const Tcenter = this.points[center][0];
             if (Tcenter <= T)
               lower = center;
@@ -116,9 +124,12 @@ class PointNode {
               upper = center;
             Tupper = this.points[upper][0];
             Tlower = this.points[lower][0];
+          if (center === upper || center === lower)
+            break;
           }
-          if (T === Tlower)
+          if (Math.abs(T - Tlower) < Math.abs(T- Tupper))
             return this.points[lower];
+
           return this.points[upper];
 
         }

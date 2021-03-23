@@ -79,7 +79,7 @@ function InteractiveButtons(props: IProps) {
      <g>
          <path d={`M ${props.x} ${props.y - 10} A 10 10 180 0 1 ${props.x} ${props.y + 10} h -${width} A 10 10 180 0 1 ${props.x - width} ${props.y - 10} h ${width}`} style={{
              fill: '#1e90ff'}} />
-          {symbols.map((s,i) => <Button key={i} symbol={s} x={props.x+ i*25} y={props.y} active={props.currentSelection === s} onClick={() => {props.setSelection(s); setExpand(false) }}/>)}
+          {symbols.map((s,i) => <Button key={i} symbol={s} x={props.x - i*25} y={props.y} active={props.currentSelection === s} onClick={() => {props.setSelection(s); setExpand(false) }}/>)}
 
          <path d={`M ${props.x} ${props.y - 10} A 10 10 180 0 1 ${props.x} ${props.y + 10} h -${width} A 10 10 180 0 1 ${props.x - width} ${props.y - 10} h ${width}`} stroke={'black'} />
      </g>)

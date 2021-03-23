@@ -25,6 +25,7 @@
 import * as React from 'react';
 import {IDataSeries, GraphContext, LineStyle} from './GraphContext';
 import * as moment from 'moment';
+import {PointNode} from './PointNode';
 
 
 export interface IProps {
@@ -54,12 +55,12 @@ function Line(props: IProps) {
            color: props.color,
            lineStyle: props.lineStyle,
            legend: props.legend,
-           getMax: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[1]),
+           getMax: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[1]) ,
            getMin: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[0]),
            legendClick: () => { setEnabled((e) => !e); },
            legendOpacity: 1
        } as IDataSeries)
-   }, [props])
+   }, [props, data])
 
    React.useEffect(() => {
        if (props.data.length === 0 || isNaN(context.XHover) || data === null)
@@ -87,7 +88,7 @@ function Line(props: IProps) {
            color: props.color,
            lineStyle: props.lineStyle,
            legend: props.legend,
-           getMax: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[1]),
+           getMax: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[1]) ,
            getMin: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[0]),
            legendClick: () => { setEnabled((e) => !e); },
            legendOpacity: 1

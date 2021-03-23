@@ -66,7 +66,7 @@ function TimeAxis(props: IProps) {
     // Adjust space for X Tick labels
     React.useEffect(() => {
       let dX = Math.max(...tick.map(t => GetTextHeight("Segoe UI", '1em', formatTS(t))));
-      dX = (isFinite(dX) ? dX : 0) + 4
+      dX = (isFinite(dX) ? dX : 0) + 12
       setHAxis(dX);
     },[tick,tFormat]);
 
@@ -364,7 +364,7 @@ function TimeAxis(props: IProps) {
          </>
          : null}
      {props.label !== undefined? <text fill={'black'} style={{ fontSize: '1em', textAnchor: 'middle', dominantBaseline: 'middle' }} x={props.offsetLeft + (( props.width- props.offsetLeft - props.offsetRight) / 2)}
-      y={props.height = props.offsetBottom + hAxis}>{props.label + GetUnitLabel()}</text> : null}
+      y={props.height - props.offsetBottom + hAxis}>{props.label + GetUnitLabel()}</text> : null}
 
     </g>)
 }
