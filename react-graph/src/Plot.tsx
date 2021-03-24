@@ -92,7 +92,7 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
     const [heightYLabel, setHeightYLabel] = React.useState<number>(0);
 
     // Constants
-    const SVGHeight = props.height - (props.legend === 'bottom'? (props.legendHeight !== undefined? props.legendHeight : 20) : 0);
+    const SVGHeight = props.height - (props.legend === 'bottom'? (props.legendHeight !== undefined? props.legendHeight : 50) : 0);
     const SVGWidth = props.width - (props.legend === 'right'? (props.legendWidth !== undefined? props.legendWidth : 100) : 0);
 
     // Adjust top and bottom Offset
