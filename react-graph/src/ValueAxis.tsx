@@ -64,10 +64,10 @@ function ValueAxis(props: IProps) {
         exp = exp - 1;
     }
 
-    let scale = 1.0;
-    if (dY * Math.pow(10, exp) < 7 && dY * Math.pow(10, exp) >= 4)
+    let scale = 1.0 / Math.pow(10, exp);
+    if (dY * Math.pow(10, exp) < 6 && dY * Math.pow(10, exp) >= 2.5)
         scale = 0.5 / Math.pow(10, exp);
-    if (dY * Math.pow(10, exp) < 4 && dY * Math.pow(10, exp) >= 1.2)
+    if (dY * Math.pow(10, exp) < 2.5 && dY * Math.pow(10, exp) >= 1.2)
         scale = 0.2 / Math.pow(10, exp);
     if (dY * Math.pow(10, exp) < 1.2)
         scale = 0.1 / Math.pow(10, exp);
@@ -78,7 +78,21 @@ function ValueAxis(props: IProps) {
     while (newTicks[newTicks.length - 1] < (context.YDomain[1] - scale))
         newTicks.push(newTicks[newTicks.length - 1] + scale);
 
-    setFactor(Math.pow(10, Math.floor(exp / 3) * 3));
+    let expF = 0;
+    let Ymax = Math.max(Math.abs(context.YDomain[0]),Math.abs(context.YDomain[1]));
+    while ((Ymax*Math.pow(10,expF)) < 1) {
+        expF = expF + 1;
+    }
+    while ((Ymax * Math.pow(10, expF)) > 10) {
+        expF = expF - 1;
+    }
+
+    expF =  Math.sign(expF)*(Math.floor(Math.abs(expF) / 3) ) * 3;
+    // adjust to avoid same value on axis scenario
+    if (dY*Math.pow(10,expF) < 0.1)
+      expF = expF + 3;
+    setFactor(Math.pow(10,expF));
+
     setTick(newTicks);
 
     }, [context.YDomain]);
@@ -86,7 +100,7 @@ function ValueAxis(props: IProps) {
     React.useEffect(() => {
       let dY = context.YDomain[1] - context.YDomain[0];
       dY = dY * factor;
-      if (dY > 15)
+      if (dY >= 15)
           setNdigits(0);
       if (dY < 15 && dY >= 1.5)
           setNdigits(1);
