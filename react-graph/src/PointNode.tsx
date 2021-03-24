@@ -65,13 +65,13 @@ export class PointNode {
     }
 
     GetData(Tstart: number, Tend: number): [number,number][] {
-        if (this.points != null && Tstart <= this.minT && Tend > this.maxT)
+        if (this.points != null && Tstart <= this.minT && Tend >= this.maxT)
             return this.points;
         if (this.points != null)
             return this.points.filter(pt => pt[0] >= Tstart && pt[1] <= Tend);
 
         const result: [number,number][] = [];
-        return result.concat(...this.children!.filter(node => Tstart <= node.minT && Tend > node.maxT).map(node => node.GetData(Tstart, Tend)));
+        return result.concat(...this.children!.filter(node => Tstart <= node.minT && Tend >= node.maxT).map(node => node.GetData(Tstart, Tend)));
     }
 
     GetFullData(): [number,number][] {
