@@ -95,6 +95,9 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
     const SVGHeight = props.height - (props.legend === 'bottom'? (props.legendHeight !== undefined? props.legendHeight : 50) : 0);
     const SVGWidth = props.width - (props.legend === 'right'? (props.legendWidth !== undefined? props.legendWidth : 100) : 0);
 
+    React.useEffect(() => {
+      setTdomain(props.defaultTdomain);      
+    }, [props.defaultTdomain])
     // Adjust top and bottom Offset
     React.useEffect(() => {
       const top = heightYFactor + 10;
