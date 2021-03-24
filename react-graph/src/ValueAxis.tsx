@@ -43,7 +43,7 @@ function ValueAxis(props: IProps) {
   const [tick,setTick] = React.useState<number[]>([]);
 
   const [hLabel, setHlabel] = React.useState<number>(0);
-  // const [ftSizeLabel, setFtSizeLabel] = React.useState<number>(1);
+  const [ftSizeLabel, setFtSizeLabel] = React.useState<number>(1);
   const [hAxis, setHAxis] = React.useState<number>(0);
 
 
@@ -110,9 +110,9 @@ function ValueAxis(props: IProps) {
         setHlabel(0);
         return;
       }
-      const h = GetTextHeight("Segoe UI", '1em', props.label) + 4;
+      const h = GetTextHeight("Segoe UI", ftSizeLabel + 'em', props.label) + 4;
       setHlabel(h);
-    },[props.label, props.height, props.offsetTop, props.offsetBottom]);
+    },[props.label, props.height, props.offsetTop, props.offsetBottom, ftSizeLabel]);
 
     React.useEffect(() => {
         let dY = Math.max(...tick.map(t => GetTextWidth("Segoe UI", '1em', (t * factor).toFixed(nDigits))));
@@ -127,13 +127,28 @@ function ValueAxis(props: IProps) {
 
     },[hAxis, hLabel, props.hAxis]);
 
+    React.useEffect(() => {
+      if (props.label === undefined)
+        return;
+      let h = GetTextWidth("Segoe UI", '1em', props.label);
+      let size = 1;
+
+      while (h > props.height && size > 0.1) {
+        size = size - 0.1;
+        h = GetTextWidth("Segoe UI", size + 'em', props.label);
+      }
+      if (ftSizeLabel !== size)
+          setFtSizeLabel(size);
+
+    }, [props.label, props.height]);
+
     return (<g>
       <path stroke='black' style={{ strokeWidth: 1, transition: 'd 0.5s' }} d={`M ${props.offsetLeft} ${props.height - props.offsetBottom + 8} V ${props.offsetTop}`} />
       <path stroke='black' style={{ strokeWidth: 1, transition: 'd 0.5s' }} d={`M ${props.offsetLeft - 8} ${props.offsetTop} h ${8}`} />
       {tick.map((l, i) => <path key={i} stroke='black' style={{ strokeWidth: 1, transition: 'd 1s' }} d={`M ${props.offsetLeft - 6} ${l * context.YScale + context.YOffset} h ${6}`} />)}
       {tick.map((l, i) => <text fill={'black'} key={i} style={{ fontSize: '1em', textAnchor: 'end', dominantBaseline: 'middle', transition: 'x 0.5s, y 0.5s' }} x={props.offsetLeft - 8} y={l * context.YScale + context.YOffset}>{(l * factor).toFixed(nDigits)}</text>)}
 
-      {props.label !== undefined ? <text fill={'black'} style={{ fontSize: '1em', textAnchor: 'middle', dominantBaseline: 'middle' }} transform={`rotate(-90,${props.offsetLeft - hAxis - 4},${(- props.offsetTop  - props.offsetBottom + props.height)/ 2.0})`} x={props.offsetLeft - hAxis - 4} y={(- props.offsetTop  - props.offsetBottom + props.height)/ 2.0}>{props.label}</text> : null}
+      {props.label !== undefined ? <text fill={'black'} style={{ fontSize: ftSizeLabel + 'em', textAnchor: 'middle', dominantBaseline: 'middle' }} transform={`rotate(-90,${props.offsetLeft - hAxis - 4},${(props.offsetTop  - props.offsetBottom + props.height)/ 2.0})`} x={props.offsetLeft - hAxis - 4} y={(props.offsetTop  - props.offsetBottom + props.height)/ 2.0}>{props.label}</text> : null}
       {factor !== 1 ? <text fill={'black'} style={{ fontSize: '1em' }} x={props.offsetLeft} y={props.offsetTop - 5}>x{1/factor}</text> : null}
     </g>)
 }
