@@ -26,6 +26,7 @@ import * as React from 'react';
 import {IDataSeries, GraphContext, LineStyle} from './GraphContext';
 import * as moment from 'moment';
 import {PointNode} from './PointNode';
+import { GetTextWidth } from '@gpa-gemstone/helper-functions';
 
 
 export interface IProps {
@@ -44,6 +45,7 @@ function Line(props: IProps) {
   const [guid, setGuid] = React.useState<string>("");
   const [highlight, setHighlight] = React.useState<[number, number]>([NaN,NaN]);
   const [enabled, setEnabled] = React.useState<boolean>(true);
+  const [wLegend, setWLegend] = React.useState<number>(0);
   const [data, setData] = React.useState<PointNode|null>(null);
   const context = React.useContext(GraphContext)
 
@@ -52,13 +54,9 @@ function Line(props: IProps) {
            return;
 
        context.UpdateData(guid, {
-           color: props.color,
-           lineStyle: props.lineStyle,
-           legend: props.legend,
+           legend: createLegend(),
            getMax: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[1]) ,
            getMin: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[0]),
-           legendClick: () => { setEnabled((e) => !e); },
-           legendOpacity: 1
        } as IDataSeries)
    }, [props, data])
 
@@ -77,25 +75,48 @@ function Line(props: IProps) {
    React.useEffect(() => {
        if (guid === "")
            return;
-       if (isNaN(highlight[0]) || isNaN(highlight[1]))
-           context.SetLegend(guid, props.legend, (enabled ? 1 : 0.5));
-       else
-           context.SetLegend(guid, props.legend + ` (${moment(highlight[0]).format('MM/DD/YY hh:mm:ss')}: ${highlight[1]> 0? ' ': ''}${highlight[1].toPrecision(6)})`, (enabled? 1: 0.5))
-   }, [highlight, enabled]);
+       context.SetLegend(guid, createLegend());
+
+   }, [highlight, enabled, wLegend]);
+
+   React.useEffect(() => {
+     if (props.legend === undefined)
+      return;
+    if (props.highlightHover === undefined) {
+      setWLegend(GetTextWidth("Segoe UI", '1em', props.legend) + 25);
+      return;
+    }
+    const txt = props.legend + ` (${moment().format('MM/DD/YY hh:mm:ss')}: ${(-99.99999).toPrecision(6)})`
+    setWLegend(GetTextWidth("Segoe UI", '1em', txt) + 25);
+
+   }, [props.legend, props.highlightHover])
 
    React.useEffect(() => {
        setGuid(context.AddData({
-           color: props.color,
-           lineStyle: props.lineStyle,
-           legend: props.legend,
+           legend: createLegend(),
            getMax: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[1]) ,
            getMin: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[0]),
-           legendClick: () => { setEnabled((e) => !e); },
-           legendOpacity: 1
-       }))
+       } as IDataSeries))
        return () => { context.RemoveData(guid) }
    }, []);
 
+   function createLegend(): HTMLElement|undefined {
+     if (props.legend === undefined)
+       return undefined;
+
+     let txt = props.legend;
+
+     if (props.highlightHover && !isNaN(highlight[0]) && !isNaN(highlight[1]))
+      txt = txt + ` (${moment(highlight[0]).format('MM/DD/YY hh:mm:ss')}: ${highlight[1].toPrecision(6)})`
+
+    return (<div onClick={() => setEnabled((e) => !e)} style={{width: wLegend, display: 'flex', alignItems: 'center', marginRight: '20px'}}>
+      {(props.lineStyle === '-' ?
+        <div style={{ width: ' 10px', height: 0, borderTop: '2px solid', borderRight: '10px solid', borderBottom: '2px solid', borderLeft: '10px solid', borderColor: props.color, overflow: 'hidden', marginRight: '5px', opacity: (enabled? 1 : 0.5) }}></div> :
+        <div style={{ width: ' 10px', height: '4px', borderTop: '0px solid', borderRight: '3px solid', borderBottom: '0px solid', borderLeft: '3px solid', borderColor: props.color, overflow: 'hidden', marginRight: '5px', opacity: (enabled? 1 : 0.5) }}></div>
+      )}
+      <label style={{ marginTop: '0.5rem' }}> {txt}</label>
+      </div>);
+   }
 
    function generateData() {
        let result = "M ";
@@ -122,6 +143,5 @@ function Line(props: IProps) {
        </g > : null
    );
 }
-
 
 export default Line;

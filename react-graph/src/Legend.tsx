@@ -23,73 +23,24 @@
 
 import * as React from 'react';
 import {GraphContext} from './GraphContext'
-import {GetTextWidth} from '@gpa-gemstone/helper-functions';
 
 interface IProps {
   height: number,
   width: number,
   location: 'bottom'|'right',
-  setHeight: (h: number) => void,
-  setWidth: (w: number) => void,
   graphHeight: number,
   graphWidth: number,
 }
 
 function Legend(props: IProps) {
   const context = React.useContext(GraphContext)
-
-  React.useLayoutEffect(() => {
-
-       const hLegendEntry = 20;
-       const wLegendEntry = 20 + 25;
-
-       let nWidth = [...context.Data.values()].map(item => (item.legend !== undefined ? GetTextWidth("Segoe UI", '1em', item.legend) + wLegendEntry : 0));
-       nWidth = nWidth.filter(i => i > 0);
-
-       if (nWidth.length === 0) {
-           if (props.height !== 0)
-               props.setHeight(0);
-           if (props.width !== 0)
-               props.setWidth(0);
-           return;
-       }
-
-       if (props.location === 'bottom') {
-           if (props.width !== props.graphWidth)
-               props.setWidth(props.graphWidth)
-           let nRow = 1;
-           let l = 0;
-           let i = 0;
-           while (i < nWidth.length) {
-               l = l + nWidth[i];
-               if (l > props.graphWidth) {
-                   nRow = nRow + 1;
-                   l = 0;
-               }
-               i = i + 1;
-           }
-           if (props.height !== (nRow * hLegendEntry))
-               props.setHeight(nRow * hLegendEntry)
-       }
-       if (props.location === 'right') {
-           if (props.height !== props.graphHeight)
-               props.setHeight(props.graphHeight);
-           const wCol = Math.max(...nWidth);
-           const nCol = Math.ceil(nWidth.length / (props.graphHeight / hLegendEntry));
-           if (props.width !== (nCol * wCol))
-               props.setWidth(nCol * wCol);
-       }
-
-   });
-
+  const w = (props.location === 'bottom'? props.graphWidth : props.width);
+  const h = (props.location === 'right'? props.graphHeight : props.height);
     return (
-      <div style={{ height: props.height, width: props.width, position: 'relative', display: 'flex' }}>
+      <div style={{ height: h, width: w, position: 'relative', display: 'flex' }}>
         {[...context.Data.values()].map((series, index) => (series.legend !== undefined ?
-              <div key={index} style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }} onClick={(series.legendClick === undefined ? () => undefined: () => series.legendClick!())}>
-                  {(series.lineStyle === '-' ?
-                      <div style={{ width: ' 10px', height: 0, borderTop: '2px solid', borderRight: '10px solid', borderBottom: '2px solid', borderLeft: '10px solid', borderColor: series.color, overflow: 'hidden', marginRight: '5px', opacity: series.legendOpacity }}></div> :
-                      <div style={{ width: ' 10px', height: '4px', borderTop: '0px solid', borderRight: '3px solid', borderBottom: '0px solid', borderLeft: '3px solid', borderColor: series.color, overflow: 'hidden', marginRight: '5px', opacity: series.legendOpacity }}></div>)}
-                  <label style={{ marginTop: '0.5rem' }}> {series.legend}</label>
+              <div key={index}>
+                  {series.legend}
           </div> : null))}
       </div>)
 }

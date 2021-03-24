@@ -44,7 +44,9 @@ export interface IProps {
     Tlabel?: string,
     Ylabel?: string,
     legend?: 'hidden'| 'bottom' | 'right',
-    showMouse: boolean
+    showMouse: boolean,
+    legendHeight?: number,
+    legendWidth?: number,
 }
 
 const SvgStyle: React.CSSProperties = {
@@ -89,12 +91,9 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
     const [heightXLabel, setHeightXLabel] = React.useState<number>(0);
     const [heightYLabel, setHeightYLabel] = React.useState<number>(0);
 
-    const [heightLegend, setHeightLegend] = React.useState<number>(0);
-    const [widthLegend, setWidthLegend] = React.useState<number>(0);
-
     // Constants
-    const SVGHeight = props.height - (props.legend === 'bottom'? heightLegend : 0);
-    const SVGWidth = props.width - (props.legend === 'right'? widthLegend : 0);
+    const SVGHeight = props.height - (props.legend === 'bottom'? (props.legendHeight !== undefined? props.legendHeight : 20) : 0);
+    const SVGWidth = props.width - (props.legend === 'right'? (props.legendWidth !== undefined? props.legendWidth : 100) : 0);
 
     // Adjust top and bottom Offset
     React.useEffect(() => {
@@ -166,12 +165,11 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
         setData((fld) => { const updated = cloneDeep(fld); updated.delete(d); return updated;})
     }
 
-    function SetLegend(key: string, legend: string, opacity: number): void {
+    function SetLegend(key: string, legend: JSX.Element|undefined): void {
         setData((fld) => {
           const updated = cloneDeep(fld);
           const series = updated.get(key);
           series!.legend = legend;
-          series!.legendOpacity = opacity;
           updated.set(key, series!);
           return updated;
         });
@@ -321,7 +319,7 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
 
                    </svg>
                </div>
-             {props.legend  !== undefined && props.legend !== 'hidden' ? <Legend location={props.legend} setWidth={setWidthLegend} setHeight={setHeightLegend} height={heightLegend} width={widthLegend} graphWidth={SVGWidth} graphHeight={SVGHeight} /> : null}
+             {props.legend  !== undefined && props.legend !== 'hidden' ? <Legend location={props.legend} height={props.legendHeight !== undefined? props.legendHeight : 50} width={props.legendWidth !== undefined? props.legendWidth : 100} graphWidth={SVGWidth} graphHeight={SVGHeight} /> : null}
             </div>
        </GraphContext.Provider>
    )

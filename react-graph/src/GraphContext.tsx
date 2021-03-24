@@ -36,7 +36,7 @@ export interface IGraphContext {
   AddData: ((d: IDataSeries) => string),
   RemoveData: (key: string) => void,
   UpdateData: (key: string, d: IDataSeries) => void,
-  SetLegend: (key: string, legend: string|undefined, opacity: number) => void
+  SetLegend: (key: string, legend: HTMLElement|undefined) => void
 };
 
 export const GraphContext = React.createContext({
@@ -59,12 +59,7 @@ export const GraphContext = React.createContext({
 export interface IDataSeries {
   getMin: (tDomain: [number, number]) => number,
   getMax: (tDomain: [number, number]) => number,
-
-  color: string,
-  legend?: string,
-  lineStyle: LineStyle,
-  legendOpacity: number,
-  legendClick?: () => void
+  legend?: HTMLElement,
 };
 
 export type LineStyle = '-'|':';
