@@ -83,11 +83,11 @@ function Line(props: IProps) {
      if (props.legend === undefined)
       return;
     if (props.highlightHover === undefined) {
-      setWLegend(GetTextWidth("Segoe UI", '1em', props.legend) + 25);
+      setWLegend(GetTextWidth("Segoe UI", '1em', props.legend) + 45);
       return;
     }
-    const txt = props.legend + ` (${moment().format('MM/DD/YY hh:mm:ss')}: ${(-99.99999).toPrecision(6)})`
-    setWLegend(GetTextWidth("Segoe UI", '1em', txt) + 25);
+    const txt = props.legend + ` (${moment().format('MM/DD/YY hh:mm:ss')}: ${(-99.999999).toPrecision(8)})`
+    setWLegend(GetTextWidth("Segoe UI", '1em', txt) + 45);
 
    }, [props.legend, props.highlightHover])
 
