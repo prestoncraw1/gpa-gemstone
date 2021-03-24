@@ -100,9 +100,9 @@ function TimeAxis(props: IProps) {
       if (deltaT < msPerSecond)
         format = 'SSS';
 
-      const Tstart = moment(context.XDomain[0]);
-      const Tend = moment(context.XDomain[1]);
-      const Tdiff = moment.duration(moment(context.XDomain[1]).diff(moment(context.XDomain[0])));
+      const Tstart = moment.utc(context.XDomain[0]);
+      const Tend = moment.utc(context.XDomain[1]);
+      const Tdiff = moment.duration(moment.utc(context.XDomain[1]).diff(moment.utc(context.XDomain[0])));
       const Ttick = cloneDeep(Tstart);
       let step = 10;
       let stepType: TimeStep = 'y'
@@ -350,7 +350,7 @@ function TimeAxis(props: IProps) {
 
 
     function formatTS(t: number): string {
-      const TS = moment(t);
+      const TS = moment.utc(t);
       return TS.format(tFormat);
     }
 

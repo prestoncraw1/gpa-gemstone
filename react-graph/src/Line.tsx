@@ -107,7 +107,7 @@ function Line(props: IProps) {
      let txt = props.legend;
 
      if (props.highlightHover && !isNaN(highlight[0]) && !isNaN(highlight[1]))
-      txt = txt + ` (${moment(highlight[0]).format('MM/DD/YY hh:mm:ss')}: ${highlight[1].toPrecision(6)})`
+      txt = txt + ` (${moment.utc(highlight[0]).format('MM/DD/YY hh:mm:ss')}: ${highlight[1].toPrecision(6)})`
 
     return (<div onClick={() => setEnabled((e) => !e)} style={{width: wLegend, display: 'flex', alignItems: 'center', marginRight: '20px'}}>
       {(props.lineStyle === '-' ?
