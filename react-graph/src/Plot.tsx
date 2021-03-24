@@ -204,6 +204,7 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
               return;
 
           evt.stopPropagation();
+		  evt.preventDefault();
 
           let multiplier = 1.25;
 
