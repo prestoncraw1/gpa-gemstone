@@ -110,13 +110,13 @@ function ValueAxis(props: IProps) {
         setHlabel(0);
         return;
       }
-      const h = GetTextHeight("Segoe UI", '1em', props.label);
+      const h = GetTextHeight("Segoe UI", '1em', props.label) + 4;
       setHlabel(h);
     },[props.label, props.height, props.offsetTop, props.offsetBottom]);
 
     React.useEffect(() => {
         let dY = Math.max(...tick.map(t => GetTextWidth("Segoe UI", '1em', (t * factor).toFixed(nDigits))));
-        dY = (isFinite(dY)? dY : 0) + 4
+        dY = (isFinite(dY)? dY : 0) + 8
         if (dY !== hAxis)
             setHAxis(dY);
     },[tick, nDigits])
@@ -133,7 +133,7 @@ function ValueAxis(props: IProps) {
       {tick.map((l, i) => <path key={i} stroke='black' style={{ strokeWidth: 1, transition: 'd 1s' }} d={`M ${props.offsetLeft - 6} ${l * context.YScale + context.YOffset} h ${6}`} />)}
       {tick.map((l, i) => <text fill={'black'} key={i} style={{ fontSize: '1em', textAnchor: 'end', dominantBaseline: 'middle', transition: 'x 0.5s, y 0.5s' }} x={props.offsetLeft - 8} y={l * context.YScale + context.YOffset}>{(l * factor).toFixed(nDigits)}</text>)}
 
-      {props.label !== undefined ? <text fill={'black'} style={{ fontSize: '1em', textAnchor: 'middle', dominantBaseline: 'middle' }} transform={`rotate(-90,${props.offsetLeft - hAxis},${(props.offsetTop  - props.offsetBottom + props.witdh)/ 2.0})`} x={props.offsetLeft - hAxis} y={(props.offsetTop  - props.offsetBottom + props.witdh)}>{props.label}</text> : null}
+      {props.label !== undefined ? <text fill={'black'} style={{ fontSize: '1em', textAnchor: 'middle', dominantBaseline: 'middle' }} transform={`rotate(-90,${props.offsetLeft - hAxis - 4},${(- props.offsetTop  - props.offsetBottom + props.height)/ 2.0})`} x={props.offsetLeft - hAxis - 4} y={(- props.offsetTop  - props.offsetBottom + props.height)/ 2.0}>{props.label}</text> : null}
       {factor !== 1 ? <text fill={'black'} style={{ fontSize: '1em' }} x={props.offsetLeft} y={props.offsetTop - 5}>x{1/factor}</text> : null}
     </g>)
 }
