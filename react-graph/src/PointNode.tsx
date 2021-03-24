@@ -118,14 +118,15 @@ export class PointNode {
           {
             const center = Math.round((upper + lower)/2);
             const Tcenter = this.points[center][0];
+
+            if (center === upper || center === lower)
+              break;
             if (Tcenter <= T)
               lower = center;
             if (Tcenter > T)
               upper = center;
             Tupper = this.points[upper][0];
             Tlower = this.points[lower][0];
-          if (center === upper || center === lower)
-            break;
           }
           if (Math.abs(T - Tlower) < Math.abs(T- Tupper))
             return this.points[lower];
