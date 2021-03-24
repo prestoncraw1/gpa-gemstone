@@ -86,11 +86,11 @@ function TimeAxis(props: IProps) {
       if (deltaT < msPerYear && deltaT >= 30 * msPerDay)
         format = 'MM/DD';
       if (deltaT < 30 * msPerDay && deltaT >=  2* msPerDay)
-        format = 'MM/DD hh';
+        format = 'MM/DD HH';
       if (deltaT < 2* msPerDay && deltaT >=  30* msPerHour)
-        format = 'hh';
+        format = 'HH';
       if (deltaT < 30* msPerHour && deltaT >=  msPerHour)
-        format = 'hh:mm';
+        format = 'HH:mm';
       if (deltaT < msPerHour && deltaT >=  30* msPerMinute)
         format = 'mm';
       if (deltaT < 30* msPerMinute && deltaT >=   msPerMinute)
@@ -303,11 +303,11 @@ function TimeAxis(props: IProps) {
         return " (min:sec)";
       if (tFormat === 'mm')
         return " (min)";
-      if (tFormat === 'hh:mm')
+      if (tFormat === 'HH:mm')
         return " (hour:min)";
-      if (tFormat === 'hh')
+      if (tFormat === 'HH')
         return " (hour)"
-      if (tFormat === 'MM/DD hh')
+      if (tFormat === 'MM/DD HH')
         return " (month/day hour)"
       if (tFormat === 'MM/DD')
         return " (month/day)"
