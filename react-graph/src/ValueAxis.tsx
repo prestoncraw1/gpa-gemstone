@@ -79,7 +79,7 @@ function ValueAxis(props: IProps) {
         newTicks.push(newTicks[newTicks.length - 1] + scale);
 
     let expF = 0;
-    let Ymax = Math.max(Math.abs(context.YDomain[0]),Math.abs(context.YDomain[1]));
+    const Ymax = Math.max(Math.abs(context.YDomain[0]),Math.abs(context.YDomain[1]));
     while ((Ymax*Math.pow(10,expF)) < 1) {
         expF = expF + 1;
     }
