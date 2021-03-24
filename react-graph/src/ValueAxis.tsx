@@ -146,9 +146,10 @@ function ValueAxis(props: IProps) {
       <path stroke='black' style={{ strokeWidth: 1, transition: 'd 0.5s' }} d={`M ${props.offsetLeft} ${props.height - props.offsetBottom + 8} V ${props.offsetTop}`} />
       <path stroke='black' style={{ strokeWidth: 1, transition: 'd 0.5s' }} d={`M ${props.offsetLeft - 8} ${props.offsetTop} h ${8}`} />
       {tick.map((l, i) => <path key={i} stroke='black' style={{ strokeWidth: 1, transition: 'd 1s' }} d={`M ${props.offsetLeft - 6} ${l * context.YScale + context.YOffset} h ${6}`} />)}
-      {tick.map((l, i) => <text fill={'black'} key={i} style={{ fontSize: '1em', textAnchor: 'end', dominantBaseline: 'middle', transition: 'x 0.5s, y 0.5s' }} x={props.offsetLeft - 8} y={l * context.YScale + context.YOffset}>{(l * factor).toFixed(nDigits)}</text>)}
+      {tick.map((l, i) => <text fill={'black'} key={i} style={{ fontSize: '1em', textAnchor: 'end', transition: 'x 0.5s, y 0.5s' }} dominantBaseline={'middle'} x={props.offsetLeft - 8} y={l * context.YScale + context.YOffset}>{(l * factor).toFixed(nDigits)}</text>)}
 
-      {props.label !== undefined ? <text fill={'black'} style={{ fontSize: ftSizeLabel + 'em', textAnchor: 'middle', dominantBaseline: 'middle' }} transform={`rotate(-90,${props.offsetLeft - hAxis - 4},${(props.offsetTop  - props.offsetBottom + props.height)/ 2.0})`} x={props.offsetLeft - hAxis - 4} y={(props.offsetTop  - props.offsetBottom + props.height)/ 2.0}>{props.label}</text> : null}
+      {props.label !== undefined ? <text fill={'black'} style={{ fontSize: ftSizeLabel + 'em', textAnchor: 'middle'}} dominantBaseline={'text-bottom'}
+      transform={`rotate(-90,${props.offsetLeft - hAxis - 4},${(props.offsetTop  - props.offsetBottom + props.height)/ 2.0})`} x={props.offsetLeft - hAxis - 4} y={(props.offsetTop  - props.offsetBottom + props.height)/ 2.0}>{props.label}</text> : null}
       {factor !== 1 ? <text fill={'black'} style={{ fontSize: '1em' }} x={props.offsetLeft} y={props.offsetTop - 5}>x{1/factor}</text> : null}
     </g>)
 }
