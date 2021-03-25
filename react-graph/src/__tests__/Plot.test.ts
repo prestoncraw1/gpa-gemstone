@@ -76,6 +76,7 @@ test('Node Get Point 3', () => {
 });
 
 
+
 test('Node Data for 40 Pts', () => {
   const d: [number,number][] = [... new Array(45)].map((_,i) => [i,2*i] as [number,number]);
   const node = new PointNode(d);
@@ -95,4 +96,12 @@ test('Node Limits for 40 Pts', () => {
 
   expect(dat[0]).toBe(0);
   expect(dat[1]).toBe(1.5*22);
+});
+
+test('Node Get Point for 40 Pts', () => {
+  const d: [number,number][] = [... new Array(45)].map((_,i) => [i,1.5*i] as [number,number]);
+  const node = new PointNode(d);
+  const dat = node.GetPoint(32.8);
+  expect(dat[0]).toBe(33);
+  expect(dat[1]).toBe(33*1.5);
 });
