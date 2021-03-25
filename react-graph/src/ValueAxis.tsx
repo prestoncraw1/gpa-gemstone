@@ -35,7 +35,9 @@ interface IProps {
   offsetLeft: number,
   height: number,
   witdh: number,
+  useFactor: boolean
   label?: string,
+
 }
 
 function ValueAxis(props: IProps) {
@@ -88,14 +90,19 @@ function ValueAxis(props: IProps) {
     }
 
     expF =  Math.sign(expF)*(Math.floor(Math.abs(expF) / 3) ) * 3;
+
     // adjust to avoid same value on axis scenario
     if (dY*Math.pow(10,expF) < 0.1)
       expF = expF + 3;
-    setFactor(Math.pow(10,expF));
+
+    if (props.useFactor)
+      setFactor(Math.pow(10,expF));
+    else
+      setFactor(1);
 
     setTick(newTicks);
 
-    }, [context.YDomain]);
+  }, [context.YDomain, props.useFactor]);
 
     React.useEffect(() => {
       let dY = context.YDomain[1] - context.YDomain[0];
@@ -108,6 +115,8 @@ function ValueAxis(props: IProps) {
           setNdigits(2);
       if (dY < 0.15)
           setNdigits(3)
+        if (dY < 0.015)
+          setNdigits(4)
 
     }, [factor, context.YDomain])
 

@@ -47,6 +47,7 @@ export interface IProps {
     showMouse: boolean,
     legendHeight?: number,
     legendWidth?: number,
+    useMetricFactors?: boolean
 }
 
 const SvgStyle: React.CSSProperties = {
@@ -96,7 +97,7 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
     const SVGWidth = props.width - (props.legend === 'right'? (props.legendWidth !== undefined? props.legendWidth : 100) : 0);
 
     React.useEffect(() => {
-      setTdomain(props.defaultTdomain);      
+      setTdomain(props.defaultTdomain);
     }, [props.defaultTdomain])
     // Adjust top and bottom Offset
     React.useEffect(() => {
@@ -296,7 +297,9 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
                    <svg ref={SVGref} width={SVGWidth} height={SVGHeight} style={SvgStyle} viewBox={`0 0 ${SVGWidth} ${SVGHeight}`}>
                       {props.showBorder !== undefined && props.showBorder ? < path stroke='black' d={`M ${offsetLeft} ${offsetTop} H ${SVGWidth- offsetRight} V ${SVGWidth - offsetBottom} H ${offsetLeft} Z`} /> : null}
                       <TimeAxis label={props.Tlabel} offsetBottom={offsetBottom} offsetLeft={offsetLeft} offsetRight={offsetRight} width={SVGWidth} height={SVGHeight} setHeight={setHeightXLabel} heightAxis={heightXLabel}/>
-                      <ValueAxis label={props.Ylabel} offsetTop={offsetTop} offsetLeft={offsetLeft} offsetBottom={offsetBottom} witdh={SVGWidth} height={SVGHeight} setWidthAxis={setHeightYLabel} setHeightFactor={setHeightYFactor} hAxis={heightYLabel} hFactor={heightYFactor} />
+                      <ValueAxis label={props.Ylabel} offsetTop={offsetTop} offsetLeft={offsetLeft} offsetBottom={offsetBottom}
+                        witdh={SVGWidth} height={SVGHeight} setWidthAxis={setHeightYLabel} setHeightFactor={setHeightYFactor}
+                        hAxis={heightYLabel} hFactor={heightYFactor} useFactor={props.useMetricFactors === undefined? true: props.useMetricFactors}/>
                        <defs>
                            <clipPath id={"cp-" + guid}>
                                <path stroke={'none'} fill={'none'} d={` M ${offsetLeft},${offsetTop - 5} H  ${SVGWidth - offsetRight + 5} V ${SVGHeight - offsetBottom} H ${offsetLeft} Z`} />
