@@ -22,19 +22,21 @@
 // ******************************************************************************************************
 
 import * as React from 'react';
-import {MagnifyingGlass, House, FourWayArrow} from '@gpa-gemstone/gpa-symbols'
+import {MagnifyingGlass, House, FourWayArrow, InputNumbers, Flag} from '@gpa-gemstone/gpa-symbols'
 
 interface IProps {
     showZoom: boolean,
     showPan: boolean,
     showReset: boolean,
-    currentSelection: 'zoom'|'pan',
-    setSelection: (selection: 'zoom'|'pan'|'reset') => void,
+    showSelect: boolean,
+    showDownload: boolean,
+    currentSelection: 'zoom'|'pan'|'select',
+    setSelection: (selection: ButtonType) => void,
     x: number,
     y: number
 }
 
-type ButtonType = ('zoom' | 'pan' | 'reset');
+type ButtonType = ('zoom' | 'pan' | 'reset' | 'select' | 'download');
 
 function InteractiveButtons(props: IProps) {
     /*
@@ -42,7 +44,7 @@ function InteractiveButtons(props: IProps) {
     */
     const [expand, setExpand] = React.useState<boolean>(false);
 
-    const nButtons = (props.showZoom? 1 : 0) + (props.showPan? 1 : 0) + (props.showReset? 1 : 0);
+    const nButtons = (props.showZoom? 1 : 0) + (props.showPan? 1 : 0) + (props.showReset? 1 : 0) + (props.showSelect? 1 : 0) + (props.showDownload? 1 : 0);
 
     function openTray(evt: React.MouseEvent): void {
       evt.stopPropagation();
@@ -72,8 +74,12 @@ function InteractiveButtons(props: IProps) {
       symbols.push('zoom' as ButtonType);
     if (props.showPan)
       symbols.push('pan' as ButtonType);
+    if (props.showSelect)
+        symbols.push('select' as ButtonType);
     if (props.showReset)
       symbols.push('reset' as ButtonType);
+    if (props.showDownload)
+      symbols.push('download' as ButtonType);
 
     return (
      <g>
@@ -92,7 +98,7 @@ function Button(props: {symbol: ButtonType, x: number, y: number, active: boolea
      onMouseDown={(evt) => evt.stopPropagation()}
      onClick={(evt) => { evt.stopPropagation(); props.onClick()}} onMouseUp={(evt) => evt.stopPropagation()}/>
     <text fill={'black'} style={{ fontSize: '1em', textAnchor: 'middle', dominantBaseline: 'middle' }} x={props.x} y={props.y}>
-    {props.symbol === 'zoom' ? MagnifyingGlass : props.symbol === 'pan'? FourWayArrow : House}
+    {props.symbol === 'zoom' ? MagnifyingGlass : props.symbol === 'pan'? FourWayArrow : props.symbol === 'select'? Flag  : props.symbol === 'download'? InputNumbers : House}
     </text>
   </>)
 }

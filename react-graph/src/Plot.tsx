@@ -47,7 +47,9 @@ export interface IProps {
     showMouse: boolean,
     legendHeight?: number,
     legendWidth?: number,
-    useMetricFactors?: boolean
+    useMetricFactors?: boolean,
+    onSelect?: (t:number) => void,
+    onDataInspect?: (tDomain: [number,number]) => void
 }
 
 const SvgStyle: React.CSSProperties = {
@@ -77,8 +79,8 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
     const [yOffset, setYoffset] = React.useState<number>(0);
     const [yScale, setYscale] = React.useState<number>(1);
 
-    const [mouseMode, setMouseMode] = React.useState<'none' | 'zoom' | 'pan'>('none');
-    const [selectedMode, setSelectedMode] = React.useState<'pan' | 'zoom'>('zoom');
+    const [mouseMode, setMouseMode] = React.useState<'none' | 'zoom' | 'pan' | 'select'>('none');
+    const [selectedMode, setSelectedMode] = React.useState<'pan' | 'zoom' | 'select'>('zoom');
     const [mouseIn, setMouseIn] = React.useState<boolean>(false);
     const [mousePosition, setMousePosition] = React.useState<[number, number]>([0, 0]);
     const [mouseClick, setMouseClick] = React.useState<[number, number]>([0, 0]);
@@ -260,6 +262,8 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
             setMouseMode('zoom');
         if (selectedMode === 'pan' && (props.pan === undefined || props.pan))
             setMouseMode('pan');
+        if (selectedMode == 'select' && props.onSelect !== undefined)
+          props.onSelect((ptTransform.x - tOffset)/ tScale)
     }
 
     function handleMouseUp(_: any) {
@@ -317,11 +321,16 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
                        </g>
                         <InteractiveButtons showPan={(props.pan === undefined || props.pan)}
                          showZoom={props.zoom === undefined || props.zoom}
-                          showReset={!(props.pan !== undefined && props.zoom !== undefined && !props.zoom && !props.pan)}
-                           currentSelection={selectedMode}
-                           setSelection={(s) => { if (s === "reset") Reset(); else setSelectedMode(s as ('zoom'|'pan'))}}
-                           x={SVGWidth - offsetRight - 12}
-                           y={22} />
+                         showReset={!(props.pan !== undefined && props.zoom !== undefined && !props.zoom && !props.pan)}
+                         showSelect={props.onSelect !== undefined}
+                         showDownload={props.onDataInspect !== undefined}
+                         currentSelection={selectedMode}
+                         setSelection={(s) => {
+                           if (s === "reset") Reset();
+                           else if (s === "download") props.onDataInspect!(tDomain);
+                           else setSelectedMode(s as ('zoom'|'pan'|'select'))}}
+                         x={SVGWidth - offsetRight - 12}
+                         y={22} />
 
                    </svg>
                </div>
