@@ -55,8 +55,8 @@ function Line(props: IProps) {
 
        context.UpdateData(guid, {
            legend: createLegend(),
-           getMax: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[1]) ,
-           getMin: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[0]),
+           getMax: (t) => (data == null|| !enabled? -Infinity : data.GetLimits(t[0],t[1])[1]) ,
+           getMin: (t) => (data == null|| !enabled? Infinity : data.GetLimits(t[0],t[1])[0]),
        } as IDataSeries)
    }, [props, data])
 
@@ -94,8 +94,8 @@ function Line(props: IProps) {
    React.useEffect(() => {
        setGuid(context.AddData({
            legend: createLegend(),
-           getMax: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[1]) ,
-           getMin: (t) => (data == null? NaN : data.GetLimits(t[0],t[1])[0]),
+           getMax: (t) => (data == null|| !enabled? -Infinity : data.GetLimits(t[0],t[1])[1]) ,
+           getMin: (t) => (data == null|| !enabled? Infinity : data.GetLimits(t[0],t[1])[0]),
        } as IDataSeries))
        return () => { context.RemoveData(guid) }
    }, []);

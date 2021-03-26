@@ -62,8 +62,8 @@ function LineWithThreshold(props: IProps) {
 
        context.UpdateData(guid, {
            legend: createLegend(),
-           getMax: (t) => (data == null? NaN : Math.max(data.GetLimits(t[0],t[1])[1],threshHoldLimits[1])) ,
-           getMin: (t) => (data == null? NaN : Math.min(data.GetLimits(t[0],t[1])[0],threshHoldLimits[0])),
+           getMax: (t) => (data == null || !enabled? -Infinity : Math.max(data.GetLimits(t[0],t[1])[1],threshHoldLimits[1])) ,
+           getMin: (t) => (data == null || !enabled? Infinity : Math.min(data.GetLimits(t[0],t[1])[0],threshHoldLimits[0])),
        } as IDataSeries)
    }, [props, data])
 
@@ -101,8 +101,8 @@ function LineWithThreshold(props: IProps) {
    React.useEffect(() => {
        setGuid(context.AddData({
            legend: createLegend(),
-           getMax: (t) => (data == null? NaN : Math.max(data.GetLimits(t[0],t[1])[1],threshHoldLimits[1])),
-           getMin: (t) => (data == null? NaN : Math.min(data.GetLimits(t[0],t[1])[0],threshHoldLimits[0])),
+           getMax: (t) => (data == null || !enabled? -Infinity : Math.max(data.GetLimits(t[0],t[1])[1],threshHoldLimits[1])) ,
+           getMin: (t) => (data == null || !enabled? Infinity : Math.min(data.GetLimits(t[0],t[1])[0],threshHoldLimits[0])),
        } as IDataSeries))
        return () => { context.RemoveData(guid) }
    }, []);
