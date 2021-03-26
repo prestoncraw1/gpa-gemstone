@@ -206,7 +206,7 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
               return;
 
           evt.stopPropagation();
-		  evt.preventDefault();
+		      evt.preventDefault();
 
           let multiplier = 1.25;
 
@@ -225,7 +225,9 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
               t0 = tcenter - (tcenter - t0) * multiplier;
               t1 = tcenter + (t1 - tcenter) * multiplier;
           }
-          setTdomain([t0, t1]);
+
+          if ((t1 - t0) > 10)
+            setTdomain([t0, t1]);
       }
 
     function handleMouseMove(evt: any) {
@@ -274,7 +276,8 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
 
             const t0 = (Math.min(mousePosition[0], mouseClick[0]) - tOffset) / tScale;
             const t1 = (Math.max(mousePosition[0], mouseClick[0]) - tOffset) / tScale;
-            setTdomain((curr) => [Math.max(curr[0], t0), Math.min(curr[1], t1)]);
+
+            setTdomain((curr) => (Math.min(curr[1], t1) - Math.max(curr[0], t0)) > 10? [Math.max(curr[0], t0), Math.min(curr[1], t1)] : [curr[0],curr[1]]);
         }
 
         setMouseMode('none');
