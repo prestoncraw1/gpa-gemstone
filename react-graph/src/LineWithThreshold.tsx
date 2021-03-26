@@ -65,7 +65,7 @@ function LineWithThreshold(props: IProps) {
            getMax: (t) => (data == null || !enabled? -Infinity : Math.max(data.GetLimits(t[0],t[1])[1],threshHoldLimits[1])) ,
            getMin: (t) => (data == null || !enabled? Infinity : Math.min(data.GetLimits(t[0],t[1])[0],threshHoldLimits[0])),
        } as IDataSeries)
-   }, [props, data])
+   }, [props, data, enabled])
 
    React.useEffect(() => {
        if (props.data.length === 0 || isNaN(context.XHover) || data === null)

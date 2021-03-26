@@ -58,7 +58,7 @@ function Line(props: IProps) {
            getMax: (t) => (data == null|| !enabled? -Infinity : data.GetLimits(t[0],t[1])[1]) ,
            getMin: (t) => (data == null|| !enabled? Infinity : data.GetLimits(t[0],t[1])[0]),
        } as IDataSeries)
-   }, [props, data])
+   }, [props, data, enabled])
 
    React.useEffect(() => {
        if (props.data.length === 0 || isNaN(context.XHover) || data === null)
@@ -92,12 +92,13 @@ function Line(props: IProps) {
    }, [props.legend, props.highlightHover])
 
    React.useEffect(() => {
-       setGuid(context.AddData({
+       const id = context.AddData({
            legend: createLegend(),
            getMax: (t) => (data == null|| !enabled? -Infinity : data.GetLimits(t[0],t[1])[1]) ,
            getMin: (t) => (data == null|| !enabled? Infinity : data.GetLimits(t[0],t[1])[0]),
-       } as IDataSeries))
-       return () => { context.RemoveData(guid) }
+       } as IDataSeries)
+     setGuid(id)
+       return () => { context.RemoveData(id) }
    }, []);
 
    function createLegend(): HTMLElement|undefined {
