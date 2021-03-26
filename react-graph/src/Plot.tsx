@@ -262,7 +262,7 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
             setMouseMode('zoom');
         if (selectedMode === 'pan' && (props.pan === undefined || props.pan))
             setMouseMode('pan');
-        if (selectedMode == 'select' && props.onSelect !== undefined)
+        if (selectedMode === 'select' && props.onSelect !== undefined)
           props.onSelect((ptTransform.x - tOffset)/ tScale)
     }
 
