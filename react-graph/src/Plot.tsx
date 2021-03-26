@@ -144,12 +144,10 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
     // Adjust y axis
     React.useEffect(() => {
       const dY = yDomain[1] - yDomain[0];
-      if (dY === 0)
-        return;
 
-      const scale = (SVGHeight - offsetTop - offsetBottom) / dY;
+      const scale = (SVGHeight - offsetTop - offsetBottom) / (dY === 0? 0.00001 : dY);
       setYscale(-scale);
-      setYoffset(SVGHeight - offsetBottom + yDomain[0] * scale);
+      setYoffset(SVGHeight - offsetBottom +(yDomain[0] - (dY ===0? 0.000005 : 0)) * scale);
 
     }, [yDomain, offsetTop, offsetBottom]);
 
