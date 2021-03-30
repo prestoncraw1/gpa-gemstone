@@ -21,6 +21,7 @@
 //
 // ******************************************************************************************************
 
+
 declare module "OpenHistorian" {
     export interface iHistorian {
         NodeID: string, ID: string, Acronym: string, Name: string,
@@ -35,6 +36,8 @@ declare module "OpenHistorian" {
         UpdatedOn: string
     }
 
+    export const SignalTypes: ['IPHM' , 'IPHA' , 'VPHM' , 'VPHA' , 'FREQ' , 'DFDT' , 'ALOG' , 'FLAG' , 'DIGI' , 'CALC' , 'STAT' , 'ALARM' , 'QUAL']
+    export const Phases: ['A' , 'B' , 'C' , '+' , '-' , '0' , 'None']
     export type SignalType = 'IPHM' | 'IPHA' | 'VPHM' | 'VPHA' | 'FREQ' | 'DFDT' | 'ALOG' | 'FLAG' | 'DIGI' | 'CALC' | 'STAT' | 'ALARM' | 'QUAL'
     export type Phase = 'A' | 'B' | 'C' | '+' | '-' | '0' | 'None'
 }

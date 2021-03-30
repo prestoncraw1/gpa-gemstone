@@ -1,5 +1,5 @@
 // ******************************************************************************************************
-//  index.tsx - Gbtc
+//  index.d.ts - Gbtc
 //
 //  Copyright © 2021, Grid Protection Alliance.  All Rights Reserved.
 //
@@ -21,9 +21,3 @@
 //
 // ******************************************************************************************************
 
-/// <reference path="OpenHistorian.d.ts"/>
-/// <reference path="OpenXDA.d.ts"/>
-import * as OpenHistorian from 'OpenHistorian';
-import * as OpenXDA from 'OpenXDA';
-
-export { OpenXDA, OpenHistorian };

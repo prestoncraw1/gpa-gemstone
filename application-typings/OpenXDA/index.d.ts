@@ -21,7 +21,22 @@
 //
 // ******************************************************************************************************
 
+//export const AssetTypes: ['Line', 'LineSegment', 'Breaker' , 'Bus' , 'CapacitorBank' , 'Transformer' , 'CapacitorBankRelay']
+//export const MeasurementTypes: ['Voltage' , 'Current' , 'Power' , 'Energy' , 'Digital'];
+//export const MeasurementCharacteristics : ['AngleFund' , 'AvgImbal' , 'CrestFactor' , 'FlkrPLT' , 'FlkrPST' , 'Frequency' , 'HRMS' , 'IHRMS' , 'Instantaneous' , 'IT' , 'None' , 'P' , 'PDemand' , 'PF' , 'PFDemand' , 'PIntg' , 'PPeakDemand' , 'QDemand' , 'QFund' , 'QIntg' , 'RMS' , 'RMSPeakDemand' , 'S' , 'SDemand' , 'SNeg' , 'SpectraHGroup' , 'SPos' , 'SZero' , 'TDD' , 'TID' , 'TIDRMS' , 'TotalTHD' , 'TotalTHDRMS' , 'BreakerStatus' , 'TCE' , 'Q' , 'PIVLIntgPos' , 'QIVLIntgPos' , 'Peak' , 'FlkrMagAvg' , 'EvenTHD' , 'OddTHD' , 'FormFactor' , 'ArithSum' , 'S0S1' , 'S2S1' , 'TIF' , 'DF' , 'SIntgFund' , 'DFArith' , 'DFVector' , 'PFArith' , 'PFVector' , 'PHarmonic' , 'SArith' , 'SArithFund' , 'SVector' , 'SVectorFund' , 'Spectra' , 'SpectraIGroup'];
+//export const Phases : ['AN' , 'BN' , 'CN' , 'AB' , 'BC' , 'CA' , 'RES' , 'NG' , 'None' , 'Worst' , 'LineToNeutralAverage' , 'LineToLineAverage'];
+//export const EventTypes: ['Sag' , 'Swell' , 'Transient' , 'Fault' , 'Interruption']
+//export const NoteTypes : ['Meter' , 'Event' , 'Asset' , 'Location' , 'Customer' , 'User' , 'Company']
+
 declare module "OpenXDA" {
+    // Lists
+    export const AssetTypes: ['Line', 'LineSegment', 'Breaker' , 'Bus' , 'CapacitorBank' , 'Transformer' , 'CapacitorBankRelay']
+    export const MeasurementTypes: ['Voltage' , 'Current' , 'Power' , 'Energy' , 'Digital'];
+    export const MeasurementCharacteristics : ['AngleFund' , 'AvgImbal' , 'CrestFactor' , 'FlkrPLT' , 'FlkrPST' , 'Frequency' , 'HRMS' , 'IHRMS' , 'Instantaneous' , 'IT' , 'None' , 'P' , 'PDemand' , 'PF' , 'PFDemand' , 'PIntg' , 'PPeakDemand' , 'QDemand' , 'QFund' , 'QIntg' , 'RMS' , 'RMSPeakDemand' , 'S' , 'SDemand' , 'SNeg' , 'SpectraHGroup' , 'SPos' , 'SZero' , 'TDD' , 'TID' , 'TIDRMS' , 'TotalTHD' , 'TotalTHDRMS' , 'BreakerStatus' , 'TCE' , 'Q' , 'PIVLIntgPos' , 'QIVLIntgPos' , 'Peak' , 'FlkrMagAvg' , 'EvenTHD' , 'OddTHD' , 'FormFactor' , 'ArithSum' , 'S0S1' , 'S2S1' , 'TIF' , 'DF' , 'SIntgFund' , 'DFArith' , 'DFVector' , 'PFArith' , 'PFVector' , 'PHarmonic' , 'SArith' , 'SArithFund' , 'SVector' , 'SVectorFund' , 'Spectra' , 'SpectraIGroup'];
+    export const Phases : ['AN' , 'BN' , 'CN' , 'AB' , 'BC' , 'CA' , 'RES' , 'NG' , 'None' , 'Worst' , 'LineToNeutralAverage' , 'LineToLineAverage'];
+    export const EventTypes: ['Sag' , 'Swell' , 'Transient' , 'Fault' , 'Interruption']
+    export const NoteTypes : ['Meter' , 'Event' , 'Asset' , 'Location' , 'Customer' , 'User' , 'Company']
+
     // Types
     export type AssetTypeName = 'Line' | 'LineSegment' | 'Breaker' | 'Bus' | 'CapacitorBank' | 'Transformer' | 'CapacitorBankRelay'
     export type MeasurementTypeName = 'Voltage' | 'Current' | 'Power' | 'Energy' | 'Digital';
@@ -71,6 +86,6 @@ declare module "OpenXDA" {
 
     // AssetGroups
     export interface AssetGroup { ID: number, Name: string, DisplayDashboard: boolean, AssetGroups: number, Meters: number, Assets: number, Users: number }
-
+    
 }
 
