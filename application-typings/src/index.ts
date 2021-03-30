@@ -20,6 +20,6 @@
 //       Generated original version of source code.
 //
 // ******************************************************************************************************
-import * as OpenXDA from 'OpenXDA';
-import * as OpenHistorian from 'OpenHistorian';
-export {OpenXDA,OpenHistorian}
+import OpenXDA from 'OpenXDA';
+import OpenHistorian from 'OpenHistorian';
+export {OpenXDA, OpenHistorian}
