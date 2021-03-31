@@ -311,6 +311,8 @@ function TimeAxis(props: IProps) {
         return " (month/day hour)"
       if (tFormat === 'MM/DD')
         return " (month/day)"
+      if (tFormat === 'MM YY')
+          return " (month year)"
 
       return ""
 
