@@ -1,9 +1,10 @@
 {
   "name": "@gpa-gemstone/application-typings",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Application typings for GPA products",
-  "main": "index.d.ts",
-  "types": "index.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files":["lib/**/*"],
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
