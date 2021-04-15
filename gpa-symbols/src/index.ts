@@ -36,10 +36,12 @@ const InputNumbers = '🔢';
 const FourWayArrow = '☩';
 const MagnifyingGlass = '🔍';
 const House = '🏠';
+const Scroll = '📜';
+const PlayButton = '▶️';
 
 export { HeavyCheckMark, Pencil, TrashCan,
  CrossMark, Plus, Warning, 
  Spinner, Wrench, Flag,
  UpArrow, DownArrow, DNA,
  InputNumbers, MagnifyingGlass, House,
- FourWayArrow };
+ FourWayArrow,Scroll, PlayButton };
