@@ -93,7 +93,7 @@ export function SelectTable<T>(props: ISelectTableProps<T>) {
     }
 
 	function selectAll() {
-		setSelected((d) => {if (d.length === data.length) return []; else return _.cloneDeep(data); });
+		setSelected((d) => {if (d.length === data.length) return []; else return data.map(row => row[props.KeyField]); });
 	}
 	
     function handleSort(
@@ -107,7 +107,12 @@ export function SelectTable<T>(props: ISelectTableProps<T>) {
 
     const tableProps: TableProps<T> = {
         cols: [
-            { key: props.KeyField, label: '', headerStyle: { width: '4em' }, rowStyle: { width: '4em' }, content: (item: T, key: keyof T, style: React.CSSProperties) => (selected.findIndex(i => i === item[props.KeyField]) > -1 ? <div style={{ marginTop: '16px', textAlign: 'center' }}><i className="fa fa-check-square-o fa-3x" aria-hidden="true"></i></div> : null) },
+            { key: props.KeyField, label: '', headerStyle: { width: '4em' }, rowStyle: { width: '4em' }, content: (item: T, key: keyof T, style: React.CSSProperties) => {
+			const index = selected.findIndex(i => i === item[props.KeyField])
+			if ( index > -1)
+				return <div style={{ marginTop: '16px', textAlign: 'center' }}><i className="fa fa-check-square-o fa-3x" aria-hidden="true"></i></div>
+			return null
+				}},
             ...props.cols
         ],
         data,
