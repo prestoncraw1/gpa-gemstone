@@ -45,16 +45,25 @@ export interface ISelectTableProps<T> {
 	rowStyle?: React.CSSProperties;
     onSelection: (selected: T[]) => void;
     KeyField: keyof T;
+	selectAllCounter?: number;
 }
 
 export function SelectTable<T>(props: ISelectTableProps<T>) {
-
+	const didMountRef = React.useRef(false);
+	
     const [data, setData] = React.useState<T[]>(props.data);
     const [selected, setSelected] = React.useState<any[]>([]);
 
     const [sortField, setSortField] = React.useState<string>(props.sortField);
     const [ascending, setAscending] = React.useState<boolean>(props.ascending);
 
+	React.useEffect(() => {
+		if (didMountRef.current)
+			selectAll();
+		else
+			didMountRef.current = true;
+	},[props.selectAllCounter]);
+	
     React.useEffect(() => {
         if (props.data.length !== data.length)
             setData(props.data);
@@ -83,6 +92,10 @@ export function SelectTable<T>(props: ISelectTableProps<T>) {
             setSelected((od) => od.filter(item => item !== d.row[props.KeyField]));
     }
 
+	function selectAll() {
+		setSelected((d) => {if (d.length === data.length) return []; else return _.cloneDeep(data); });
+	}
+	
     function handleSort(
         d: { col: keyof T; ascending: boolean },
     ) {
