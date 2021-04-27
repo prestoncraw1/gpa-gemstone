@@ -46,4 +46,4 @@ export { HeavyCheckMark, Pencil, TrashCan,
  Spinner, Wrench, Flag,
  UpArrow, DownArrow, DNA,
  InputNumbers, MagnifyingGlass, House,
- FourWayArrow,Scroll, PlayButton };
+ FourWayArrow,Scroll, PlayButton, LeftArrow, RightArrow };
