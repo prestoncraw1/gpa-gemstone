@@ -36,10 +36,10 @@ export interface TableProps<T> {
     label: string;
     headerStyle?: React.CSSProperties;
     rowStyle?: React.CSSProperties;
-    content?(item: T, key: keyof T, style: React.CSSProperties): React.ReactNode;
+    content?(item: T, key: keyof T, style: React.CSSProperties, index: number): React.ReactNode;
   }[];
   data: T[];
-  onClick: (data: { col: keyof T; row: T; data: T[keyof T] }, event: any) => void;
+  onClick: (data: { col: keyof T; row: T; data: T[keyof T], index: number }, event: any) => void;
   sortField: string;
   ascending: boolean;
   onSort(data: { col: keyof T; ascending: boolean }): void;
@@ -108,9 +108,9 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
           <td
             key={index.toString() + item[colData.key] + colData.key}
             style={css}
-            onClick={this.handleClick.bind(this, { col: colData.key, row: item, data: item[colData.key] })}
+            onClick={this.handleClick.bind(this, { col: colData.key, row: item, data: item[colData.key], index })}
           >
-            {colData.content !== undefined ? colData.content(item, colData.key, css) : item[colData.key]}
+            {colData.content !== undefined ? colData.content(item, colData.key, css, index) : item[colData.key]}
           </td>
         );
       });
@@ -134,7 +134,7 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
   }
 
   handleClick(
-    data: { col: keyof T; row: T; data: any },
+    data: { col: keyof T; row: T; data: T[keyof T], index: number  },
     event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>,
   ) {
     this.props.onClick(data, event);
