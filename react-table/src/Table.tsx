@@ -32,17 +32,17 @@ const AngleIcon: React.FunctionComponent<{ ascending: boolean }> = (props) => (
 
 export interface TableProps<T> {
   cols: {
-    key: keyof T;
+    key: (keyof T|null);
     label: string;
     headerStyle?: React.CSSProperties;
     rowStyle?: React.CSSProperties;
-    content?(item: T, key: keyof T, style: React.CSSProperties, index: number): React.ReactNode;
+    content?(item: T, key: keyof T|null, style: React.CSSProperties, index: number): React.ReactNode;
   }[];
   data: T[];
-  onClick: (data: { col: keyof T; row: T; data: T[keyof T], index: number }, event: any) => void;
+  onClick: (data: { col: keyof T|null; row: T; data: T[keyof T]|null, index: number }, event: any) => void;
   sortField: string;
   ascending: boolean;
-  onSort(data: { col: keyof T; ascending: boolean }): void;
+  onSort(data: { col: keyof T|null; ascending: boolean }): void;
   tableClass?: string;
   tableStyle?: React.CSSProperties;
   theadStyle?: React.CSSProperties;
@@ -106,11 +106,11 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
 
         return (
           <td
-            key={index.toString() + item[colData.key] + colData.key}
+            key={index.toString() + (colData.key === null? '' : item[colData.key]) + colData.key}
             style={css}
-            onClick={this.handleClick.bind(this, { col: colData.key, row: item, data: item[colData.key], index })}
+            onClick={this.handleClick.bind(this, { col: colData.key, row: item, data: (colData.key === null? null : item[colData.key]), index })}
           >
-            {colData.content !== undefined ? colData.content(item, colData.key, css, index) : item[colData.key]}
+            {colData.content !== undefined ? colData.content(item, colData.key, css, index) : (colData.key === null? null : item[colData.key])}
           </td>
         );
       });
@@ -134,14 +134,14 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
   }
 
   handleClick(
-    data: { col: keyof T; row: T; data: T[keyof T], index: number  },
+    data: { col: keyof T|null; row: T; data: T[keyof T]|null, index: number  },
     event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>,
   ) {
     this.props.onClick(data, event);
   }
 
   handleSort(
-    data: { col: keyof T; ascending: boolean },
+    data: { col: keyof T|null; ascending: boolean },
     event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>,
   ) {
     this.props.onSort(data);

@@ -27,11 +27,11 @@ import Table, {TableProps} from './Table';
 
 export interface ISelectTableProps<T> {
 	cols: {
-		key: keyof T;
+		key: keyof T|null;
 		label: string;
 		headerStyle?: React.CSSProperties;
 		rowStyle?: React.CSSProperties;
-		content?(item: T, key: keyof T, style: React.CSSProperties): React.ReactNode;
+		content?(item: T, key: keyof T|null, style: React.CSSProperties): React.ReactNode;
 	  }[];
 	data: T[];
 	sortField: string;
@@ -82,7 +82,7 @@ export function SelectTable<T>(props: ISelectTableProps<T>) {
     }, [selected])
 
     function handleClick(
-        d: { col: keyof T; row: T; data: any },
+        d: { col: keyof T|null; row: T; data: any },
         event: React.MouseEvent < HTMLTableHeaderCellElement, MouseEvent >,
     ) {
         const sIndex = selected.findIndex(item => item === d.row[props.KeyField]);
