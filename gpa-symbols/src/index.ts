@@ -40,10 +40,12 @@ const MagnifyingGlass = '🔍';
 const House = '🏠';
 const Scroll = '📜';
 const PlayButton = '▶️';
+const Questionmark = '?';
 
 export { HeavyCheckMark, Pencil, TrashCan,
  CrossMark, Plus, Warning, 
  Spinner, Wrench, Flag,
  UpArrow, DownArrow, DNA,
  InputNumbers, MagnifyingGlass, House,
- FourWayArrow,Scroll, PlayButton, LeftArrow, RightArrow };
+ FourWayArrow,Scroll, PlayButton, LeftArrow, RightArrow,
+ Questionmark };
