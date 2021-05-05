@@ -18,12 +18,16 @@
 //  ----------------------------------------------------------------------------------------------------
 //  01/28/2020 - Billy Ernest
 //       Generated original version of source code.
+//  05/05/2021 - C. Lackner
+//       Added Help Message.
 //
 // ******************************************************************************************************
 
 import * as React from 'react';
+import HelperMessage from './HelperMessage';
+import { CreateGuid } from '@gpa-gemstone/helper-functions'
 
-export default function Select<T>(props: {
+interface IProps<T> {
   Record: T;
   Field: keyof T;
   Options: { Value: string; Label: string }[];
@@ -32,11 +36,30 @@ export default function Select<T>(props: {
   Disabled?: boolean;
   EmptyOption?: boolean;
   EmptyLabel?: string;
-}) {
+  Help?: string|JSX.Element;
+}
+
+
+export default function Select<T>(props: IProps<T>) {
+	const [guid, setGuid] = React.useState<string>("");
+	const [showHelp, setShowHelp] = React.useState<boolean>(false);
+	
+	 React.useEffect(() => {
+		setGuid(CreateGuid());
+	  }, []);
+	  
   return (
     <div className="form-group">
-      <label>{props.Label == null ? props.Field : props.Label}</label>
+	<label>{props.Label == null ? props.Field : props.Label} 
+     {props.Help !== undefined? <div style={{ width: 20, height: 20, borderRadius: '50%', display: 'inline-block', background: '#0D6EFD', marginLeft: 10, textAlign: 'center', fontWeight: 'bold' }} onMouseEnter={() => setShowHelp(true)} onMouseLeave={() => setShowHelp(false)}> ? </div> : null}
+		</label>
+		{props.Help !== undefined? 
+			<HelperMessage Show={showHelp} Target={guid}>
+				{props.Help}
+			</HelperMessage>
+		: null}
       <select
+		data-help={guid}
         className="form-control"
         onChange={(evt) => {
           const record: T = { ...props.Record };
