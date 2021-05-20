@@ -57,7 +57,8 @@ const TabSelector = (props: IProps) => {
     });
 
     React.useEffect(() => {
-        let Wtext = 0;
+        let Wtext = 40;
+		
         let Ntext = 0;
         while (Ntext < props.Tabs.length) {
             const w = 2 * 17 + GetTextWidth("Segoe UI", '14px', props.Tabs[Ntext].Label) + 1
@@ -72,6 +73,9 @@ const TabSelector = (props: IProps) => {
 
     const showExp = nVisible < props.Tabs.length;
 
+	if (width < 50)
+		return <div style={{ width: '100%' }} id={guid}> </div>
+		
     return <div style={{ width: '100%' }} id={guid}>
         <ul className="nav nav-tabs" style={{ maxHeight: 38 }}>
             {props.Tabs.map((t, i) => i > (nVisible - 1) ? null :
