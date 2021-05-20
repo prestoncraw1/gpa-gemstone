@@ -28,6 +28,7 @@ import { Search } from './SearchBar';
 import LoadingScreen from './LoadingScreen';
 import LoadingIcon from './LoadingIcon';
 import ToolTip from './ToolTip';
+import TabSelector from './TabSelector';
 
 export {
   Modal,
@@ -36,5 +37,6 @@ export {
   Search,
   LoadingScreen,
   LoadingIcon,
-  ToolTip
+  ToolTip,
+  TabSelector
 };
