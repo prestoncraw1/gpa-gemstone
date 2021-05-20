@@ -136,7 +136,7 @@ function Setting<T extends S>(props: IProps<T>)  {
             </div>
             </div>
             <Modal Title={editNew === 'Edit' ? editnewSetting.Name + ' - Setting' : 'Add New Setting'}
-                Show={showModal} ShowX={true} Size={'lg'} ShowCancel={editNew === 'Edit'} ConfirmText={'Save'}
+                Show={showModal} ShowX={true} Size={'lg'} ShowCancel={editNew === 'Edit'} ConfirmText={'Save'} CancelText={'Delete'}
                 CallBack={(conf, isBtn) => {
                     if (conf && editNew === 'New')
                         props.addSetting(editnewSetting).then((d) => setTriggerReload((x) => x + 1));
