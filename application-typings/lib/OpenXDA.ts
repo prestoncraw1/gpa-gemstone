@@ -32,6 +32,8 @@ namespace OpenXDA {
         const Phases: Types.PhaseName[] = ['AN' , 'BN' , 'CN' , 'AB' , 'BC' , 'CA' , 'RES' , 'NG' , 'None' , 'Worst' , 'LineToNeutralAverage' , 'LineToLineAverage'];
         const EventTypes: Types.EventTypeName[] = ['Sag' , 'Swell' , 'Transient' , 'Fault' , 'Interruption']
         const NoteTypes = ['Meter' , 'Event' , 'Asset' , 'Location' , 'Customer' , 'User' , 'Company'] as Types.NoteTypeName[];
+		const NoteApplications = ['OpenMIC', 'OpenXDA', 'MiMD', 'SystemCenter', 'OpenHistorian', 'All'] as Types.NoteApplicationName[];
+		const NoteTags = ['General', 'Configuration', 'Diagnostic', 'Compliance'] as Types.NoteTagName[];
     }
 
     export namespace Types {
@@ -42,6 +44,9 @@ namespace OpenXDA {
         export type PhaseName = 'AN' | 'BN' | 'CN' | 'AB' | 'BC' | 'CA' | 'RES' | 'NG' | 'None' | 'Worst' | 'LineToNeutralAverage' | 'LineToLineAverage';
         export type EventTypeName = 'Sag' | 'Swell' | 'Transient' | 'Fault' | 'Interruption'
         export type NoteTypeName = 'Meter' | 'Event' | 'Asset' | 'Location' | 'Customer' | 'User' | 'Company'
+		export type NoteApplicationName = 'OpenMIC' | 'OpenXDA' | 'MiMD' | 'SystemCenter' | 'OpenHistorian' | 'All'
+		export type NoteTagName = 'General' | 'Configuration' | 'Diagnostic' | 'Compliance'
+		
         // Tables
         export interface EventType { ID: number, Name: EventTypeName, Description: string, Selected?: boolean }
         export interface Meter { ID: number, AssetKey: string, Alias: string, Make: string, Model: string, Name: string, ShortName: string, TimeZone: string, LocationID: number, Description: string, Selected?: boolean }
@@ -50,7 +55,9 @@ namespace OpenXDA {
         export interface EDNAPoint { ID: number, BreakerID: number, Point: string }
         export interface Channel { ID: number, Meter: string, Asset: string, MeasurementType: string, MeasurementCharacteristic: string, Phase: string, Name: string, Adder: number, Multiplier: number, SamplesPerHour: number, PerUnitValue: number, HarmonicGroup: number, Description: string, Enabled: boolean, Series: Series[] }
         export interface Series { ID: number, ChannelID: number, SeriesType: string, SourceIndexes: string }
-        export interface Note { ID: number, NoteTypeID: number, ReferenceTableID: number, Note: string, UserAccount: string, Timestamp: string }
+        export interface Note { ID: number, NoteTypeID: number, ReferenceTableID: number, Note: string, UserAccount: string, Timestamp: string, NoteApplicationID: number, NoteTagID : number }
+		export interface NoteApplication { ID: number, Name: NoteApplicationName }
+		export interface NoteTag { ID: number, Name: NoteTagName }
 
         // Assets
         export interface Asset { ID: number, VoltageKV: number, AssetKey: string, Description: string, AssetName: string, AssetType: AssetTypeName, Spare:boolean, Channels: Array<Channel> }

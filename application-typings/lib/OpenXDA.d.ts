@@ -9,6 +9,8 @@ declare namespace OpenXDA {
         type PhaseName = 'AN' | 'BN' | 'CN' | 'AB' | 'BC' | 'CA' | 'RES' | 'NG' | 'None' | 'Worst' | 'LineToNeutralAverage' | 'LineToLineAverage';
         type EventTypeName = 'Sag' | 'Swell' | 'Transient' | 'Fault' | 'Interruption';
         type NoteTypeName = 'Meter' | 'Event' | 'Asset' | 'Location' | 'Customer' | 'User' | 'Company';
+        type NoteApplicationName = 'OpenMIC' | 'OpenXDA' | 'MiMD' | 'SystemCenter' | 'OpenHistorian' | 'All';
+        type NoteTagName = 'General' | 'Configuration' | 'Diagnostic' | 'Compliance';
         interface EventType {
             ID: number;
             Name: EventTypeName;
@@ -81,6 +83,16 @@ declare namespace OpenXDA {
             Note: string;
             UserAccount: string;
             Timestamp: string;
+            NoteApplicationID: number;
+            NoteTagID: number;
+        }
+        interface NoteApplication {
+            ID: number;
+            Name: NoteApplicationName;
+        }
+        interface NoteTag {
+            ID: number;
+            Name: NoteTagName;
         }
         interface Asset {
             ID: number;
