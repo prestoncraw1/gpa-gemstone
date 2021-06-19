@@ -22,8 +22,9 @@
 // ******************************************************************************************************
 
 import Setting from './Setting';
-
+import Note from './Note';
 
 export {
-  Setting
+  Setting,
+  Note
 };
