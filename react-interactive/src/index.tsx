@@ -29,7 +29,7 @@ import LoadingScreen from './LoadingScreen';
 import LoadingIcon from './LoadingIcon';
 import ToolTip from './ToolTip';
 import TabSelector from './TabSelector';
-
+import ServerErrorIcon from './ServerErrorIcon';
 export {
   Modal,
   Warning,
@@ -38,5 +38,6 @@ export {
   LoadingScreen,
   LoadingIcon,
   ToolTip,
-  TabSelector
+  TabSelector,
+  ServerErrorIcon
 };
