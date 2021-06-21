@@ -69,6 +69,7 @@ declare namespace OpenXDA {
             Description: string;
             Enabled: boolean;
             Series: Series[];
+            ConnectionPriority: number;
         }
         interface Series {
             ID: number;
@@ -152,6 +153,7 @@ declare namespace OpenXDA {
         }
         interface CapBankRelay extends Asset {
             OnVoltageThreshhold: number;
+            CapBankNumber: number;
         }
         interface Line extends Asset {
             MaxFaultDistance: number;
@@ -165,6 +167,7 @@ declare namespace OpenXDA {
             X1: number;
             ThermalRating: number;
             Length: number;
+            IsEnd: boolean;
         }
         interface Transformer extends Asset {
             R0: number;
@@ -175,6 +178,10 @@ declare namespace OpenXDA {
             PrimaryVoltageKV: number;
             SecondaryVoltageKV: number;
             Tap: number;
+            TertiaryVoltageKV: number;
+            SecondaryWinding: number;
+            PrimaryWinding: number;
+            TertiaryWinding: number;
         }
         interface LineDetail {
             R0: number;
