@@ -25,12 +25,23 @@ export default SystemCenter;
 
 namespace SystemCenter {
     export namespace Lists {
+	
         // Lists
+		const AdditionalFieldTypes: Types.AdditionalFieldType[] = ['integer', 'number', 'string' , 'boolean']
             }
 
     export namespace Types {
-        // Settings
+		// Types
+		export type AdditionalFieldType = 'integer' | 'number' | 'string' | 'boolean' | string;
+        // Tables
         export interface Setting {ID: number, Name: string, Value: string, DefaultValue: string }
+		export interface AdditionalField { ID: number, ParentTable: string, FieldName: string, Type: AdditionalFieldType, ExternalDB?: string, ExternalDBTable?: string, ExternalDBTableKey?: string, IsSecure: boolean }
+		export interface AdditionalFieldValue { ID: number, ParentTableID: number, AdditionalFieldID: number, Value: string }
+		export interface ValueListGroup { ID: number, Name: string, Description: string, Items?: ValueListItem[]}
+		export interface ValueListItem { ID: number, GroupID: number, AltValue: string, Value: string, SortOrder: number}
+		
+		export interface LocationDrawing { ID: number, LocationID: number, Name: string, Link: string, Description: string }
+
 		}
     }
 
