@@ -40,7 +40,7 @@ export interface TableProps<T> {
   }[];
   data: T[];
   onClick: (data: { col: keyof T|null; row: T; data: T[keyof T]|null, index: number }, event: any) => void;
-  sortField: string;
+  sortField: keyof T;
   ascending: boolean;
   onSort(data: { col: keyof T|null; ascending: boolean }): void;
   tableClass?: string;

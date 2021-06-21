@@ -34,7 +34,7 @@ export interface ISelectTableProps<T> {
 		content?(item: T, key: keyof T|null, style: React.CSSProperties): React.ReactNode;
 	  }[];
 	data: T[];
-	sortField: string;
+	sortField: keyof T;
 	ascending: boolean;
 	tableClass?: string;
 	tableStyle?: React.CSSProperties;
@@ -54,7 +54,7 @@ export function SelectTable<T>(props: ISelectTableProps<T>) {
     const [data, setData] = React.useState<T[]>(props.data);
     const [selected, setSelected] = React.useState<any[]>([]);
 
-    const [sortField, setSortField] = React.useState<string>(props.sortField);
+    const [sortField, setSortField] = React.useState<keyof T>(props.sortField);
     const [ascending, setAscending] = React.useState<boolean>(props.ascending);
 
 	React.useEffect(() => {
@@ -102,7 +102,7 @@ export function SelectTable<T>(props: ISelectTableProps<T>) {
         if (d.col === sortField)
             setAscending(!ascending);
         else 
-            setSortField(d.col as string);
+            setSortField(d.col);
     }
 
     const tableProps: TableProps<T> = {
