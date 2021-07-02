@@ -98,8 +98,8 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
   generateRows() {
     if (this.props.data.length === 0) return null;
 
-    return this.props.data.map((item, index) => {
-      const cells = this.props.cols.map((colData) => {
+    return this.props.data.map((item, rowIndex) => {
+      const cells = this.props.cols.map((colData, colIndex) => {
         const css: React.CSSProperties = (colData.rowStyle !== undefined)
           ? { ...colData.rowStyle }
           : {};
@@ -114,9 +114,9 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
 
         return (
           <td
-            key={index.toString() + (colData.key === null? '' : item[colData.key]) + colData.key}
+            key={colIndex}
             style={css}
-            onClick={this.handleClick.bind(this, { col: colData.key, row: item, data: getFieldValue(), index })}
+            onClick={this.handleClick.bind(this, { col: colData.key, row: item, data: getFieldValue(), index: rowIndex })}
           >
             {getFieldContent()}
           </td>
@@ -134,7 +134,7 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
         style.backgroundColor = 'yellow';
 
       return (
-        <tr style={style} key={index}>
+        <tr style={style} key={rowIndex}>
           {cells}
         </tr>
       );
