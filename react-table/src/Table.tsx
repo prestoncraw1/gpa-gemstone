@@ -73,12 +73,12 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
     if (this.props.cols.length === 0) return null;
 
     const cells = this.props.cols.map((colData, index) => {
-      let style;
-      if (colData.headerStyle !== undefined) {
-        style = colData.headerStyle;
-      } else style = {};
+      const style: React.CSSProperties = (colData.headerStyle !== undefined)
+        ? colData.headerStyle
+        : {};
 
-      if (style.cursor === undefined) style.cursor = 'pointer';
+      if (style.cursor === undefined)
+        style.cursor = 'pointer';
 
       return (
         <th
@@ -100,33 +100,41 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
 
     return this.props.data.map((item, index) => {
       const cells = this.props.cols.map((colData) => {
-        let css;
-        if (colData.rowStyle === undefined) css = {};
-        else css = { ...colData.rowStyle };
+        const css: React.CSSProperties = (colData.rowStyle !== undefined)
+          ? { ...colData.rowStyle }
+          : {};
+
+        const getFieldValue = () => colData.key !== null
+          ? item[colData.key]
+          : null;
+
+        const getFieldContent = () => colData.content !== undefined
+          ? colData.content(item, colData.key, css, rowIndex)
+          : getFieldValue();
 
         return (
           <td
             key={index.toString() + (colData.key === null? '' : item[colData.key]) + colData.key}
             style={css}
-            onClick={this.handleClick.bind(this, { col: colData.key, row: item, data: (colData.key === null? null : item[colData.key]), index })}
+            onClick={this.handleClick.bind(this, { col: colData.key, row: item, data: getFieldValue(), index })}
           >
-            {colData.content !== undefined ? colData.content(item, colData.key, css, index) : (colData.key === null? null : item[colData.key])}
+            {getFieldContent()}
           </td>
         );
       });
 
-      let style;
+      const style: React.CSSProperties = (this.props.rowStyle !== undefined)
+        ? { ...this.props.rowStyle }
+        : {};
 
-      if (this.props.rowStyle !== undefined) {
-        style = { ...this.props.rowStyle };
-      } else style = {};
+      if (style.cursor === undefined)
+        style.cursor = 'pointer';
 
-      if (style.cursor === undefined) style.cursor = 'pointer';
-
-      if (this.props.selected !== undefined && this.props.selected(item)) style.backgroundColor = 'yellow';
+      if (this.props.selected !== undefined && this.props.selected(item))
+        style.backgroundColor = 'yellow';
 
       return (
-        <tr style={style} key={index.toString()}>
+        <tr style={style} key={index}>
           {cells}
         </tr>
       );
