@@ -40,7 +40,7 @@ export interface TableProps<T> {
   }[];
   data: T[];
   onClick: (data: { col: keyof T|null; row: T; data: T[keyof T]|null, index: number }, event: any) => void;
-  sortField: keyof T;
+  sortField: (keyof T|null);
   ascending: boolean;
   onSort(data: { col: keyof T|null; ascending: boolean }): void;
   tableClass?: string;
@@ -80,6 +80,16 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
       if (style.cursor === undefined && colData.key !== null)
         style.cursor = 'pointer';
 
+      const renderAngleIcon = () => {
+        if (this.props.sortField === null)
+          return null;
+
+        if (this.props.sortField !== colData.key)
+          return null;
+
+        return <AngleIcon ascending={this.props.ascending} />
+      };
+
       return (
         <th
           key={index}
@@ -87,7 +97,7 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
           onClick={(e) => this.handleSort({ col: colData.key, ascending: this.props.ascending }, e)}
         >
           {colData.label}
-          {this.props.sortField === colData.key ? <AngleIcon ascending={this.props.ascending} /> : null}
+          {renderAngleIcon()}
         </th>
       );
     });
