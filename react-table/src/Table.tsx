@@ -77,7 +77,7 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
         ? colData.headerStyle
         : {};
 
-      if (style.cursor === undefined)
+      if (style.cursor === undefined && colData.key !== null)
         style.cursor = 'pointer';
 
       return (
@@ -152,6 +152,7 @@ export default class Table<T> extends React.Component<TableProps<T>, {}> {
     data: { col: keyof T|null; ascending: boolean },
     event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>,
   ) {
-    this.props.onSort(data);
+    if (data.col !== null)
+      this.props.onSort(data);
   }
 }
