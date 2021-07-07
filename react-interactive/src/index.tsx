@@ -30,6 +30,8 @@ import LoadingIcon from './LoadingIcon';
 import ToolTip from './ToolTip';
 import TabSelector from './TabSelector';
 import ServerErrorIcon from './ServerErrorIcon';
+import GenericSlice from './GenericSlice';
+
 export {
   Modal,
   Warning,
@@ -39,5 +41,6 @@ export {
   LoadingIcon,
   ToolTip,
   TabSelector,
-  ServerErrorIcon
+  ServerErrorIcon,
+  GenericSlice
 };
