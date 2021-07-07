@@ -68,7 +68,7 @@ export default class GenericSlice<T extends U> {
         const handle = this.GetRecords(parentID);
 
         signal.addEventListener('abort', () => {
-            if (handle.abort != undefined) handle.abort();
+            if (handle.abort !== undefined) handle.abort();
         });
 
         return await handle;
@@ -78,7 +78,7 @@ export default class GenericSlice<T extends U> {
           const handle = this.Action(args.verb, args.record);
 
           signal.addEventListener('abort', () => {
-              if (handle.abort != undefined) handle.abort();
+              if (handle.abort !== undefined) handle.abort();
           });
 
           return await handle
@@ -95,7 +95,7 @@ export default class GenericSlice<T extends U> {
             const handle = this.Search(args.filter, asc,sortfield);
 
             signal.addEventListener('abort', () => {
-                if (handle.abort != undefined) handle.abort();
+                if (handle.abort !== undefined) handle.abort();
             });
 
             return await handle;
