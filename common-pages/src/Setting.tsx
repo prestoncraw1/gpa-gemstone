@@ -80,18 +80,18 @@ function Setting<T extends S>(props: IProps<T>)  {
     }
 
     const searchFields: Search.IField<T>[] = [
-        { key: 'Name', label: 'Name', type: 'string' },
-        { key: 'DefaultValue', label: 'Default Value', type: 'string' },
-        { key: 'Value', label: 'Value', type: 'string' }
+        { key: 'Name', label: 'Name', type: 'string', isPivotField: false },
+        { key: 'DefaultValue', label: 'Default Value', type: 'string', isPivotField: false },
+        { key: 'Value', label: 'Value', type: 'string', isPivotField: false }
     ]
 
     return (
         <>
         <div style={{ width: '100%', height: '100%' }}>
-            <SearchBar<T> CollumnList={searchFields} SetFilter={(flds) => setSearch(flds)} Direction={'left'} defaultCollumn={{ key: 'Name', label: 'Name', type: 'string'}} Width={'50%'} Label={'Search'}
+            <SearchBar<T> CollumnList={searchFields} SetFilter={(flds) => setSearch(flds)} Direction={'left'} defaultCollumn={{ key: 'Name', label: 'Name', type: 'string', isPivotField: false}} Width={'50%'} Label={'Search'}
                 ShowLoading={searchState === 'Loading'} ResultNote={searchState === 'Error' ? 'Could not complete Search' : 'Found ' + data.length + ' Settings'}
                 GetEnum={(setOptions, field) => {
-                    return () => { 
+                    return () => {
 						// do nothing.
 					}
                 }}
@@ -109,21 +109,21 @@ function Setting<T extends S>(props: IProps<T>)  {
             <div style={{ width: '100%', height: 'calc( 100% - 136px)' }}>
                 <Table<T>
                     cols={[
-                        { key: 'Name' as keyof(T), label: 'Setting Name', headerStyle: { width: '10%' }, rowStyle: { width: '10%' } },
-                        { key: 'Value' as keyof (T), label: 'Current Value', headerStyle: { width: '10%' }, rowStyle: { width: '10%' } },
-                        { key: 'DefaultValue' as keyof (T), label: 'Default Value', headerStyle: { width: '20%' }, rowStyle: { width: '20%' } },
-                        { key: null, label: '', headerStyle: { width: 17, padding: 0 }, rowStyle: { width: 0, padding: 0 } },
+                        { key: 'Name', field: 'Name', label: 'Setting Name', headerStyle: { width: '10%' }, rowStyle: { width: '10%' } },
+                        { key: 'Value', field: 'Value', label: 'Current Value', headerStyle: { width: '10%' }, rowStyle: { width: '10%' } },
+                        { key: 'DefaultValue', field: 'DefaultValue', label: 'Default Value', headerStyle: { width: '20%' }, rowStyle: { width: '20%' } },
+                        { key: 'scroll',  label: '', headerStyle: { width: 17, padding: 0 }, rowStyle: { width: 0, padding: 0 } },
                     ]}
                     tableClass="table table-hover"
                     data={data}
-                    sortField={sortField}
+                    sortKey={sortField}
                     ascending={ascending}
                     onSort={(d) => {
-                        if (d.col === sortField)
+                        if (d.colField === sortField)
                             setAscending(!ascending);
                         else {
                             setAscending(true);
-                            setSortField(d.col as string);
+                            setSortField(d.colField as string);
                         }
 
                     }}
@@ -144,7 +144,7 @@ function Setting<T extends S>(props: IProps<T>)  {
                         props.updateSetting(editnewSetting).then((d) => setTriggerReload((x) => x + 1));
                     if (!conf && isBtn)
                         setShowWarning(true);
-                    
+
                     setShowModal(false);
                 }}
                 DisableConfirm={(editNew === 'Edit' && !hasChanged) || !isValidSetting()}

@@ -46,7 +46,7 @@ interface IProps {
 function Note(props: IProps)  {
 
   const [showEdit, setEdit] = React.useState<boolean>(false);
-	const [sortField, setSortField] = React.useState<keyof OpenXDA.Types.Note>('Timestamp');
+	const [sortField, setSortField] = React.useState<string>('Timestamp');
   const [ascending, setAscending] = React.useState<boolean>(false);
 	const [hoverAdd, setHoverAdd] = React.useState<boolean>(false);
   const [hoverClear, setHoverClear] = React.useState<boolean>(false);
@@ -192,7 +192,7 @@ function Note(props: IProps)  {
 												{ key: 'Timestamp', label: 'Time', headerStyle: { width: 'auto' }, rowStyle: { width: 'auto' }, content: (item) => moment.utc(item.Timestamp).format("MM/DD/YYYY HH:mm") },
 												{ key: 'UserAccount', label: 'User', headerStyle: { width: 'auto' }, rowStyle: { width: 'auto' } },
 												{
-														key: null, label: '', headerStyle: { width: 'auto' }, rowStyle: { width: 'auto' }, content: (item) => <>
+														key: 'buttons', label: '', headerStyle: { width: 'auto' }, rowStyle: { width: 'auto' }, content: (item) => <>
 																{props.UpdateNote !== undefined? <button className="btn btn-sm" onClick={() => handleEdit(item)}><span> {Pencil} </span></button> : null }
 																{props.DeleteNote !== undefined? <button className="btn btn-sm" onClick={() => handleRemove(item)}><span> {TrashCan} </span></button> : null }
 														</>
@@ -202,15 +202,15 @@ function Note(props: IProps)  {
 
 										tableClass="table table-hover"
 										data={data}
-										sortField={sortField}
+										sortKey={sortField}
 										ascending={ascending}
 										onSort={(d) => {
-												if (d.col === sortField)
+												if (d.colField === sortField)
 														setAscending(!ascending);
 												else {
 														setAscending(true);
-														if (d.col !== null)
-															setSortField(d.col);
+														if (d.colField !== null)
+															setSortField(d.colField as string);
 												}
 
 										}}

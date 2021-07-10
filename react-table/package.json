@@ -1,7 +1,7 @@
 {
   "name": "@gpa-gemstone/react-table",
-  "version": "1.1.0",
-  "description": "",
+  "version": "1.1.1",
+  "description": "Table for GPA web applications",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
@@ -36,18 +36,18 @@
   },
   "homepage": "https://github.com/GridProtectionAlliance/gpa-gemstone#readme",
   "devDependencies": {
-    "@types/jest": "26.0.23",
+    "@types/jest": "^26.0.24",
     "jest": "27.0.6",
     "prettier": "2.3.2",
     "ts-jest": "27.0.3",
     "tslint": "6.1.3",
     "tslint-config-prettier": "1.18.0",
-    "typescript": "4.3.5"
+    "typescript": "4.3.4"
   },
   "dependencies": {
-    "@gpa-gemstone/helper-functions": "0.0.6",
-    "@types/lodash": "4.14.170",
-    "@types/react": "17.0.2",
+    "@gpa-gemstone/helper-functions": "0.0.7",
+    "@types/lodash": "4.14.171",
+    "@types/react": "17.0.14",
     "lodash": "4.17.21",
     "react": "17.0.2"
   },

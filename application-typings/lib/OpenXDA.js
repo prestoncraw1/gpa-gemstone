@@ -35,6 +35,8 @@ define(["require", "exports"], function (require, exports) {
             var Phases = ['AN', 'BN', 'CN', 'AB', 'BC', 'CA', 'RES', 'NG', 'None', 'Worst', 'LineToNeutralAverage', 'LineToLineAverage'];
             var EventTypes = ['Sag', 'Swell', 'Transient', 'Fault', 'Interruption'];
             var NoteTypes = ['Meter', 'Event', 'Asset', 'Location', 'Customer', 'User', 'Company'];
+            var NoteApplications = ['OpenMIC', 'OpenXDA', 'MiMD', 'SystemCenter', 'OpenHistorian', 'All'];
+            var NoteTags = ['General', 'Configuration', 'Diagnostic', 'Compliance'];
         })(Lists = OpenXDA.Lists || (OpenXDA.Lists = {}));
     })(OpenXDA || (OpenXDA = {}));
 });
