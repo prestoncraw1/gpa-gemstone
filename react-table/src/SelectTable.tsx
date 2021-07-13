@@ -23,17 +23,10 @@
 
 import * as React from 'react';
 import * as _ from 'lodash';
-import Table, {TableProps} from './Table';
+import Table, {Column, TableProps} from './Table';
 
 export interface ISelectTableProps<T> {
-    cols: {
-        key: string;
-        label: string;
-        field?: keyof T;
-        headerStyle?: React.CSSProperties;
-        rowStyle?: React.CSSProperties;
-        content?(item: T, key: string, field: keyof T|undefined, style: React.CSSProperties): React.ReactNode;
-    }[];
+    cols: Column<T>[];
     data: T[];
     sortKey: string;
     ascending: boolean;
@@ -117,7 +110,7 @@ export function SelectTable<T>(props: ISelectTableProps<T>) {
             { key: 'gemstone-checkbox', field: props.KeyField, label: '', headerStyle: { width: '4em' }, rowStyle: { width: '4em' }, content: (item: T, key: string, field: keyof T|undefined, style: React.CSSProperties) => {
                 const index = selected.findIndex(i => i === item[props.KeyField])
                 if ( index > -1)
-                    return <div style={{ marginTop: '16px', textAlign: 'center' }}><i className="fa fa-check-square-o fa-3x" aria-hidden="true"></i></div>
+                    return <div style={{ marginTop: '16px', textAlign: 'center' }}><i className="fa fa-check-square-o fa-3x"></i></div>
                 return null
             }},
             ...props.cols

@@ -22,9 +22,8 @@
 //  ******************************************************************************************************
 
 import * as React from 'react';
-import {CreateGuid} from '@gpa-gemstone/helper-functions';
 
-interface Column<T> {
+export interface Column<T> {
   key: string;
   label: string;
   field?: keyof T;
@@ -33,11 +32,24 @@ interface Column<T> {
   content?(item: T, key: string, field: keyof T|undefined, style: React.CSSProperties, index: number): React.ReactNode;
 }
 
+
 export interface TableProps<T> {
+  /**
+   * List of Collumns in this Table
+   */
   cols: Column<T>[];
+  /**
+   * List of T objects used to generate rows
+   */
   data: T[];
   onClick: (data: { colKey: string; colField?: keyof T; row: T; data: T[keyof T]|null, index: number }, event: any) => void;
+  /**
+   * Key of the collumn to sort by
+   */
   sortKey: string;
+  /**
+   * Boolen to indicate whether the sort is ascending or descending
+   */
   ascending: boolean;
   onSort(data: { colKey: string; colField?: keyof T; ascending: boolean }): void;
   tableClass?: string;
@@ -48,6 +60,7 @@ export interface TableProps<T> {
   tbodyClass?: string;
   selected?(data: T): boolean;
   rowStyle?: React.CSSProperties;
+  keySelector?: (data: T) => string;
 }
 
 export default function Table<T> (props: TableProps<T>) {
@@ -55,7 +68,7 @@ export default function Table<T> (props: TableProps<T>) {
   return (
     <table className={props.tableClass !== undefined ? props.tableClass : ''} style={props.tableStyle}>
       <Header<T> Class={props.theadClass} Style={props.theadStyle} Cols={props.cols} SortKey={props.sortKey} Ascending={props.ascending} Click={(d,e) => handleSort(d,e)} />
-      <Rows<T> Data={props.data} Cols={props.cols} RowStyle={props.rowStyle} BodyStyle={props.tbodyStyle} BodyClass={props.tbodyClass} Click={(data,e) => props.onClick(data, e)} Selected={props.selected} />
+      <Rows<T> Data={props.data} Cols={props.cols} RowStyle={props.rowStyle} BodyStyle={props.tbodyStyle} BodyClass={props.tbodyClass} Click={(data,e) => props.onClick(data, e)} Selected={props.selected} KeySelector={props.keySelector} />
     </table>
   );
 
@@ -75,15 +88,10 @@ interface IRowProps<T> {
   BodyStyle?: React.CSSProperties,
   BodyClass?: string,
   Click :( data: { colKey: string, colField?: keyof T, row: T, data: T[keyof T] | null, index: number },e : React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => void,
-  Selected?: ((data: T) => boolean),
+  Selected?: ((data: T) => boolean);
+  KeySelector?: (data: T) => string;
 }
 function Rows<T>(props: IRowProps<T>) {
-  const [guid, setGuid] = React.useState<string>('');
-
-  React.useEffect(() => {
-    if (guid === '')
-      setGuid(CreateGuid())
-  }, []);
 
   if (props.Data.length === 0) return null;
 
@@ -100,8 +108,15 @@ function Rows<T>(props: IRowProps<T>) {
     if (props.Selected !== undefined && props.Selected(item))
       style.backgroundColor = 'yellow';
 
+    function ToKey(index: number, data: T): string {
+      if (props.KeySelector === undefined)
+        return index.toString();
+      return props.KeySelector(data);
+
+    }
+
     return (
-      <tr style={style} key={guid}>
+      <tr style={style} key={ToKey(rowIndex,item)}>
         {cells}
       </tr>
     );
