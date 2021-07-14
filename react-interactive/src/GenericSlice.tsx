@@ -29,10 +29,15 @@ import { WritableDraft } from 'immer/dist/types/types-external'
 
 interface U { ID: number }
 
+interface IError {
+	Message: string,
+	Verb: 'POST' | 'DELETE' | 'PATCH' | 'FETCH' | 'SEARCH'
+	Time: string
+}
 interface IState<T extends U> {
   Status: Application.Types.Status,
   SearchStatus: Application.Types.Status,
-  Error: ( string | null ),
+  Error: ( IError | null ),
   Data: T[],
   SortField: keyof T,
   Ascending: boolean,
@@ -44,7 +49,7 @@ export default class GenericSlice<T extends U> {
     Name: string = "";
     APIPath: string = "";
     Slice: ( Slice<IState<T>> );
-    Fetch: (AsyncThunk<any, void | number, {}> | null) = null;
+    Fetch: (AsyncThunk<any, void | number, {}>);
     DBAction: (AsyncThunk<any, { verb: 'POST' | 'DELETE' | 'PATCH', record: T }, {}> );
     DBSearch: (AsyncThunk<any, { filter: Search.IFilter<T>[], sortField?: keyof T, ascending?: boolean }, {}> );
     Sort: ActionCreatorWithPayload<{ SortField: keyof T, Ascending: boolean}, string>;
@@ -137,7 +142,11 @@ export default class GenericSlice<T extends U> {
 
                 builder.addCase(fetch.rejected, (state: WritableDraft<IState<T>>, action: PayloadAction<unknown, string,  {arg: number | void},SerializedError>) => {
                     state.Status = 'error';
-                    state.Error = (action.error.message == null? null : action.error.message)
+                    state.Error = {
+						Message: (action.error.message == null? '' : action.error.message),
+						Verb: 'FETCH',
+						Time: new Date().toString()
+					}
                 });
 
                 builder.addCase(dBAction.pending, (state: WritableDraft<IState<T>>) => {
@@ -145,7 +154,11 @@ export default class GenericSlice<T extends U> {
                 });
                 builder.addCase(dBAction.rejected, (state: WritableDraft<IState<T>>, action: PayloadAction<unknown, string,  {arg: {verb: 'POST' | 'DELETE' | 'PATCH', record: T}},SerializedError>) => {
                     state.Status = 'error';
-                    state.Error = (action.error.message == null? null : action.error.message);
+                    state.Error = {
+												Message: (action.error.message == null? '' : action.error.message),
+												Verb: action.meta.arg.verb,
+												Time: new Date().toString()
+											}
 
                 });
                 builder.addCase(dBAction.fulfilled, (state: WritableDraft<IState<T>>) => {
@@ -156,8 +169,13 @@ export default class GenericSlice<T extends U> {
                 builder.addCase(dBSearch.pending, (state: WritableDraft<IState<T>>) => {
                     state.SearchStatus = 'loading';
                 });
-                builder.addCase(dBSearch.rejected, (state: WritableDraft<IState<T>>) => {
+                builder.addCase(dBSearch.rejected, (state: WritableDraft<IState<T>>, action: PayloadAction<unknown, string,  any,SerializedError> ) => {
                     state.SearchStatus = 'error';
+										state.Error = {
+											Message: (action.error.message == null? '' : action.error.message),
+											Verb: 'SEARCH',
+											Time: new Date().toString()
+										}
 
                 });
                 builder.addCase(dBSearch.fulfilled, (state: WritableDraft<IState<T>>, action: PayloadAction<string, string,  {arg: { filter:  Search.IFilter<T>[], sortfield?: keyof T, ascending?: boolean}},never>) => {
@@ -223,6 +241,7 @@ export default class GenericSlice<T extends U> {
 
 
     public Data = (state: any) => state[this.Name].Data as T[];
+		public Error = (state: any) => state[this.Name].Error as IError;
     public Datum = (state: any, id: number) => (state[this.Name] as IState<T>).Data.find((d: T) => d.ID === id) as T;
     public Status = (state: any) => state[this.Name].Status as Application.Types.Status;
     public SortField = (state: any) => state[this.Name].SortField as keyof T;
