@@ -28,48 +28,76 @@ namespace Application{
         export interface iByComponent<T> {
             (props: { Roles: Array<T> }): any;
         }
-    
-        export interface iApplicationRole<T> { 
-			ID: string, 
+
+        export interface iApplicationRole<T> {
+			ID: string,
 			Name: T,
 			Description: string,
-			NodeID: string, 
+			NodeID: string,
 			CreatedOn: Date,
 			CreatedBy: string,
 			UpdatedOn: Date,
 			UpdatedBy: string,
 			Assigned?: boolean
 		}
-    
+
 		export interface iApplicationRoleUserAccount {
 			ID: string,
 			ApplicationRoleID: string,
 			UserAccountID: string
 		}
-		
-		export interface iSecurityGroup { 
-			ID: string, 
+
+		export interface iSecurityGroup {
+			ID: string,
 			Name: string,
-			Description: string, 
+			Description: string,
 			CreatedOn: Date,
 			CreatedBy: string,
 			UpdatedOn: Date
 		}
-		export interface iApplicationRoleSecurityGroup { 
+		export interface iApplicationRoleSecurityGroup {
 			ID: string,
 			ApplicationRoleID: string,
 			SecurityGroupID: string
 		}
-	
-        export type Status = 'loading' | 'idle' | 'error' | 'changed' | 'unintiated';
+    export interface UserAccount {
+			ID: string,
+       Name: string,
+       Password: string,
+       FirstName: string,
+       LastName: string,
+       DefaultNodeID?: string,
+       Phone: string,
+       PhoneConfirmed: boolean,
+       Email: string,
+       EmailConfirmed: boolean,
+       LockedOut: boolean,
+       Approved: boolean,
+       UseADAuthentication: boolean,
+       ChangePasswordOn: Date
+		}
+    export interface AdditionalUserFieldValue {
+      ID: number,
+       UserAccountID: string,
+       AdditionalUserFieldID: number,
+      Value: string
+      }
+    export interface AdditionalUserField {
+      ID: number,
+      FieldName: string,
+      Type: string,
+      IsSecure: boolean
+    }
+
+    export type Status = 'loading' | 'idle' | 'error' | 'changed' | 'unintiated';
 		export type NewEdit = 'New' | 'Edit'
-   
+
 		export type SecurityRoleName = 'Administrator' | 'Transmission SME' | 'PQ Data Viewer' | 'DataPusher' | 'Developer' | 'Viewer' | 'Engineer';
 		export type AttachedDatabases = 'SystemCenter' | 'OpenXDA' | 'MiMD'
     }
-    
+
     export namespace Lists{
 
-      
+
     }
 }
