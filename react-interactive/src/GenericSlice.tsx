@@ -43,10 +43,10 @@ interface IState<T extends U> {
 export default class GenericSlice<T extends U> {
     Name: string = "";
     APIPath: string = "";
-    Slice: ( Slice<IState<T>> | null ) = null;
+    Slice: ( Slice<IState<T>> );
     Fetch: (AsyncThunk<any, void | number, {}> | null) = null;
-    DBAction: (AsyncThunk<any, { verb: 'POST' | 'DELETE' | 'PATCH', record: T }, {}> | null ) = null;
-    DBSearch: (AsyncThunk<any, { filter: Search.IFilter<T>[], sortField?: keyof T, ascending?: boolean }, {}> | null ) = null;
+    DBAction: (AsyncThunk<any, { verb: 'POST' | 'DELETE' | 'PATCH', record: T }, {}> );
+    DBSearch: (AsyncThunk<any, { filter: Search.IFilter<T>[], sortField?: keyof T, ascending?: boolean }, {}> );
     Sort: ActionCreatorWithPayload<{ SortField: keyof T, Ascending: boolean}, string>;
     Reducer: any;
 
