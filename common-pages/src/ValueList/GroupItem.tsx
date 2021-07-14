@@ -39,7 +39,7 @@ export default function GroupItemsWindow(props: IProps) {
 
 	const recordStatus: Application.Types.Status = useSelector(props.ValueListItemSlice.Status);
 	const data: SystemCenter.Types.ValueListItem[] = useSelector(props.ValueListItemSlice.Data);
-
+	const parentID: number|null = useSelector(props.ValueListItemSlice.ParentID);
   const [sortField, setSortField] = React.useState<keyof SystemCenter.Types.ValueListItem>('Value');
 	const [ascending,setAscending] = React.useState<boolean>(false);
 
@@ -52,8 +52,8 @@ export default function GroupItemsWindow(props: IProps) {
 	const [validValue, setValidValue] = React.useState<boolean>(true);
 
 	React.useEffect(() => {
-			if (recordStatus === 'unintiated' || recordStatus === 'changed')
-				dispatch(props.ValueListItemSlice.Fetch())
+			if (recordStatus === 'unintiated' || recordStatus === 'changed' || parentID !== props.Record.ID)
+				dispatch(props.ValueListItemSlice.Fetch(props.Record.ID))
 	}, [recordStatus,dispatch]);
 
 	React.useEffect(() => {
@@ -83,9 +83,9 @@ export default function GroupItemsWindow(props: IProps) {
                     <div style={{ width: '100%', height: window.innerHeight - 421, maxHeight: window.innerHeight - 421, padding: 0, overflowY: 'auto' }}>
 												<SearchableTable<SystemCenter.Types.ValueListItem>
 													cols={[
-		                        { key: 'Value', field: 'Value', label: 'User Name', headerStyle: { width: '10%' }, rowStyle: { width: 'auto' } },
-		                        { key: 'AltValue', field: 'AltValue', label: 'First Name', headerStyle: { width: '10%' }, rowStyle: { width: 'auto' } },
-		                        { key: 'SortOrder', field: 'SortOrder', label: 'Last Name', headerStyle: { width: '10%' }, rowStyle: { width: 'auto' } },
+		                        { key: 'Value', field: 'Value', label: 'Value', headerStyle: { width: 'auto' }, rowStyle: { width: 'auto' } },
+		                        { key: 'AltValue', field: 'AltValue', label: 'Alternate Value', headerStyle: { width: 'auto' }, rowStyle: { width: 'auto' } },
+		                        { key: 'SortOrder', field: 'SortOrder', label: 'Sort Order', headerStyle: { width: 'auto' }, rowStyle: { width: 'auto' } },
 		                        { key: 'remove', label: '', headerStyle: { width: '10%' }, rowStyle: { width: '10%' }, content: (item) => <button className="btn btn-sm" onClick={(e) => {
 																e.preventDefault();
 																dispatch(props.ValueListItemSlice.DBAction({verb: 'DELETE', record: item}));
@@ -111,14 +111,14 @@ export default function GroupItemsWindow(props: IProps) {
 												 	tbodyStyle={{ display: 'block', overflowY: 'scroll', maxHeight: window.innerHeight - 300, width: '100%' }}
 												 	rowStyle={{ fontSize: 'smaller', display: 'table', tableLayout: 'fixed', width: '100%' }}
 												 	selected={(item) => false}
-													matchSearch={(item,search) => item.Value.toLowerCase() === search.toLowerCase()}
+													matchSearch={(item,search) => item.Value.toLowerCase().indexOf(search.toLowerCase()) > -1}
 												/>
                     </div>
                 </div>
             </div>
             <div className="card-footer">
                 <div className="btn-group mr-2">
-                    <button className="btn btn-primary pull-right" data-toggle="modal" data-target="#exampleModal" onClick={() => setRecord({ ...emptyRecord, GroupID: props.Record.ID }) }>Add Item</button>
+                    <button className="btn btn-primary pull-right" data-toggle="modal" data-target="#exampleModal" onClick={() => {setRecord({ ...emptyRecord, GroupID: props.Record.ID }); setShowNew(true);} }>Add Item</button>
                 </div>
             </div>
 						<Modal Title={'Add new List Item'} Show={showNew} Size={'lg'} ShowX={true} ShowCancel={false} DisableConfirm={newErrors.length > 0 || !validValue} ConfirmShowToolTip={newErrors.length > 0 || !validValue}

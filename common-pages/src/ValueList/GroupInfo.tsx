@@ -43,9 +43,9 @@ interface IProps {
 				if (record == null)
 					return;
 				if (record.Name !== props.Record.Name)
-					w.push('Changes to Name will ');
+					w.push('Changes to Name will be lost.');
 				if (record.Description !== props.Record.Description)
-					w.push('Description');
+					w.push('Changes to Description will be lost.');
 				setWarnings(w)
 			}, [props.Record, record]);
 
@@ -56,7 +56,7 @@ interface IProps {
 	            <div className="card-header">
 	                <div className="row">
 	                    <div className="col">
-	                        <h4>Company Information:</h4>
+	                        <h4>Value List Group Information:</h4>
 	                    </div>
 	                </div>
 	            </div>
