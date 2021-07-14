@@ -23,8 +23,12 @@
 
 import Setting from './Setting';
 import Note from './Note';
+import ByValueList from './ValueList/ByValueList';
+import ValueList from './ValueList/Group';
 
 export {
   Setting,
-  Note
+  Note,
+  ValueList,
+  ByValueList
 };
