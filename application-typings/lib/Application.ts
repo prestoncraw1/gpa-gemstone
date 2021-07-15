@@ -30,16 +30,16 @@ namespace Application{
         }
 
         export interface iApplicationRole<T> {
-			ID: string,
-			Name: T,
-			Description: string,
-			NodeID: string,
-			CreatedOn: Date,
-			CreatedBy: string,
-			UpdatedOn: Date,
-			UpdatedBy: string,
-			Assigned?: boolean
-		}
+    			ID: string,
+    			Name: T,
+    			Description: string,
+    			NodeID: string,
+    			CreatedOn: Date,
+    			CreatedBy: string,
+    			UpdatedOn: Date,
+    			UpdatedBy: string,
+    			Assigned?: boolean
+    		}
 
 		export interface iApplicationRoleUserAccount {
 			ID: string,
@@ -60,30 +60,30 @@ namespace Application{
 			ApplicationRoleID: string,
 			SecurityGroupID: string
 		}
-    export interface UserAccount {
+    export interface iUserAccount {
 			ID: string,
-       Name: string,
-       Password: string,
-       FirstName: string,
-       LastName: string,
-       DefaultNodeID?: string,
-       Phone: string,
-       PhoneConfirmed: boolean,
-       Email: string,
-       EmailConfirmed: boolean,
-       LockedOut: boolean,
-       Approved: boolean,
-       UseADAuthentication: boolean,
-       ChangePasswordOn: Date,
-       AccountName?: string
+      Name: string,
+      Password: string,
+      FirstName: string,
+      LastName: string,
+      DefaultNodeID?: string,
+      Phone: string,
+      PhoneConfirmed: boolean,
+      Email: string,
+      EmailConfirmed: boolean,
+      LockedOut: boolean,
+      Approved: boolean,
+      UseADAuthentication: boolean,
+      ChangePasswordOn: Date,
+      AccountName?: string
 		}
-    export interface AdditionalUserFieldValue {
-      ID: number,
-       UserAccountID: string,
-       AdditionalUserFieldID: number,
-      Value: string
-      }
-    export interface AdditionalUserField {
+    export interface iAdditionalUserFieldValue {
+        ID: number,
+        UserAccountID: string,
+        AdditionalUserFieldID: number,
+        Value: string
+    }
+    export interface iAdditionalUserField {
       ID: number,
       FieldName: string,
       Type: string,
