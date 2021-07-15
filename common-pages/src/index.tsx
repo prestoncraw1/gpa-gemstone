@@ -25,10 +25,14 @@ import Setting from './Setting';
 import Note from './Note';
 import ByValueList from './ValueList/ByValueList';
 import ValueList from './ValueList/Group';
+import ByUser from './user/ByUser';
+import User from './user/User';
 
 export {
   Setting,
   Note,
   ValueList,
-  ByValueList
+  ByValueList,
+  User,
+  ByUser
 };
