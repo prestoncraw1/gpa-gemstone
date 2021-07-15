@@ -74,7 +74,8 @@ namespace Application{
        LockedOut: boolean,
        Approved: boolean,
        UseADAuthentication: boolean,
-       ChangePasswordOn: Date
+       ChangePasswordOn: Date,
+       AccountName?: string
 		}
     export interface AdditionalUserFieldValue {
       ID: number,
