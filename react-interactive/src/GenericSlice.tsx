@@ -27,7 +27,7 @@ import * as $ from 'jquery';
 import { Search } from './SearchBar';
 import { WritableDraft } from 'immer/dist/types/types-external'
 
-interface U { ID: number }
+interface U { ID: number|string }
 
 interface IError {
 	Message: string,
@@ -242,7 +242,7 @@ export default class GenericSlice<T extends U> {
 
     public Data = (state: any) => state[this.Name].Data as T[];
 		public Error = (state: any) => state[this.Name].Error as IError;
-    public Datum = (state: any, id: number) => (state[this.Name] as IState<T>).Data.find((d: T) => d.ID === id) as T;
+    public Datum = (state: any, id: number|string) => (state[this.Name] as IState<T>).Data.find((d: T) => d.ID === id) as T;
     public Status = (state: any) => state[this.Name].Status as Application.Types.Status;
     public SortField = (state: any) => state[this.Name].SortField as keyof T;
     public Ascending = (state: any) => state[this.Name].Ascending as boolean;
