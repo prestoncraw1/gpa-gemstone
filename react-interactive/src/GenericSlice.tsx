@@ -42,7 +42,8 @@ interface IState<T extends U> {
   SortField: keyof T,
   Ascending: boolean,
   ParentID: (number | null ),
-  SearchResults: T[]
+  SearchResults: T[],
+	Filter: Search.IFilter<T>[]
 }
 
 export default class GenericSlice<T extends U> {
@@ -116,7 +117,8 @@ export default class GenericSlice<T extends U> {
                 SortField: defaultSort,
                 Ascending: ascending,
                 ParentID: null,
-                SearchResults: []
+                SearchResults: [],
+								Filter: []
             } as IState<T>,
             reducers: {
                 Sort: (state: any, action: PayloadAction<{SortField: keyof T, Ascending: boolean}>)  => {
@@ -180,7 +182,8 @@ export default class GenericSlice<T extends U> {
                 });
                 builder.addCase(dBSearch.fulfilled, (state: WritableDraft<IState<T>>, action: PayloadAction<string, string,  {arg: { filter:  Search.IFilter<T>[], sortfield?: keyof T, ascending?: boolean}},never>) => {
                     state.SearchStatus = 'idle';
-                    state.SearchResults = JSON.parse(action.payload)
+                    state.SearchResults = JSON.parse(action.payload);
+										state.Filter = action.meta.arg.filter;
                 });
 
             }
@@ -250,5 +253,5 @@ export default class GenericSlice<T extends U> {
 
     public SearchResults = (state: any) => state[this.Name].SearchResults as T[];
     public SearchStatus = (state: any) => state[this.Name].SearchStatus as Application.Types.Status;
-    public SearchFilters = (state: any) => state[this.Name].SearchResults as T[];
+    public SearchFilters = (state: any) => state[this.Name].Fil as T[];
 }
