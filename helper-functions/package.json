@@ -1,6 +1,6 @@
 {
   "name": "@gpa-gemstone/helper-functions",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Helper Functions for gpa-gemstone packages",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/GridProtectionAlliance/gpa-gemstone#readme",
   "devDependencies": {
-    "@types/jest": "^27.0.6",
+    "@types/jest": "^26.0.4",
     "jest": "^27.0.6",
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.3",
