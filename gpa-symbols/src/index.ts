@@ -20,32 +20,29 @@
 //       Generated original version of source code.
 //
 // ******************************************************************************************************
-const HeavyCheckMark = '✔️';
-const Pencil = '✏️';
-const TrashCan = '🗑️';
-const CrossMark = '❌';
-const Plus = '➕';
-const Warning = '⚠️';
-const Spinner = '🔄';
-const Wrench = '🔧';
-const Flag = '🚩';
-const UpArrow = '⬆️';
-const LeftArrow = '⬅';
-const RightArrow = '➡';
-const DownArrow = '⬇️';
-const DNA = '🧬';
-const InputNumbers = '🔢';
-const FourWayArrow = '☩';
-const MagnifyingGlass = '🔍';
-const House = '🏠';
-const Scroll = '📜';
-const PlayButton = '▶️';
-const Questionmark = '?';
 
-export { HeavyCheckMark, Pencil, TrashCan,
- CrossMark, Plus, Warning, 
- Spinner, Wrench, Flag,
- UpArrow, DownArrow, DNA,
- InputNumbers, MagnifyingGlass, House,
- FourWayArrow,Scroll, PlayButton, LeftArrow, RightArrow,
- Questionmark };
+export const HeavyCheckMark = '✔️';
+export const Pencil = '✏️';
+export const TrashCan = '🗑️';
+export const CrossMark = '❌';
+export const Plus = '➕';
+export const Warning = '⚠️';
+export const Spinner = '🔄';
+export const Wrench = '🔧';
+export const Flag = '🚩';
+export const UpArrow = '⬆️';
+export const LeftArrow = '⬅';
+export const RightArrow = '➡';
+export const DownArrow = '⬇️';
+export const DNA = '🧬';
+export const InputNumbers = '🔢';
+export const FourWayArrow = '☩';
+export const MagnifyingGlass = '🔍';
+export const House = '🏠';
+export const Scroll = '📜';
+export const PlayButton = '▶️';
+export const StopButton = '⏹️';
+export const PauseButton = '⏸️';
+export const FastForwardButton = '⏩';
+export const RewindButton = '⏪';
+export const Questionmark = '?';
