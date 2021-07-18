@@ -23,14 +23,15 @@
 import * as React from 'react';
 import { SystemCenter, Application } from '@gpa-gemstone/application-typings';
 import ItemForm from './ItemForm';
-import {  GenericSlice, Modal } from '@gpa-gemstone/react-interactive';
+import { Modal } from '@gpa-gemstone/react-interactive';
 import { SearchableTable } from '@gpa-gemstone/react-table';
 import { CrossMark } from '@gpa-gemstone/gpa-symbols';
 import { useDispatch, useSelector } from 'react-redux';
+import { iGenericSlice } from '../SliceInterfaces';
 
 interface IProps {
 		Record: SystemCenter.Types.ValueListGroup
-		ValueListItemSlice: GenericSlice<SystemCenter.Types.ValueListItem>;
+		ValueListItemSlice: iGenericSlice<SystemCenter.Types.ValueListItem>;
 	}
 
 
@@ -39,7 +40,7 @@ export default function GroupItemsWindow(props: IProps) {
 
 	const recordStatus: Application.Types.Status = useSelector(props.ValueListItemSlice.Status);
 	const data: SystemCenter.Types.ValueListItem[] = useSelector(props.ValueListItemSlice.Data);
-	const parentID: number|null = useSelector(props.ValueListItemSlice.ParentID);
+	const parentID: number|null = useSelector((props.ValueListItemSlice.ParentID == undefined? (state: any) => -1 : props.ValueListItemSlice.ParentID));
   const [sortField, setSortField] = React.useState<keyof SystemCenter.Types.ValueListItem>('Value');
 	const [ascending,setAscending] = React.useState<boolean>(false);
 
@@ -129,7 +130,7 @@ export default function GroupItemsWindow(props: IProps) {
 						CallBack={(c) => {
 							setShowNew(false);
 							if (c)
-								dispatch(props.ValueListItemSlice.DBAction({verb: 'POST', record: record}))
+								dispatch(props.ValueListItemSlice.DBAction({verb: 'POST', record}))
 						}}
 						>
 							<ItemForm Record={record} Setter={setRecord} ErrorSetter={setNewErrors} />

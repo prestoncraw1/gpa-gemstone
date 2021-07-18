@@ -23,6 +23,7 @@
 import * as React from 'react';
 import { SystemCenter } from '@gpa-gemstone/application-typings';
 import { Input } from '@gpa-gemstone/react-forms';
+import { IsInteger } from '@gpa-gemstone/helper-functions';
 
 interface IProps {
 	Record: SystemCenter.Types.ValueListItem,
@@ -42,6 +43,8 @@ export default function ItemForm(props: IProps) {
 			e.push('Value has to be less than 200 characters.')
 		if (props.Record.AltValue != null && props.Record.AltValue.length > 200)
 			e.push('Alt Value has to be less than 200 characters.')
+		if (props.Record.SortOrder != null && !IsInteger(props.Record.SortOrder))
+				e.push('Sort Order has to be an integer or be left blank.')
 		setErrors(e)
 
 	}, [props.Record])
@@ -56,14 +59,16 @@ export default function ItemForm(props: IProps) {
             return props.Record.Value != null && props.Record.Value.length > 0 && props.Record.Value.length <= 200;
         else if (field === 'AltValue')
             return props.Record.AltValue == null || props.Record.AltValue.length <= 200;
+				else if (field == 'SortOrder')
+					return props.Record.SortOrder == null ||  IsInteger(props.Record.SortOrder)
         return true;
     }
 
     return (
         <form>
             <Input<SystemCenter.Types.ValueListItem> Record={props.Record} Field={'Value'} Feedback={'Value must be set and be less than 200 characters.'} Valid={Valid} Setter={props.Setter} />
-            <Input<SystemCenter.Types.ValueListItem> Record={props.Record} Field={'AltValue'} Feedback={'AltValue must be less than 200 characters.'} Valid={Valid} Setter={props.Setter} />
-            <Input<SystemCenter.Types.ValueListItem> Record={props.Record} Field={'SortOrder'} Type='number' Valid={Valid} Setter={props.Setter} />
+            <Input<SystemCenter.Types.ValueListItem> Record={props.Record} Field={'AltValue'} Label={'Alt. Value'} Feedback={'Alt. Value must be less than 200 characters.'} Valid={Valid} Setter={props.Setter} />
+            <Input<SystemCenter.Types.ValueListItem> Record={props.Record} Field={'SortOrder'} Label={'Sort Order'} Type='number' Valid={Valid} Setter={props.Setter} />
         </form>
 
         );

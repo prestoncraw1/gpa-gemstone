@@ -22,9 +22,10 @@
 // ******************************************************************************************************
 import { Application } from '@gpa-gemstone/application-typings';
 import { Search } from '@gpa-gemstone/react-interactive';
-import { ActionCreatorWithPayload, AsyncThunk } from '@reduxjs/toolkit';
+import { ActionCreatorWithPayload, AsyncThunk, ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
 
 type DBAction = 'POST' | 'DELETE' | 'PATCH';
+export type UserValidation = 'Resolving' | 'Valid' | 'Invalid' | 'Unknown';
 
 export interface iGenericSlice<T> {
   Fetch: (AsyncThunk<any, void | number, {}>),
@@ -46,19 +47,40 @@ export interface iSearchableSlice<T> extends iGenericSlice<T> {
 	SearchStatus: (state: any) => Application.Types.Status,
 }
 
-export interface iUserAccountSlice extends iGenericSlice<Application.Types.UserAccount> {
-	ValidateAD: (AsyncThunk<any, {}, {}>),
-	ADUpdate: (AsyncThunk<any, {}, {}>),
-	SetCurrentUser: (AsyncThunk<any, string, {}>),
-	CurrentID: (state: any) => string,
-	CurrentUser: (state: any) => Application.Types.UserAccount,
-	Status: (state: any) => Application.Types.Status,
+export interface iAdditionaFieldSlice<F,V> {
+	FetchField: AsyncThunk<any, void, {}>,
+	FieldAction: AsyncThunk<any, { Verb: DBAction, Record: F }, {}>,
+  FetchValues: AsyncThunk<any, number|string, {}>,
+  UpdateValues: AsyncThunk<any, {ParentID: number|string, Values: V[]}, {}>,
+  Sort: ActionCreatorWithPayload<{ SortField: keyof F, Ascending: boolean}, string>,
+
+	Fields: (state: any) => F[],
+  Values: (state: any) => V[],
+  FieldStatus: (state: any) => Application.Types.Status,
+  ValueStatus: (state: any) => Application.Types.Status,
+  ValueParentId: (state: any) => number|string,
+  SortField: (state: any) => keyof F,
+  Ascending: (state: any) => boolean,
 }
 
-export interface iAdditionaFieldSlice<T,U> {
-	FetchField: AsyncThunk<any, {}, {}>,
-	FieldAction: AsyncThunk<any, { verb: DBAction, record: T }, {}>,
-	SetParent: AsyncThunk<any, number|string, {}>,
-	Fields: (state: any) => T[],
-	Field: (state: any, id: number) => T,
+export interface iUserAccountSlice extends iSearchableSlice<Application.Types.iUserAccount> {
+	ADUpdate: (AsyncThunk<any, void, {}>),
+  SetCurrentUser: (AsyncThunk<any, Application.Types.iUserAccount, {}>),
+  LoadExistingUser: (AsyncThunk<any, string, {}>),
+  SetNewUser: ActionCreatorWithoutPayload
+
+	CurrentID: (state: any) => string|undefined,
+	CurrentUser: (state: any) => Application.Types.iUserAccount,
+  ADValidation: (state: any) => UserValidation
+}
+
+export interface iSecurityRoleSlice {
+  FetchRoles: (AsyncThunk<any, void, {}>),
+  FetchUserRoles: (AsyncThunk<any, string, {}>),
+  SetUserRoles: (AsyncThunk<any, {UserId: string, Roles: Application.Types.iApplicationRoleUserAccount[]}, {}>),
+
+	Status: (state: any) => Application.Types.Status,
+  CurrentRoleStatus: (state: any) => Application.Types.Status,
+  Roles: (state: any) =>  Application.Types.iApplicationRoleUserAccount[],
+  AvailableRoles: (state: any) => Application.Types.iApplicationRole<Application.Types.SecurityRoleName>[]
 }

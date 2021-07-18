@@ -23,47 +23,46 @@
 import * as React from 'react';
 import { Select, TextArea } from '@gpa-gemstone/react-forms';
 import Table from '@gpa-gemstone/react-table';
-import { Pencil, TrashCan } from '@gpa-gemstone/gpa-symbols';
-import { Modal, LoadingIcon, ToolTip, ServerErrorIcon } from '@gpa-gemstone/react-interactive';
-import { OpenXDA } from '@gpa-gemstone/application-typings';
+import { CrossMark, Pencil, TrashCan } from '@gpa-gemstone/gpa-symbols';
+import { Modal, ToolTip, ServerErrorIcon, LoadingScreen } from '@gpa-gemstone/react-interactive';
+import { Application, OpenXDA } from '@gpa-gemstone/application-typings';
 import moment = require('moment');
+import { iGenericSlice } from './SliceInterfaces';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface IProps {
 		NoteTypes: OpenXDA.Types.NoteType[],
     NoteTags: OpenXDA.Types.NoteTag[],
 		NoteApplications: OpenXDA.Types.NoteApplication[],
-    GetNotes: (ascending: boolean, sortField: string, ReferenceID?: number) => JQuery.jqXHR<string>,
 		MaxHeight: number,
 		Title?: string,
 		ReferenceTableID?: number,
-    AddNote?: (note: OpenXDA.Types.Note) => JQuery.jqXHR,
-    UpdateNote?: (note: OpenXDA.Types.Note) => JQuery.jqXHR,
-    DeleteNote?: (note: OpenXDA.Types.Note) => JQuery.jqXHR,
+		NoteSlice: iGenericSlice<OpenXDA.Types.Note>
+		AllowEdit?: boolean,
+		AllowRemove?: boolean,
+		AllowAdd?: boolean
 }
 
 
 
 function Note(props: IProps)  {
+	const dispatch = useDispatch();
 
   const [showEdit, setEdit] = React.useState<boolean>(false);
-	const [sortField, setSortField] = React.useState<string>('Timestamp');
-  const [ascending, setAscending] = React.useState<boolean>(false);
-	const [hoverAdd, setHoverAdd] = React.useState<boolean>(false);
-  const [hoverClear, setHoverClear] = React.useState<boolean>(false);
-  const [data, setData] = React.useState<OpenXDA.Types.Note[]>([]);
-	const [loadingState, setLoadingState] = React.useState<('Idle' | 'Loading' | 'Error')>('Idle');
+	const [hover, setHover] = React.useState<'add'|'clear'|'none'>('none')
+
+  const data: OpenXDA.Types.Note[] = useSelector(props.NoteSlice.Data)
+	const dataStatus: Application.Types.Status =  useSelector(props.NoteSlice.Status)
+	const parentID: number|null|undefined = useSelector((props.NoteSlice.ParentID == undefined? (state: any) => props.ReferenceTableID : props.NoteSlice.ParentID))
+	const sortField: keyof OpenXDA.Types.Note = useSelector(props.NoteSlice.SortField)
+  const ascending: boolean = useSelector(props.NoteSlice.Ascending)
+
 	const [note, setNote] = React.useState<OpenXDA.Types.Note>(CreateNewNote());
 
-	const [triggerReload, setTriggerReload] = React.useState<number>(0);
-
   React.useEffect(() => {
-				setLoadingState('Loading');
-        const handle = props.GetNotes( ascending, sortField, props.ReferenceTableID);
-        handle.done((d: string) => { setData(JSON.parse(d) as OpenXDA.Types.Note[]); setLoadingState('Idle') });
-        handle.fail(() => setLoadingState('Error'))
-
-        return () => { if (handle != null && handle.abort != null) handle.abort(); }
-    }, [props.ReferenceTableID, ascending, sortField, triggerReload]);
+				if (dataStatus == 'unintiated' || dataStatus == 'changed' || parentID != props.ReferenceTableID)
+					dispatch(props.NoteSlice.Fetch(props.ReferenceTableID));
+    }, [props.ReferenceTableID, dispatch, dataStatus]);
 
 	React.useEffect(() => {
 		if (note.NoteTypeID > 0 || props.NoteTypes.length === 0)
@@ -75,24 +74,23 @@ function Note(props: IProps)  {
 		if (note.NoteApplicationID > 0 || props.NoteApplications.length === 0)
 			return;
 			setNote((n) => ({...n, NoteApplicationID: props.NoteApplications[0].ID}));
-
 	},[props.NoteApplications]);
 
 	React.useEffect(() => {
 		if (note.NoteTagID > 0 || props.NoteTags.length === 0)
 			return;
 		setNote((n) => ({...n, NoteTagID: props.NoteTags[0].ID}));
-
 	},[props.NoteTags]);
 
 	React.useEffect(() => {
-
 		if (note.ReferenceTableID === undefined)
 			return
-
 		setNote((n) => ({...n, ReferenceTableID: props.ReferenceTableID !== undefined ? props.ReferenceTableID : -1}));
 	},[props.ReferenceTableID]);
 
+	const allowEdit = props.AllowEdit == undefined? true : props.AllowEdit;
+	const allowRemove = props.AllowRemove == undefined? true : props.AllowRemove;
+	const allowAdd = props.AllowAdd == undefined? true : props.AllowAdd;
 
   function CreateNewNote() {
 		const newNote: OpenXDA.Types.Note = {ID: -1, ReferenceTableID: -1, NoteTagID: -1, NoteTypeID: -1, NoteApplicationID: -1, Timestamp: '', UserAccount: '', Note: '' }
@@ -117,66 +115,35 @@ function Note(props: IProps)  {
       setEdit(true);
 		}
 
-	function handleRemove(d: OpenXDA.Types.Note) {
-			if (props.DeleteNote === undefined)
-				return;
 
-			setLoadingState('Loading');
-			const handle = props.DeleteNote(d);
-			handle.done(() => {
-				setTriggerReload((x) => x + 1)
-			})
-			handle.fail(() => setLoadingState('Error'));
-	}
 
 	function handleAdd(d: OpenXDA.Types.Note) {
-		if (props.AddNote === undefined)
-			return;
-
-		setLoadingState('Loading');
+		dispatch(props.NoteSlice.DBAction({verb: 'POST', record: {...d, UserAccount: undefined, Timestamp: moment().format('MM/DD/YYYY HH:mm')}}))
 		setNote(CreateNewNote());
-		const handle = props.AddNote(d);
-		handle.done(() => {
-			setTriggerReload((x) => x + 1)
-		})
-		handle.fail(() => setLoadingState('Error'))
 	}
 
 	function handleSaveEdit(confirm: boolean) {
         if (note.Note.length === 0 && confirm)
             return;
-
         setEdit(false);
-        if (confirm && props.UpdateNote !== undefined) {
-					setLoadingState('Loading')
-					const handle = props.UpdateNote(note);
-					handle.done(() => {
-						setTriggerReload((x) => x + 1)
-					})
-					handle.fail(() => setLoadingState('Error'))
-        }
-
+        if (confirm && allowEdit)
+					dispatch(props.NoteSlice.DBAction({verb: 'PATCH', record: note}));
       	setNote(CreateNewNote());
 
     }
 
-
-	if (loadingState === 'Loading')
-		return (<div style={{ width: '100%', height: '100%', opacity: 0.5, backgroundColor: '#000000', }}>
-						 <div style={{height: '40px', width: '40px', margin:'auto', marginTop: 'calc(50% - 20 px)'}}>
-							 <LoadingIcon Show={true} Size={40}/>
+	if (dataStatus === "error")
+		return (<div style={{ width: '100%', height: '100%'}}>
+						 <div style={{height: '40px', margin:'auto', marginTop: 'calc(50% - 20 px)'}}>
+							 <ServerErrorIcon Show={true} Size={40} Label={'A Server Error Occured. Please Reload the Application'}/>
 						 </div>
 					 </div>)
 
-		if (loadingState === "Error")
-			return (<div style={{ width: '100%', height: '100%'}}>
-							 <div style={{height: '40px', margin:'auto', marginTop: 'calc(50% - 20 px)'}}>
-								 <ServerErrorIcon Show={true} Size={40} Label={'A Server Error Occured. Please Reload the Application'}/>
-							 </div>
-						 </div>)
+
 
     return (
 				<div className="card" style={{ marginBottom: 10, maxHeight: props.MaxHeight, width: '100%'}}>
+				<LoadingScreen Show={dataStatus == 'loading'}/>
 					<div className="card-header">
                 <div className="row">
                     <div className="col">
@@ -188,13 +155,14 @@ function Note(props: IProps)  {
             <div>
 							<Table<OpenXDA.Types.Note>
 										cols={[
-												{ key: 'Note', label: 'Note', headerStyle: { width: '50%' }, rowStyle: { width: '50%' } },
+												{ key: 'Note', field: 'Note', label: 'Note', headerStyle: { width: '50%' }, rowStyle: { width: '50%' } },
 												{ key: 'Timestamp', label: 'Time', headerStyle: { width: 'auto' }, rowStyle: { width: 'auto' }, content: (item) => moment.utc(item.Timestamp).format("MM/DD/YYYY HH:mm") },
-												{ key: 'UserAccount', label: 'User', headerStyle: { width: 'auto' }, rowStyle: { width: 'auto' } },
+												{ key: 'UserAccount', field: 'UserAccount', label: 'User', headerStyle: { width: 'auto' }, rowStyle: { width: 'auto' } },
 												{
 														key: 'buttons', label: '', headerStyle: { width: 'auto' }, rowStyle: { width: 'auto' }, content: (item) => <>
-																{props.UpdateNote !== undefined? <button className="btn btn-sm" onClick={() => handleEdit(item)}><span> {Pencil} </span></button> : null }
-																{props.DeleteNote !== undefined? <button className="btn btn-sm" onClick={() => handleRemove(item)}><span> {TrashCan} </span></button> : null }
+																{allowEdit? <button className="btn btn-sm" onClick={() => handleEdit(item)}><span> {Pencil} </span></button> : null }
+																{allowRemove? <button className="btn btn-sm" onClick={() => dispatch(props.NoteSlice.DBAction({verb: 'DELETE', record: item}))}>
+																<span> {TrashCan} </span></button> : null }
 														</>
 												},
 
@@ -205,13 +173,12 @@ function Note(props: IProps)  {
 										sortKey={sortField}
 										ascending={ascending}
 										onSort={(d) => {
-												if (d.colField === sortField)
-														setAscending(!ascending);
-												else {
-														setAscending(true);
-														if (d.colField !== null)
-															setSortField(d.colField as string);
-												}
+												if (d.colField === undefined)
+														return;
+												if (d.colField == sortField)
+													dispatch(props.NoteSlice.Sort({SortField: sortField, Ascending: ascending}))
+												else
+													dispatch(props.NoteSlice.Sort({SortField: d.colField, Ascending: true}))
 
 										}}
 										onClick={() => { return;}}
@@ -221,34 +188,33 @@ function Note(props: IProps)  {
 										selected={() => false}
 								/>
             </div>
-						{props.AddNote !== undefined?
+						{allowAdd?
 							<NoteOptions Record={note} Setter={(n) => setNote(n)} NoteTags={props.NoteTags} NoteTypes={props.NoteTypes} NoteApplications={props.NoteApplications}/>
 						 : null }
 						 <Modal Show={showEdit} Title={'Edit Note'}
                     ShowCancel={true}
                     CallBack={handleSaveEdit}
-                    DisableConfirm={note.Note === null || note.Note.length === 0}
+                    DisableConfirm={note.Note == null || note.Note.length === 0}
                     ShowX={true}
-                    ConfirmShowToolTip={note.Note === null || note.Note.length === 0}
+                    ConfirmShowToolTip={note.Note == null || note.Note.length === 0}
                     ConfirmToolTipContent={
-                        <p> <i style={{ marginRight: '10px', color: '#dc3545' }} className="fa fa-exclamation-circle"></i>
-                        An empty Note can not be saved. </p>
+                        <p> {CrossMark} An empty Note can not be saved. </p>
                     }>
                     <NoteOptions Record={note} Setter={(n) => setNote(n)} NoteTags={props.NoteTags} NoteTypes={props.NoteTypes} NoteApplications={props.NoteApplications}/>
                 </Modal>
 						</div>
-						  {props.AddNote !== undefined?
+						  {allowAdd?
 								<div className="card-footer">
 								<div className="btn-group mr-2">
-                    <button className={"btn btn-primary" + (note.Note === null ||note.Note.length === 0 ? ' disabled' : '')} onClick={() => { if (note.Note !== null && note.Note.length > 0) handleAdd(note); }} data-tooltip={"Add"} style={{ cursor: note.Note === null || note.Note.length === 0 ? 'not-allowed' : 'pointer' }} onMouseOver={() => setHoverAdd(true)} onMouseOut={() => setHoverAdd(false)}>Add Note</button>
-                    <ToolTip Show={hoverAdd && ( note.Note === null || note.Note.length === 0 )} Position={'top'} Theme={'dark'} Target={"Add"}>
-                        <p> A note needs to be entered. </p>
+                    <button className={"btn btn-primary" + (note.Note === null ||note.Note.length === 0 ? ' disabled' : '')} onClick={() => { if (note.Note !== null && note.Note.length > 0) handleAdd(note); }} data-tooltip={"Add"} style={{ cursor: note.Note === null || note.Note.length === 0 ? 'not-allowed' : 'pointer' }} onMouseOver={() => setHover('add')} onMouseOut={() => setHover('none')}>Add Note</button>
+                    <ToolTip Show={hover === 'add' && ( note.Note === null || note.Note.length === 0 )} Position={'top'} Theme={'dark'} Target={"Add"}>
+                        <p>{CrossMark} A note needs to be entered. </p>
                     </ToolTip>
                 </div>
                 <div className="btn-group mr-2">
-                    <button className={"btn btn-default" + (note.Note === null || note.Note.length === 0  ? ' disabled' : '')} onClick={() => setNote((n) => ({...n, Note: ''}))} style={{ cursor: note.Note === null || note.Note.length === 0 ? 'not-allowed' : 'pointer' }} data-tooltip={"Remove"} onMouseOver={() => setHoverClear(true)} onMouseOut={() => setHoverClear(false)} >Clear</button>
-                    <ToolTip Show={hoverClear && (note.Note === null || note.Note.length === 0)} Position={'top'} Theme={'dark'} Target={"Remove"}>
-                        <p> The note field is already empty. </p>
+                    <button className={"btn btn-default" + (note.Note === null || note.Note.length === 0  ? ' disabled' : '')} onClick={() => setNote((n) => ({...n, Note: ''}))} style={{ cursor: note.Note === null || note.Note.length === 0 ? 'not-allowed' : 'pointer' }} data-tooltip={"Remove"} onMouseOver={() => setHover('clear')} onMouseOut={() => setHover('none')} >Clear</button>
+                    <ToolTip Show={hover === 'clear' && (note.Note === null || note.Note.length === 0)} Position={'top'} Theme={'dark'} Target={"Remove"}>
+                        <p>{CrossMark} The note field is already empty. </p>
                     </ToolTip>
                 </div>
             </div>
@@ -271,7 +237,7 @@ function NoteOptions(props: OptionProps) {
 	return (
 	<div className="row">
 		<div className={showOptions? "col-6" : 'col-12'}>
-			<TextArea<OpenXDA.Types.Note> Record={props.Record} Rows={4} Field={'Note'} Setter={(n) => props.Setter(n)} Valid={() => props.Record.Note.length > 0} Label={''} />
+			<TextArea<OpenXDA.Types.Note> Record={props.Record} Rows={4} Field={'Note'} Setter={(n) => props.Setter(n)} Valid={() => props.Record.Note != null && props.Record.Note.length > 0} Label={''} />
 		</div>
 	{showOptions? <div className="col-6">
 		{props.NoteTypes.length > 1? <Select<OpenXDA.Types.Note> Record={props.Record} Field={'NoteTypeID'} Label={'Note for: '} Options={props.NoteTypes.map(r => ({Value: r.ID.toString(), Label: r.Name }))} Setter={(record: OpenXDA.Types.Note) => props.Setter({...record, NoteTypeID: parseInt(record.NoteTypeID.toString(),10)})}/> : null}

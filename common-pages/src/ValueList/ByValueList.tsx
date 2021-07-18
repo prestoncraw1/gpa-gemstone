@@ -23,15 +23,16 @@
 import * as React from 'react';
 import Table from '@gpa-gemstone/react-table';
 import { CrossMark } from '@gpa-gemstone/gpa-symbols';
-import { SearchBar, Search, Modal, GenericSlice } from '@gpa-gemstone/react-interactive';
+import { SearchBar, Search, Modal } from '@gpa-gemstone/react-interactive';
 import { SystemCenter, Application } from '@gpa-gemstone/application-typings';
 import GroupForm  from './GroupForm';
 import { useDispatch, useSelector } from 'react-redux';
+import { iGenericSlice, iSearchableSlice } from '../SliceInterfaces';
 
 interface IProps {
 	OnValueListSelect: (id: number) => void,
-	ValueListSlice: GenericSlice<SystemCenter.Types.ValueListGroup>;
-	ValueListItemSlice: GenericSlice<SystemCenter.Types.ValueListItem>;
+	ValueListSlice: iSearchableSlice<SystemCenter.Types.ValueListGroup>;
+	ValueListItemSlice: iGenericSlice<SystemCenter.Types.ValueListItem>;
 }
 
 function ByValueListGroup(props: IProps)  {
@@ -52,10 +53,9 @@ function ByValueListGroup(props: IProps)  {
   const [record, setRecord] = React.useState<SystemCenter.Types.ValueListGroup>(emptyRecord);
 
 	const items: SystemCenter.Types.ValueListItem[] = useSelector(props.ValueListItemSlice.Data);
-	const itemsParentID: number|null = useSelector(props.ValueListItemSlice.ParentID);
   const itemStatus: Application.Types.Status = useSelector(props.ValueListItemSlice.Status);
 
-  const [search, setSearch] = React.useState<Array<Search.IFilter<SystemCenter.Types.ValueListGroup>>>([]);
+  const [search, setSearch] = React.useState<Search.IFilter<SystemCenter.Types.ValueListGroup>[]>([]);
 	const [newErrors, setNewErrors] = React.useState<string[]>([]);
 	const [validName, setValidName] = React.useState<boolean>(true);
 
@@ -71,10 +71,10 @@ function ByValueListGroup(props: IProps)  {
 	);
 
 	React.useEffect(() => {
-		if (itemStatus === 'unintiated' || itemStatus === 'changed' || itemsParentID != null)
+		if (itemStatus === 'unintiated' || itemStatus === 'changed')
 			dispatch(props.ValueListItemSlice.Fetch());
 
-}, [dispatch, itemsParentID]);
+}, [dispatch]);
 
 	React.useEffect(() => {
 		if (groupStatus === 'unintiated' || groupStatus === 'changed')

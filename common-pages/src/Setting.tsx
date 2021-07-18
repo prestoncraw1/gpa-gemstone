@@ -65,8 +65,8 @@ function Setting(props: IProps)  {
 
 	React.useEffect(() => {
       if (searchStatus == 'unintiated' || status == 'changed')
-				dispatch(props.SettingsSlice.DBSearch({filter: search, sortField: sortField, ascending: ascending}));
-  }, [dispatch,searchStatus, ascending, sortField]);
+				dispatch(props.SettingsSlice.DBSearch({filter: search, sortField, ascending}));
+  }, [dispatch,searchStatus, ascending, sortField, search]);
 
   React.useEffect(() => { setHasChanged(false) }, [showModal]);
 
@@ -88,13 +88,15 @@ function Setting(props: IProps)  {
   ]
 
 	if (status == 'error')
-		return <div style={{ width: '100%', height: '100%' }}> <ServerErrorIcon Show={true}/></div>;
+		return <div style={{ width: '100%', height: '100%' }}>
+		<ServerErrorIcon Show={true} Label={'A Server Error Occured. Please Reload the Application'}/>
+		</div>;
 
   return (
       <>
 			<LoadingScreen Show={status == 'loading'} />
       <div style={{ width: '100%', height: '100%' }}>
-        <SearchBar<SystemCenter.Types.Setting> CollumnList={searchFields} SetFilter={(flds) => dispatch(props.SettingsSlice.DBSearch({filter: search, sortField: sortField, ascending: ascending}))}
+        <SearchBar<SystemCenter.Types.Setting> CollumnList={searchFields} SetFilter={(flds) => dispatch(props.SettingsSlice.DBSearch({filter: flds, sortField, ascending}))}
 					Direction={'left'} defaultCollumn={{ key: 'Name', label: 'Name', type: 'string', isPivotField: false}} Width={'50%'} Label={'Search'}
           ShowLoading={searchStatus === 'loading'} ResultNote={searchStatus === 'error' ? 'Could not complete Search' : 'Found ' + data.length + ' Settings'}
           GetEnum={() => {
@@ -132,6 +134,10 @@ function Setting(props: IProps)  {
                 setAscending(true);
                 setSortField(d.colField);
               }
+							if (d.colField === sortField)
+								dispatch(props.SettingsSlice.DBSearch({filter: search, sortField: sortField, ascending: true}));
+							else
+								dispatch(props.SettingsSlice.DBSearch({filter: search, sortField: d.colField, ascending: ascending}));
             }}
             onClick={(item) => { setEditNewSetting(item.row); setShowModal(true); setEditNew('Edit');}}
             theadStyle={{ fontSize: 'smaller', display: 'table', tableLayout: 'fixed', width: '100%' }}

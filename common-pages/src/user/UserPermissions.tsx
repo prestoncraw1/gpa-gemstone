@@ -24,43 +24,47 @@ import * as React from 'react';
 import { Application } from '@gpa-gemstone/application-typings';
 import * as _ from 'lodash';
 import { CheckBox } from '@gpa-gemstone/react-forms';
+import { iSecurityRoleSlice } from '../SliceInterfaces';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface IProps {
-	User: Application.Types.UserAccount,
-	GetAllRoles: () => JQuery.jqXHR<Application.Types.iApplicationRole<Application.Types.SecurityRoleName>[]>,
-	GetActiveRoles: (userID: string) => JQuery.jqXHR<Application.Types.iApplicationRoleUserAccount[]>,
-	SetRoles: (roles: Application.Types.iApplicationRoleUserAccount[]) => JQuery.jqXHR
-
+	UserID: string,
+	RoleSlice: iSecurityRoleSlice
 }
 
 function UserPermission(props: IProps)  {
-	const [roles, setRoles] = React.useState<Application.Types.iApplicationRole<Application.Types.SecurityRoleName>[]>([]);
-	const [currentRoles, setCurrentRoles] = React.useState<Application.Types.iApplicationRole<Application.Types.SecurityRoleName>[]>([]);
-  const [changed, setChanged] = React.useState<boolean>(false);
-  const [counter, setCounter] = React.useState<number>(0);
+	const dispatch = useDispatch();
+
+	const currentRoles: Application.Types.iApplicationRoleUserAccount[] = useSelector(props.RoleSlice.Roles);
+	const allRoleStatus: Application.Types.Status = useSelector(props.RoleSlice.Status)
+	const availableRoles: Application.Types.iApplicationRole<Application.Types.SecurityRoleName>[] = useSelector(props.RoleSlice.AvailableRoles)
+	const currentRoleStatus: Application.Types.Status = useSelector(props.RoleSlice.CurrentRoleStatus)
+
+	const [workingRoles, setWorkingRoles] = React.useState<Application.Types.iApplicationRole<Application.Types.SecurityRoleName>[]>([]);
+	const [changed, setChanged] = React.useState<boolean>(false)
 
 	React.useEffect(() => {
-		const handle = props.GetAllRoles();
-		handle.then((d) => {
-			setRoles(d);
-			setCounter((x) => x + 1)
-
-		})
-		return () => { if (handle != null && handle.abort != null) handle.abort(); }
-	},[]);
+	  if (allRoleStatus == 'unintiated' || allRoleStatus == 'changed')
+			dispatch(props.RoleSlice.FetchRoles())
+	}, [dispatch, allRoleStatus])
 
 	React.useEffect(() => {
-		setChanged(false);
-		const handle = props.GetActiveRoles(props.User.ID);
-		handle.then((d) => {
-			setCurrentRoles(roles.map(src => {
-				 src.Assigned = d.find(usrc => usrc.ApplicationRoleID == src.ID) != undefined;
-				 return src;
-		 }));
+		if (currentRoleStatus == 'unintiated' || currentRoleStatus == 'changed')
+			dispatch(props.RoleSlice.FetchUserRoles(props.UserID))
+	}, [dispatch, currentRoleStatus, props.UserID])
 
-		})
-		return () => { if (handle != null && handle.abort != null) handle.abort(); }
-	}, [counter]);
+	React.useEffect(() => {
+		resetCurrentRoles(availableRoles, currentRoles)
+ },[currentRoles, availableRoles]);
+
+function resetCurrentRoles(avRoles: Application.Types.iApplicationRole<Application.Types.SecurityRoleName>[], currRoles: Application.Types.iApplicationRoleUserAccount[] ) {
+	setChanged(false);
+	setWorkingRoles(avRoles.map(src => {
+		 const upd = _.cloneDeep(src);
+		 upd.Assigned = currRoles.find(usrc => usrc.ApplicationRoleID == upd.ID) != undefined;
+		 return upd;
+ }))
+}
 
 	return (
         <div className="card" style={{ marginBottom: 10 }}>
@@ -78,10 +82,10 @@ function UserPermission(props: IProps)  {
                             <legend className="w-auto" style={{ fontSize: 'large' }}>System Center:</legend>
                             <form>
                                 {
-                                    currentRoles.map((scr, i, array) => <CheckBox<Application.Types.iApplicationRole<Application.Types.SecurityRoleName>> key={scr.ID} Record={scr} Field='Assigned' Label={scr.Name} Setter={(record) => {
+                                    workingRoles.map((scr, i, array) => <CheckBox<Application.Types.iApplicationRole<Application.Types.SecurityRoleName>> key={scr.ID} Record={scr} Field='Assigned' Label={scr.Name} Setter={(record) => {
                                         scr.Assigned = record.Assigned;
-                                        let newArray = _.clone(array);
-                                        setCurrentRoles(newArray);
+                                        const newArray = _.clone(array);
+                                        setWorkingRoles(newArray);
                                         setChanged(true);
                                     }} />)
                                 }
@@ -94,10 +98,14 @@ function UserPermission(props: IProps)  {
             </div>
             <div className="card-footer">
                 <div className="btn-group mr-2">
-                    <button className="btn btn-primary" onClick={() => props.SetRoles(currentRoles.filter(scr => scr.Assigned).map(scr => ({ ID: '00000000-0000-0000-0000-000000000000', ApplicationRoleID: scr.ID, UserAccountID: props.User.ID }))).then(() => setCounter((x) => x + 1))} disabled={!changed}>Update</button>
+                    <button className="btn btn-primary" onClick={() =>
+											dispatch(props.RoleSlice.SetUserRoles({
+												UserId: props.UserID,
+												Roles: workingRoles.filter(scr => scr.Assigned).map(scr => ({ ID: '00000000-0000-0000-0000-000000000000', ApplicationRoleID: scr.ID, UserAccountID: props.UserID }))
+											}))} disabled={!changed}>Update</button>
                 </div>
                 <div className="btn-group mr-2">
-                    <button className="btn btn-default" onClick={() => setCounter((x) => x + 1)} disabled={!changed}>Reset</button>
+                    <button className="btn btn-default" onClick={() => resetCurrentRoles(availableRoles, currentRoles)} disabled={!changed}>Reset</button>
                 </div>
             </div>
         </div>

@@ -25,7 +25,7 @@ import { SystemCenter } from '@gpa-gemstone/application-typings';
 import { Input, TextArea } from '@gpa-gemstone/react-forms';
 
 interface IProps {
-	Record: SystemCenter.Types.ValueListGroup,
+	 Record: SystemCenter.Types.ValueListGroup,
 	 Setter: (record: SystemCenter.Types.ValueListGroup) => void,
 	 ErrorSetter?: (errors: string[]) => void
 	}

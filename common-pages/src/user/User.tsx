@@ -21,64 +21,51 @@
 // ******************************************************************************************************
 
 import * as React from 'react';
-import { TabSelector, Warning } from '@gpa-gemstone/react-interactive';
+import { LoadingScreen, ServerErrorIcon, TabSelector, Warning } from '@gpa-gemstone/react-interactive';
 import { Application, SystemCenter } from '@gpa-gemstone/application-typings';
 import * as _ from 'lodash';
 import UserInfo from './UserInfo';
 import UserPermissions from './UserPermissions';
 import AdditionalField from './AdditionalField'
+import { iAdditionaFieldSlice, iGenericSlice, iSecurityRoleSlice, iUserAccountSlice } from '../SliceInterfaces';
+import { useDispatch, useSelector } from 'react-redux';
+import { CheckBox } from '@gpa-gemstone/react-forms';
 
 interface IProps {
 	UserID: string,
-	GetUser: (UserID: string) => JQuery.jqXHR<Application.Types.UserAccount>,
-	DeleteUser: (user: Application.Types.UserAccount) => JQuery.jqXHR,
-	OnDelete: () => {};
-	UpdateUser: (user: Application.Types.UserAccount) => JQuery.jqXHR,
-	GetSID: (userName: string) => JQuery.jqXHR<string>,
-	GetADinfo: (user: Application.Types.UserAccount) => JQuery.jqXHR<Application.Types.UserAccount>,
-	GetAllRoles: () => JQuery.jqXHR<Application.Types.iApplicationRole<Application.Types.SecurityRoleName>[]>,
-	GetActiveRoles: (userID: string) => JQuery.jqXHR<Application.Types.iApplicationRoleUserAccount[]>,
-	SetRoles: (roles: Application.Types.iApplicationRoleUserAccount[]) => JQuery.jqXHR
-
-	GetAdditionalUserFields: () => JQuery.jqXHR<Application.Types.AdditionalUserField[]>,
-	GetFieldValues: (userID: string) => JQuery.jqXHR<Application.Types.AdditionalUserFieldValue[]>,
-	AddOrUpdateValues: (data: Application.Types.AdditionalUserFieldValue[])=> JQuery.jqXHR,
-	GetFields: (sortKey: string, ascending: boolean) => JQuery.jqXHR<Application.Types.AdditionalUserField[]>,
-	GetValueLists: () => JQuery.jqXHR<SystemCenter.Types.ValueListGroup[]>,
-	DeleteField: (field: Application.Types.AdditionalUserField) => JQuery.jqXHR,
-	UpdateField: (field: Application.Types.AdditionalUserField) => JQuery.jqXHR,
-	AddField: (field: Application.Types.AdditionalUserField) => JQuery.jqXHR,
-	GetValueListGroup: (group: string) => JQuery.jqXHR<SystemCenter.Types.ValueListItem[]>,
-	ValidateFieldName: (fieldName: string) => Promise<boolean>
+	OnDelete: () => {},
+	SecurityRoleSlice: iSecurityRoleSlice,
+	UserSlice: iUserAccountSlice,
+	AdditionalFieldSlice: iAdditionaFieldSlice<Application.Types.iAdditionalUserField, Application.Types.iAdditionalUserFieldValue>,
+	ValueListItemSlice: iGenericSlice<SystemCenter.Types.ValueListItem>,
+	ValueListGroupSlice: iGenericSlice<SystemCenter.Types.ValueListGroup>
 }
 
 function User(props: IProps)  {
-	const [user, setUser] = React.useState<Application.Types.UserAccount>()
+	const dispatch = useDispatch();
+
+	const user: Application.Types.iUserAccount = useSelector(props.UserSlice.CurrentUser);
+	const status: Application.Types.Status = useSelector(props.UserSlice.Status);
+
 	const [tab, setTab] = React.useState<string>('userInfo')
 
 	const [showWarning, setShowWarning] =  React.useState<boolean>(false);
 
-	const [counter,setCounter] = React.useState<number>(0);
-
 	React.useEffect(() => {
-		let handle = props.GetUser(props.UserID);
-		handle.done((u) => setUser({...u, Name: (u.AccountName !== undefined? u.AccountName : u.Name)}))
+		dispatch(props.UserSlice.LoadExistingUser(props.UserID))
+	}, [dispatch, props.UserID])
 
-		return () => { if (handle != null && handle.abort != null) handle.abort(); }
-	}, [counter])
-
-	React.useEffect(() => {
-	setCounter((x) => x+1)
-	}, [])
-
-
-	if (user == null) return null;
+	if (status == 'error')
+		return <div style={{ width: '100%', height: '100%' }}>
+			<ServerErrorIcon Show={true} Label={'A Server Error Occured. Please Reload the Application'}/>
+		</div>;
 
 	const Tabs = [
 					 { Id: "userInfo", Label: "User Info" },
 					 { Id: "permissions", Label: "Permissions" },
 					 { Id: "additionalFields", Label: "Additional Fields" }
 			 ];
+
  return (
              <div style={{ width: '100%', height: window.innerHeight - 63, maxHeight: window.innerHeight - 63, overflow: 'hidden', padding: 15 }}>
                  <div className="row">
@@ -89,37 +76,39 @@ function User(props: IProps)  {
                          <button className="btn btn-danger pull-right" hidden={user == null} onClick={() => setShowWarning(true)}>Delete User</button>
                      </div>
                  </div>
-
+							 	<LoadingScreen Show={status == 'loading'}/>
                  <hr />
                  <TabSelector CurrentTab={tab} SetTab={(t) => setTab(t)} Tabs={Tabs} />
                  <div className="tab-content" style={{maxHeight: window.innerHeight - 235, overflow: 'hidden' }}>
-                     <div className={"tab-pane " + (tab == "userInfo" ? " active" : "fade")} id="userInfo">
-                         <UserInfo User={user} stateSetter={(record) => props.UpdateUser(record).then(() =>setCounter((x) => x+1) )} GetSID={props.GetSID} GetADinfo={props.GetADinfo}/>
+                     <div className={"tab-pane " + (tab == "userInfo" ? " active" : "fade")}>
+                         <UserInfo UserSlice={props.UserSlice}/>
                      </div>
-                     <div className={"tab-pane " + (tab == "permissions" ? " active" : "fade")} id="permissions">
-                         <UserPermissions User={user} GetAllRoles={props.GetAllRoles} GetActiveRoles={props.GetActiveRoles} SetRoles={props.SetRoles}/>
+                     <div className={"tab-pane " + (tab == "permissions" ? " active" : "fade")}>
+                         {user == null? null : <UserPermissions UserID={user.ID} RoleSlice={props.SecurityRoleSlice} />}
                      </div>
-                     <div className={"tab-pane " + (tab == "additionalFields" ? " active" : "fade")} id="additionalFields" style={{ maxHeight: window.innerHeight - 215 }}>
-                         <AdditionalField
-												 GetFields={props.GetFields}
-												 GetValueLists={props.GetValueLists}
-												 GetFieldValues={props.GetFieldValues}
-												 GetValueListGroup={props.GetValueListGroup}
-												 AddField={props.AddField}
-												 AddOrUpdateValues={props.AddOrUpdateValues}
-												 UpdateField={props.UpdateField}
-												 UserID={props.UserID}
-												 DeleteField={props.DeleteField}
-												 ValidateFieldName={props.ValidateFieldName}
-												 Tab={tab}
+                     <div className={"tab-pane " + (tab == "additionalFields" ? " active" : "fade")} style={{ maxHeight: window.innerHeight - 215 }}>
+                         <AdditionalField<Application.Types.iAdditionalUserField, Application.Types.iAdditionalUserFieldValue>
+													 Id={props.UserID}
+													 AdditionalFieldSlice={props.AdditionalFieldSlice}
+													 ValueListItemSlice={props.ValueListItemSlice}
+													 ValueListGroupSlice={props.ValueListGroupSlice}
+													 EmptyField={{ID: -1, IsSecure: false, FieldName: '', Type: 'string'}}
+													 GetFieldValueIndex={(field, values) => values.findIndex(v => v.AdditionalUserFieldID == field.ID)}
+													 GetFieldIndex={(value, fields) => fields.findIndex(f => f.ID == value.AdditionalUserFieldID)}
+													 FieldKeySelector={(field) => (field.ID == -1? 'new' : field.ID.toString())}
+													 ValidateField={() => []}
+													 FieldUI={(fld, setter) => <CheckBox<Application.Types.iAdditionalUserField> Record={fld} Field='IsSecure' Label="Secure Data" Setter={setter} />}
+													 CreateValue={(fld) => ({Value: '', ID: -1, UserAccountID: props.UserID, AdditionalUserFieldID: fld.ID})}
 												 />
                      </div>
 
                  </div>
 								 <Warning Message={'This will permanently remove the User. Are you sure you want to continue?'} Title={'Warning'} Show={showWarning} CallBack={(c) => {
 										setShowWarning(false);
-									if (c)
-										props.DeleteUser(user).done(() => props.OnDelete());
+									if (c) {
+										dispatch(props.UserSlice.DBAction({verb: 'DELETE', record: user}));
+										props.OnDelete();
+									}
 								}}/>
              </div>
          )

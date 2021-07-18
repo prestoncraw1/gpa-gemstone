@@ -27,51 +27,59 @@ import * as _ from 'lodash';
 import UserForm from './UserForm';
 import { ToolTip } from '@gpa-gemstone/react-interactive';
 import { Warning } from '@gpa-gemstone/gpa-symbols';
+import { iUserAccountSlice } from '../SliceInterfaces';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface IProps {
-	User: Application.Types.UserAccount,
-	stateSetter: (user: Application.Types.UserAccount) => void,
-	GetSID: (userName: string) => JQuery.jqXHR<string>,
-	GetADinfo: (user: Application.Types.UserAccount) => JQuery.jqXHR<Application.Types.UserAccount>,
+	UserSlice: iUserAccountSlice
 }
 
 function UserInfo(props: IProps)  {
-	const [user, setUser] = React.useState<Application.Types.UserAccount>(props.User);
+	const dispatch = useDispatch();
+
+	const currentUser = useSelector(props.UserSlice.CurrentUser);
+	const [user, setUser] = React.useState<Application.Types.iUserAccount>(currentUser);
 	const [warnings, setWarning] = React.useState<string[]>([]);
 	const [hover, setHover] = React.useState<('None' | 'Clear')>('None');
 
+
 	React.useEffect(() => {
-        let encryptedPwd = (user.Password != props.User.Password ? CryptoJS.SHA256(user.Password + "0").toString(CryptoJS.enc.Base64) : user.Password)
+		if (currentUser == null || user == null)
+			return;
 
-        let w = [];
-        if (props.User.FirstName != user.FirstName)
-            w.push('Changes to First Name will be lost.')
-        if (props.User.LastName != user.LastName)
-            w.push('Changes to Last Name will be lost.')
-        if (props.User.Phone != user.Phone)
-            w.push('Changes to Phone will be lost.')
-        if (props.User.Email != user.Email)
-            w.push('Changes to Email will be lost.')
-        if (props.User.ChangePasswordOn != user.ChangePasswordOn)
-            w.push('Changes to Change Password Date will be lost.')
-        if (props.User.LockedOut != user.LockedOut)
-            w.push('Changes to Account Locked Status will be lost.')
-        if (props.User.Approved != user.Approved)
-            w.push('Changes Account Approved Status will be lost.')
-        if (props.User.PhoneConfirmed != user.PhoneConfirmed)
-            w.push('Changes to Phone Confirmed Status will be lost.')
-        if (props.User.EmailConfirmed != user.EmailConfirmed)
-            w.push('Changes to Email confirmed Status will be lost.')
-        if (!props.User.UseADAuthentication && props.User.Password != encryptedPwd)
-            w.push('Changes to Password will be lost.')
+    const encryptedPwd = (user.Password != currentUser.Password ? CryptoJS.SHA256(user.Password + "0").toString(CryptoJS.enc.Base64) : user.Password)
 
-        setWarning(w);
-    }, [props.User, user])
+    const w = [];
+    if (currentUser.FirstName != user.FirstName)
+        w.push('Changes to First Name will be lost.')
+    if (currentUser.LastName != user.LastName)
+        w.push('Changes to Last Name will be lost.')
+    if (currentUser.Phone != user.Phone)
+        w.push('Changes to Phone will be lost.')
+    if (currentUser.Email != user.Email)
+        w.push('Changes to Email will be lost.')
+    if (currentUser.ChangePasswordOn != user.ChangePasswordOn)
+        w.push('Changes to Change Password Date will be lost.')
+    if (currentUser.LockedOut != user.LockedOut)
+        w.push('Changes to Account Locked Status will be lost.')
+    if (currentUser.Approved != user.Approved)
+        w.push('Changes Account Approved Status will be lost.')
+    if (currentUser.PhoneConfirmed != user.PhoneConfirmed)
+        w.push('Changes to Phone Confirmed Status will be lost.')
+    if (currentUser.EmailConfirmed != user.EmailConfirmed)
+        w.push('Changes to Email confirmed Status will be lost.')
+    if (!currentUser.UseADAuthentication && currentUser.Password != encryptedPwd)
+        w.push('Changes to Password will be lost.')
 
+    setWarning(w);
+    }, [currentUser, user])
+
+		React.useEffect(() => { setUser(currentUser)}, [currentUser])
 
 	function updateUser() {
-			let encryptedPwd = (user.Password != props.User.Password ? CryptoJS.SHA256(user.Password + "0").toString(CryptoJS.enc.Base64) : user.Password)
-			props.stateSetter({ ...user, Name: props.User.Name, Password: encryptedPwd });
+			const encryptedPwd = (user.Password != currentUser.Password ? CryptoJS.SHA256(user.Password + "0").toString(CryptoJS.enc.Base64) : user.Password)
+			dispatch(props.UserSlice.SetCurrentUser({ ...user, Name: currentUser.Name, Password: encryptedPwd }));
+			dispatch(props.UserSlice.DBAction({verb: 'PATCH', record: { ...user, Name: currentUser.Name, Password: encryptedPwd }}))
 	 }
 
 	 return (
@@ -84,14 +92,14 @@ function UserInfo(props: IProps)  {
                 </div>
             </div>
             <div className="card-body" style={{ height: window.innerHeight - 440, maxHeight: window.innerHeight - 440, overflowY: 'auto' }}>
-                <UserForm UserAccount={user} Setter={setUser} Edit={true}	GetSID={props.GetSID} GetADinfo={props.GetADinfo} />
+                <UserForm UserAccount={user} Setter={(u) => setUser(u)} Edit={true} UserSlice={props.UserSlice}/>
             </div>
             <div className="card-footer">
                 <div className="btn-group mr-2">
                     <button className="btn btn-primary" onClick={() => updateUser()} disabled={warnings.length == 0}>Update</button>
                 </div>
                 <div className="btn-group mr-2">
-                    <button className="btn btn-default" onClick={() => setUser({ ...props.User, Name: props.User.Name })} disabled={warnings.length == 0} data-tooltip={'Clr'}
+                    <button className="btn btn-default" onClick={() => setUser(currentUser)} disabled={warnings.length == 0} data-tooltip={'Clr'}
                         onMouseEnter={() => setHover('Clear')} onMouseLeave={() => setHover('None')}>Reset</button>
                 </div>
                 <ToolTip Show={hover == 'Clear' && (warnings.length > 0)} Position={'top'} Theme={'dark'} Target={"Clr"}>

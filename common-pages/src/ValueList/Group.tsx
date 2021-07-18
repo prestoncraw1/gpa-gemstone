@@ -22,22 +22,23 @@
 
 import * as React from 'react';
 import { SystemCenter, Application } from '@gpa-gemstone/application-typings';
-import { GenericSlice, TabSelector, Warning } from '@gpa-gemstone/react-interactive'
+import { ServerErrorIcon, TabSelector, Warning } from '@gpa-gemstone/react-interactive'
 import InfoWindow from './GroupInfo';
 import GroupItemsWindow from './GroupItem';
 import { useDispatch, useSelector } from 'react-redux';
+import { iGenericSlice } from '../SliceInterfaces';
 
 interface IProps {
 	Id: number;
-	ValueListSlice: GenericSlice<SystemCenter.Types.ValueListGroup>;
-	ValueListItemSlice: GenericSlice<SystemCenter.Types.ValueListItem>;
+	ValueListSlice: iGenericSlice<SystemCenter.Types.ValueListGroup>;
+	ValueListItemSlice: iGenericSlice<SystemCenter.Types.ValueListItem>;
 	OnDelete: () => {};
 }
 
 	export default function ValueListGroup (props: IProps) {
 			const dispatch = useDispatch();
 
-	    const record: SystemCenter.Types.ValueListGroup = useSelector((state) => props.ValueListSlice.Datum(state,props.Id))
+	    const record: SystemCenter.Types.ValueListGroup|undefined = useSelector((state) => props.ValueListSlice.Data(state).find(i => i.ID == props.Id))
 			const recordStatus: Application.Types.Status = useSelector(props.ValueListSlice.Status)
 
 			const [tab, setTab] = React.useState('items');
@@ -54,12 +55,18 @@ interface IProps {
             { Id: "items", Label: "List Items" }
         ];
 
-			if (record == null)
-				return null;
+
+				if (recordStatus == 'error' )
+					return <div style={{ width: '100%', height: '100%' }}>
+					<ServerErrorIcon Show={true} Label={'A Server Error Occured. Please Reload the Application'}/>
+					</div>;
+
+				if (record == null)
+					return null;
 
 	    return (
 	        <div style={{ width: '100%', height: window.innerHeight - 63, maxHeight: window.innerHeight - 63, overflow: 'hidden', padding: 15 }}>
-	            <div className="row">
+							<div className="row">
 	                <div className="col">
 	                    <h2>{record.Name}</h2>
 	                </div>
@@ -83,7 +90,7 @@ interface IProps {
 								setShowWarning(false);
 							if (c)
 							{
-								dispatch(props.ValueListSlice.DBAction({verb: 'DELETE', record: record}))
+								dispatch(props.ValueListSlice.DBAction({verb: 'DELETE', record}))
 								props.OnDelete();
 							}
 
