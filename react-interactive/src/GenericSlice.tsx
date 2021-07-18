@@ -253,5 +253,5 @@ export default class GenericSlice<T extends U> {
 
     public SearchResults = (state: any) => state[this.Name].SearchResults as T[];
     public SearchStatus = (state: any) => state[this.Name].SearchStatus as Application.Types.Status;
-    public SearchFilters = (state: any) => state[this.Name].Fil as T[];
+    public SearchFilters = (state: any) => state[this.Name].Filter as Search.IFilter<T>[];
 }
