@@ -30,7 +30,7 @@ import { Application, SystemCenter } from '@gpa-gemstone/application-typings';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface IProps {
-	SettingsSlice: iSearchableSlice<SystemCenter.Types.Setting>
+	SettingsSlice: ISearchableSlice<SystemCenter.Types.Setting>
 }
 
 
