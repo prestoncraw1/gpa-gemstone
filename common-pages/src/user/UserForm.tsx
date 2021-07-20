@@ -24,7 +24,7 @@ import * as React from 'react';
 import { Application } from '@gpa-gemstone/application-typings';
 import {Input, DatePicker, CheckBox} from '@gpa-gemstone/react-forms'
 import * as _ from 'lodash';
-import { iUserAccountSlice, UserValidation } from '../SliceInterfaces';
+import { IUserAccountSlice, UserValidation } from '../SliceInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface IProps {
@@ -32,7 +32,7 @@ interface IProps {
 	Setter: (record: Application.Types.iUserAccount) => void,
 	Edit: boolean,
 	SetErrors?: (e: string[]) => void
-	UserSlice: iUserAccountSlice,
+	UserSlice: IUserAccountSlice,
 	}
 
 function UserForm(props: IProps)  {
@@ -44,12 +44,12 @@ function UserForm(props: IProps)  {
   const [userError, setUserError] = React.useState<string[]>([]);
 
   React.useEffect(() => {
-      if (userValidation == 'Valid' && !props.Edit && updatedAD == false)
+      if (userValidation === 'Valid' && !props.Edit && updatedAD === false)
           dispatch(props.UserSlice.ADUpdate());
   }, [userValidation, updatedAD])
 
     React.useEffect(() => {
-        if (props.SetErrors != undefined)
+        if (props.SetErrors !== undefined)
             props.SetErrors(userError);
     }, [userError, props.SetErrors]);
 
@@ -57,26 +57,26 @@ function UserForm(props: IProps)  {
 			if (props.UserAccount == null)
 				return
         const e = [];
-        if (props.UserAccount.Name == null || props.UserAccount.Name.length == 0)
+        if (props.UserAccount.Name == null || props.UserAccount.Name.length === 0)
             e.push('An AccountName is required.')
-        if (props.UserAccount.UseADAuthentication && userValidation != 'Valid')
+        if (props.UserAccount.UseADAuthentication && userValidation !== 'Valid')
             e.push('The user could not be validated by the AD.')
 
         setUserError(e);
     }, [props.UserAccount, userValidation])
 
 		function validUserAccountField(user: Application.Types.iUserAccount,field: keyof (Application.Types.iUserAccount)): boolean {
-    if (field == 'Name')
+    if (field === 'Name')
         return user.Name != null && user.Name.length > 0 && user.Name.length <= 200;
-    else if (field == 'Password')
+    else if (field === 'Password')
         return user.Password == null || user.Password.length <= 200;
-    else if (field == 'FirstName')
+    else if (field === 'FirstName')
         return user.FirstName == null || user.FirstName.length <= 200;
-    else if (field == 'LastName')
+    else if (field === 'LastName')
         return user.LastName == null || user.LastName.length <= 200;
-    else if (field == 'Phone')
+    else if (field === 'Phone')
         return user.Phone == null || user.Phone.length <= 200;
-    else if (field == 'Email')
+    else if (field === 'Email')
         return user.Email == null || user.Email.length <= 200;
     return false;
 
@@ -90,26 +90,26 @@ function UserForm(props: IProps)  {
         <form>
             <div className="row">
                 <div className="col">
-                        <Input<Application.Types.iUserAccount> Record={props.UserAccount} Disabled={props.Edit == true} Field={'Name'} Feedback={'A Name of less than 200 characters is required.'} Valid={field => validUserAccountField(props.UserAccount, field)} Setter={(record) => {
+                        <Input<Application.Types.iUserAccount> Record={props.UserAccount} Disabled={props.Edit === true} Field={'Name'} Feedback={'A Name of less than 200 characters is required.'} Valid={field => validUserAccountField(props.UserAccount, field)} Setter={(record) => {
                             setUpdatedAD(false);
                         		props.Setter(record);
                         }} />
 
                         <div className="row" style={{ position: 'absolute', top: 0, left: 100 }} hidden={!props.UserAccount.UseADAuthentication}>
-                            <span id="resolvingAccount" hidden={userValidation != 'Resolving'}><i style={{ height: 10, width: 10, color: 'grey' }} className="fa fa fa-spin fa-refresh"></i>&nbsp;<em className="small">Resolving account details...</em></span>
-                            <span id="accountValid" hidden={userValidation != 'Valid'}><i style={{ height: 20, width: 20, color: 'green' }} className="fa fa-check-circle"></i>&nbsp;<em className="small">Resolved account name </em></span>
-                            <span id="accountInvalid" hidden={userValidation != 'Invalid'}><i style={{ height: 20, width: 20, color: 'red' }} className="fa fa-times-circle"></i>&nbsp;<em className="small">Cannot resolve account name</em></span>
-                            <span id="accountUnknown" hidden={userValidation != 'Unknown'}><i style={{ height: 20, width: 20, color: 'orange' }} className="fa fa-exclamation-circle"></i>&nbsp;<em className="small">Valid account name is not a user or Active Directory access is limited</em></span>
+                            <span id="resolvingAccount" hidden={userValidation !== 'Resolving'}><i style={{ height: 10, width: 10, color: 'grey' }} className="fa fa fa-spin fa-refresh"></i>&nbsp;<em className="small">Resolving account details...</em></span>
+                            <span id="accountValid" hidden={userValidation !== 'Valid'}><i style={{ height: 20, width: 20, color: 'green' }} className="fa fa-check-circle"></i>&nbsp;<em className="small">Resolved account name </em></span>
+                            <span id="accountInvalid" hidden={userValidation !== 'Invalid'}><i style={{ height: 20, width: 20, color: 'red' }} className="fa fa-times-circle"></i>&nbsp;<em className="small">Cannot resolve account name</em></span>
+                            <span id="accountUnknown" hidden={userValidation !== 'Unknown'}><i style={{ height: 20, width: 20, color: 'orange' }} className="fa fa-exclamation-circle"></i>&nbsp;<em className="small">Valid account name is not a user or Active Directory access is limited</em></span>
                         </div>
 
-                        <button style={{ marginBottom: 10 }} type="button" className="btn btn-primary btn-sm" onClick={(evt) => { evt.preventDefault(); dispatch(props.UserSlice.ADUpdate()); }} hidden={userValidation != 'Valid' || !props.Edit}>Load Information from AD</button>
+                        <button style={{ marginBottom: 10 }} type="button" className="btn btn-primary btn-sm" onClick={(evt) => { evt.preventDefault(); dispatch(props.UserSlice.ADUpdate()); }} hidden={userValidation !== 'Valid' || !props.Edit}>Load Information from AD</button>
 
                     <div className="card">
                         <div className="card-header">
                             <div className="row">
                                 <div className="col-xs-4">
                                     <div className="form-check-inline">
-                                            <label className="form-check-label"><input disabled={props.Edit == true} className='form-check-input' type='radio' checked={props.UserAccount.UseADAuthentication} onChange={(e) => {
+                                            <label className="form-check-label"><input disabled={props.Edit === true} className='form-check-input' type='radio' checked={props.UserAccount.UseADAuthentication} onChange={(e) => {
                                             const record: Application.Types.iUserAccount = _.clone(props.UserAccount);
                                             record.UseADAuthentication = e.target.checked;
                                             props.Setter(record);
@@ -118,7 +118,7 @@ function UserForm(props: IProps)  {
                                 </div>
                                 <div className="col-xs-4">
                                     <div className="form-check-inline">
-                                            <label className="form-check-label"><input disabled={props.Edit == true} className='form-check-input' type='radio' checked={!props.UserAccount.UseADAuthentication} onChange={(e) => {
+                                            <label className="form-check-label"><input disabled={props.Edit === true} className='form-check-input' type='radio' checked={!props.UserAccount.UseADAuthentication} onChange={(e) => {
                                             const record: Application.Types.iUserAccount = _.clone(props.UserAccount);
                                             record.UseADAuthentication = !e.target.checked;
                                             props.Setter(record);

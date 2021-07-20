@@ -27,12 +27,12 @@ import { SearchBar, Search, Modal } from '@gpa-gemstone/react-interactive';
 import { SystemCenter, Application } from '@gpa-gemstone/application-typings';
 import GroupForm  from './GroupForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { iGenericSlice, iSearchableSlice } from '../SliceInterfaces';
+import { IGenericSlice, ISearchableSlice } from '../SliceInterfaces';
 
 interface IProps {
 	OnValueListSelect: (id: number) => void,
-	ValueListSlice: iSearchableSlice<SystemCenter.Types.ValueListGroup>;
-	ValueListItemSlice: iGenericSlice<SystemCenter.Types.ValueListItem>;
+	ValueListSlice: ISearchableSlice<SystemCenter.Types.ValueListGroup>;
+	ValueListItemSlice: IGenericSlice<SystemCenter.Types.ValueListItem>;
 }
 
 function ByValueListGroup(props: IProps)  {
@@ -91,7 +91,7 @@ function ByValueListGroup(props: IProps)  {
  return (
        <div style={{ width: '100%', height: '100%' }}>
            <SearchBar< SystemCenter.Types.ValueListGroup> CollumnList={[{ label: 'Name', key: 'Name', type: 'string', isPivotField: false }]} SetFilter={(flds) => setSearch(flds)} Direction={'left'} defaultCollumn={{ label: 'Name', key: 'Name', type: 'string', isPivotField: false }} Width={'50%'} Label={'Search'}
-               ShowLoading={dataStatus == 'loading' || itemStatus === 'loading'} ResultNote={dataStatus == 'error' || itemStatus == 'error' ? 'Could not complete Search' : 'Found ' + data.length + ' Groups'}
+               ShowLoading={dataStatus === 'loading' || itemStatus === 'loading'} ResultNote={dataStatus === 'error' || itemStatus === 'error' ? 'Could not complete Search' : 'Found ' + data.length + ' Groups'}
                GetEnum={() => { return () => { }; }}
            >
                <li className="nav-item" style={{ width: '15%', paddingRight: 10 }}>
@@ -109,7 +109,7 @@ function ByValueListGroup(props: IProps)  {
                    cols={[
                        { key: 'Name', field: 'Name', label: 'Name', headerStyle: { width: '15%' }, rowStyle: { width: '15%' } },
                        { key: 'Description', field: 'Description', label: 'Description/Comments', headerStyle: { width: 'auto' }, rowStyle: { width: 'auto' } },
-                       { key: 'Items', field: 'Items', label: 'Items', headerStyle: { width: '10%' }, rowStyle: { width: '10%' }, content: (item) => items.filter(i => i.GroupID == item.ID).length },
+                       { key: 'Items', field: 'Items', label: 'Items', headerStyle: { width: '10%' }, rowStyle: { width: '10%' }, content: (item) => items.filter(i => i.GroupID === item.ID).length },
                        { key: 'Scroll', label: '', headerStyle: { width: 17, padding: 0 }, rowStyle: { width: 0, padding: 0 } },
                    ]}
                    tableClass="table table-hover"
@@ -117,11 +117,11 @@ function ByValueListGroup(props: IProps)  {
                    sortKey={sortKey}
                    ascending={asc}
                    onSort={(d) => {
-										 if (d.colKey == 'remove' || d.colKey == 'scroll' || d.colField === undefined)
+										 if (d.colKey === 'remove' || d.colKey === 'scroll' || d.colField === undefined)
 											 return;
 										 setSortKey(d.colField);
-										 if (d.colField == sortKey)
-											 setASC((asc) => !asc)
+										 if (d.colField === sortKey)
+											 setASC(false)
 										 else
 											 setASC(true)
                    }}

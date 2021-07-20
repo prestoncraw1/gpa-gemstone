@@ -28,14 +28,14 @@ import { SystemCenter, Application } from '@gpa-gemstone/application-typings';
 import * as CryptoJS from 'crypto-js';
 import * as _ from 'lodash';
 import UserForm from './UserForm';
-import { iAdditionaFieldSlice, iGenericSlice, iUserAccountSlice, UserValidation } from '../SliceInterfaces';
+import { IAdditionalFieldSlice, IGenericSlice, IUserAccountSlice, UserValidation } from '../SliceInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface IProps {
-	UserSlice: iUserAccountSlice,
-	AdditionalFieldSlice: iAdditionaFieldSlice<Application.Types.iAdditionalUserField, Application.Types.iAdditionalUserFieldValue>,
-	ValueListItemSlice: iGenericSlice<SystemCenter.Types.ValueListItem>,
-	ValueListGroupSlice: iGenericSlice<SystemCenter.Types.ValueListGroup>,
+	UserSlice: IUserAccountSlice,
+	AdditionalFieldSlice: IAdditionalFieldSlice<Application.Types.iAdditionalUserField, Application.Types.iAdditionalUserFieldValue>,
+	ValueListItemSlice: IGenericSlice<SystemCenter.Types.ValueListItem>,
+	ValueListGroupSlice: IGenericSlice<SystemCenter.Types.ValueListGroup>,
 	OnUserSelect: (userID: string) => void,
 }
 
@@ -82,16 +82,16 @@ function ByUser(props: IProps)  {
 	const [pageStatus, setPageStatus] = React.useState<Application.Types.Status>('unintiated');
 
 	React.useEffect(() => {
-		if (userStatus === 'error' || adlFieldStatus === 'error' || valueListItemStatus == 'error' || valueListGroupStatus == 'error')
+		if (userStatus === 'error' || adlFieldStatus === 'error' || valueListItemStatus === 'error' || valueListGroupStatus === 'error')
 			setPageStatus('error')
-		else if (userStatus === 'loading' || adlFieldStatus === 'loading' || valueListItemStatus == 'loading' || valueListGroupStatus == 'loading')
+		else if (userStatus === 'loading' || adlFieldStatus === 'loading' || valueListItemStatus === 'loading' || valueListGroupStatus === 'loading')
 				setPageStatus('loading')
 		else
 			setPageStatus('idle');
 	}, [userStatus, adlFieldStatus, valueListItemStatus, valueListGroupStatus ])
 
 	React.useEffect(() => {
-      if (adlFieldStatus == 'unintiated' || adlFieldStatus == 'changed')
+      if (adlFieldStatus === 'unintiated' || adlFieldStatus === 'changed')
 				dispatch(props.AdditionalFieldSlice.FetchField());
   }, [dispatch,adlFieldStatus]);
 
@@ -101,19 +101,19 @@ function ByUser(props: IProps)  {
   }, [dispatch]);
 
 	React.useEffect(() => {
-      if (valueListItemStatus == 'unintiated' || valueListItemStatus == 'changed')
+      if (valueListItemStatus === 'unintiated' || valueListItemStatus === 'changed')
 				dispatch(props.ValueListItemSlice.Fetch());
   }, [dispatch,valueListItemStatus]);
 
 	React.useEffect(() => {
-      if (valueListGroupStatus == 'unintiated' || valueListGroupStatus == 'changed')
+      if (valueListGroupStatus === 'unintiated' || valueListGroupStatus === 'changed')
 				dispatch(props.ValueListGroupSlice.Fetch());
   }, [dispatch,valueListGroupStatus]);
 
 
   React.useEffect(() => {
 		function ConvertType(type: string) {
-			 if (type == 'string' || type == 'integer' || type == 'number' || type == 'datetime' || type == 'boolean')
+			 if (type === 'string' || type === 'integer' || type === 'number' || type === 'datetime' || type === 'boolean')
 					 return { type }
 			 return { type: 'enum', enum: [{ Label: type, Value: type }] }
 			}
@@ -123,28 +123,28 @@ function ByUser(props: IProps)  {
         setFilterableList(ordered)
   }, [adlFields]);
 
-		if (pageStatus == 'error')
+		if (pageStatus === 'error')
 			return <div style={{ width: '100%', height: '100%' }}>
 			<ServerErrorIcon Show={true} Label={'A Server Error Occured. Please Reload the Application'}/>
 			</div>;
 
 		return (
        <div style={{ width: '100%', height: '100%' }}>
-			 	<LoadingScreen Show={pageStatus == 'loading'} />
+			 	<LoadingScreen Show={pageStatus === 'loading'} />
         <SearchBar<Application.Types.iUserAccount> CollumnList={filterableList} SetFilter={(flds) => dispatch(props.UserSlice.DBSearch({sortField, ascending, filter: flds}))}
 					 Direction={'left'} defaultCollumn={{ label: 'Last Name', key: 'LastName', type: 'string', isPivotField: false }} Width={'50%'} Label={'Search'}
-               ShowLoading={searchStatus == 'loading'} ResultNote={searchStatus == 'error' ? 'Could not complete Search' : 'Found ' + data.length + ' UserAccounts'}
+               ShowLoading={searchStatus === 'loading'} ResultNote={searchStatus === 'error' ? 'Could not complete Search' : 'Found ' + data.length + ' UserAccounts'}
                GetEnum={(setOptions, field) => {
 
-                   if (field.type != 'enum' || field.enum == undefined || field.enum.length != 1)
+                   if (field.type !== 'enum' || field.enum === undefined || field.enum.length !== 1)
                   	return () => { };
 
-									const grpName = (field.enum != undefined? field.enum[0].Value.toLowerCase() : '')
-								 	const grpIndex = valueListGroups.findIndex(g => g.Name.toLowerCase() == grpName)
+									const grpName = (field.enum !== undefined? field.enum[0].Value.toLowerCase() : '')
+								 	const grpIndex = valueListGroups.findIndex(g => g.Name.toLowerCase() === grpName)
 								 	if (grpIndex < 0)
 										return () => {}
 
-								 	 setOptions(valueListItems.filter(v => v.GroupID == valueListGroups[grpIndex].ID).map(item => ({ Value: item.ID.toString(), Label: item.Value })));
+								 	 setOptions(valueListItems.filter(v => v.GroupID === valueListGroups[grpIndex].ID).map(item => ({ Value: item.ID.toString(), Label: item.Value })));
 							 		return () => {}
                }}
 
@@ -174,7 +174,7 @@ function ByUser(props: IProps)  {
                    sortKey={sortField}
                    ascending={ascending}
                    onSort={(d) => {
-										 if (d.colField == undefined)
+										 if (d.colField === undefined)
 										 	return;
                      if (d.colField !== sortField)
                          dispatch(props.UserSlice.DBSearch({sortField, ascending: !ascending, filter: search}))

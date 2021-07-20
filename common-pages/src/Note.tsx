@@ -27,7 +27,7 @@ import { CrossMark, Pencil, TrashCan } from '@gpa-gemstone/gpa-symbols';
 import { Modal, ToolTip, ServerErrorIcon, LoadingScreen } from '@gpa-gemstone/react-interactive';
 import { Application, OpenXDA } from '@gpa-gemstone/application-typings';
 import moment = require('moment');
-import { iGenericSlice } from './SliceInterfaces';
+import { IGenericSlice } from './SliceInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface IProps {
@@ -37,7 +37,7 @@ interface IProps {
 		MaxHeight: number,
 		Title?: string,
 		ReferenceTableID?: number,
-		NoteSlice: iGenericSlice<OpenXDA.Types.Note>
+		NoteSlice: IGenericSlice<OpenXDA.Types.Note>
 		AllowEdit?: boolean,
 		AllowRemove?: boolean,
 		AllowAdd?: boolean
@@ -53,14 +53,14 @@ function Note(props: IProps)  {
 
   const data: OpenXDA.Types.Note[] = useSelector(props.NoteSlice.Data)
 	const dataStatus: Application.Types.Status =  useSelector(props.NoteSlice.Status)
-	const parentID: number|null|undefined = useSelector((props.NoteSlice.ParentID == undefined? (state: any) => props.ReferenceTableID : props.NoteSlice.ParentID))
+	const parentID: number|null|undefined = useSelector((props.NoteSlice.ParentID === undefined? (state: any) => props.ReferenceTableID : props.NoteSlice.ParentID))
 	const sortField: keyof OpenXDA.Types.Note = useSelector(props.NoteSlice.SortField)
   const ascending: boolean = useSelector(props.NoteSlice.Ascending)
 
 	const [note, setNote] = React.useState<OpenXDA.Types.Note>(CreateNewNote());
 
   React.useEffect(() => {
-				if (dataStatus == 'unintiated' || dataStatus == 'changed' || parentID != props.ReferenceTableID)
+				if (dataStatus === 'unintiated' || dataStatus === 'changed' || parentID !== props.ReferenceTableID)
 					dispatch(props.NoteSlice.Fetch(props.ReferenceTableID));
     }, [props.ReferenceTableID, dispatch, dataStatus]);
 
@@ -88,9 +88,9 @@ function Note(props: IProps)  {
 		setNote((n) => ({...n, ReferenceTableID: props.ReferenceTableID !== undefined ? props.ReferenceTableID : -1}));
 	},[props.ReferenceTableID]);
 
-	const allowEdit = props.AllowEdit == undefined? true : props.AllowEdit;
-	const allowRemove = props.AllowRemove == undefined? true : props.AllowRemove;
-	const allowAdd = props.AllowAdd == undefined? true : props.AllowAdd;
+	const allowEdit = props.AllowEdit === undefined? true : props.AllowEdit;
+	const allowRemove = props.AllowRemove === undefined? true : props.AllowRemove;
+	const allowAdd = props.AllowAdd === undefined? true : props.AllowAdd;
 
   function CreateNewNote() {
 		const newNote: OpenXDA.Types.Note = {ID: -1, ReferenceTableID: -1, NoteTagID: -1, NoteTypeID: -1, NoteApplicationID: -1, Timestamp: '', UserAccount: '', Note: '' }
@@ -143,7 +143,7 @@ function Note(props: IProps)  {
 
     return (
 				<div className="card" style={{ marginBottom: 10, maxHeight: props.MaxHeight, width: '100%'}}>
-				<LoadingScreen Show={dataStatus == 'loading'}/>
+				<LoadingScreen Show={dataStatus === 'loading'}/>
 					<div className="card-header">
                 <div className="row">
                     <div className="col">
@@ -175,7 +175,7 @@ function Note(props: IProps)  {
 										onSort={(d) => {
 												if (d.colField === undefined)
 														return;
-												if (d.colField == sortField)
+												if (d.colField === sortField)
 													dispatch(props.NoteSlice.Sort({SortField: sortField, Ascending: ascending}))
 												else
 													dispatch(props.NoteSlice.Sort({SortField: d.colField, Ascending: true}))

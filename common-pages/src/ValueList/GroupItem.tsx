@@ -27,7 +27,7 @@ import { Modal } from '@gpa-gemstone/react-interactive';
 import { SearchableTable } from '@gpa-gemstone/react-table';
 import { CrossMark } from '@gpa-gemstone/gpa-symbols';
 import { useDispatch, useSelector } from 'react-redux';
-import { iGenericSlice } from '../SliceInterfaces';
+import { IGenericSlice } from '../SliceInterfaces';
 
 interface IProps {
 		Record: SystemCenter.Types.ValueListGroup
@@ -40,7 +40,7 @@ export default function GroupItemsWindow(props: IProps) {
 
 	const recordStatus: Application.Types.Status = useSelector(props.ValueListItemSlice.Status);
 	const data: SystemCenter.Types.ValueListItem[] = useSelector(props.ValueListItemSlice.Data);
-	const parentID: number|null = useSelector((props.ValueListItemSlice.ParentID == undefined? (state: any) => -1 : props.ValueListItemSlice.ParentID));
+	const parentID: number|null = useSelector((props.ValueListItemSlice.ParentID === undefined? (state: any) => -1 : props.ValueListItemSlice.ParentID));
   const [sortField, setSortField] = React.useState<keyof SystemCenter.Types.ValueListItem>('Value');
 	const [ascending,setAscending] = React.useState<boolean>(false);
 
@@ -98,10 +98,10 @@ export default function GroupItemsWindow(props: IProps) {
 													data={data}
 													sortKey={sortField}
 													onSort={(d) => {
-														if (d.colKey == 'remove' || d.colKey == 'scroll' || d.colField === undefined)
+														if (d.colKey === 'remove' || d.colKey === 'scroll' || d.colField === undefined)
 															return;
 														setSortField(d.colField);
-														if (d.colField == sortField)
+														if (d.colField === sortField)
 															setAscending((asc) => !asc)
 														else
 															setAscending(true)

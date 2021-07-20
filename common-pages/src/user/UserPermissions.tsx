@@ -24,12 +24,12 @@ import * as React from 'react';
 import { Application } from '@gpa-gemstone/application-typings';
 import * as _ from 'lodash';
 import { CheckBox } from '@gpa-gemstone/react-forms';
-import { iSecurityRoleSlice } from '../SliceInterfaces';
+import { ISecurityRoleSlice } from '../SliceInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface IProps {
 	UserID: string,
-	RoleSlice: iSecurityRoleSlice
+	RoleSlice: ISecurityRoleSlice
 }
 
 function UserPermission(props: IProps)  {
@@ -44,12 +44,12 @@ function UserPermission(props: IProps)  {
 	const [changed, setChanged] = React.useState<boolean>(false)
 
 	React.useEffect(() => {
-	  if (allRoleStatus == 'unintiated' || allRoleStatus == 'changed')
+	  if (allRoleStatus === 'unintiated' || allRoleStatus === 'changed')
 			dispatch(props.RoleSlice.FetchRoles())
 	}, [dispatch, allRoleStatus])
 
 	React.useEffect(() => {
-		if (currentRoleStatus == 'unintiated' || currentRoleStatus == 'changed')
+		if (currentRoleStatus === 'unintiated' || currentRoleStatus === 'changed')
 			dispatch(props.RoleSlice.FetchUserRoles(props.UserID))
 	}, [dispatch, currentRoleStatus, props.UserID])
 
@@ -61,7 +61,7 @@ function resetCurrentRoles(avRoles: Application.Types.iApplicationRole<Applicati
 	setChanged(false);
 	setWorkingRoles(avRoles.map(src => {
 		 const upd = _.cloneDeep(src);
-		 upd.Assigned = currRoles.find(usrc => usrc.ApplicationRoleID == upd.ID) != undefined;
+		 upd.Assigned = currRoles.find(usrc => usrc.ApplicationRoleID === upd.ID) !== undefined;
 		 return upd;
  }))
 }

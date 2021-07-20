@@ -27,18 +27,18 @@ import * as _ from 'lodash';
 import UserInfo from './UserInfo';
 import UserPermissions from './UserPermissions';
 import AdditionalField from './AdditionalField'
-import { iAdditionaFieldSlice, iGenericSlice, iSecurityRoleSlice, iUserAccountSlice } from '../SliceInterfaces';
+import { IAdditionalFieldSlice, IGenericSlice, ISecurityRoleSlice, IUserAccountSlice } from '../SliceInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
 import { CheckBox } from '@gpa-gemstone/react-forms';
 
 interface IProps {
 	UserID: string,
 	OnDelete: () => {},
-	SecurityRoleSlice: iSecurityRoleSlice,
-	UserSlice: iUserAccountSlice,
-	AdditionalFieldSlice: iAdditionaFieldSlice<Application.Types.iAdditionalUserField, Application.Types.iAdditionalUserFieldValue>,
-	ValueListItemSlice: iGenericSlice<SystemCenter.Types.ValueListItem>,
-	ValueListGroupSlice: iGenericSlice<SystemCenter.Types.ValueListGroup>
+	SecurityRoleSlice: ISecurityRoleSlice,
+	UserSlice: IUserAccountSlice,
+	AdditionalFieldSlice: IAdditionalFieldSlice<Application.Types.iAdditionalUserField, Application.Types.iAdditionalUserFieldValue>,
+	ValueListItemSlice: IGenericSlice<SystemCenter.Types.ValueListItem>,
+	ValueListGroupSlice: IGenericSlice<SystemCenter.Types.ValueListGroup>
 }
 
 function User(props: IProps)  {
@@ -55,7 +55,7 @@ function User(props: IProps)  {
 		dispatch(props.UserSlice.LoadExistingUser(props.UserID))
 	}, [dispatch, props.UserID])
 
-	if (status == 'error')
+	if (status === 'error')
 		return <div style={{ width: '100%', height: '100%' }}>
 			<ServerErrorIcon Show={true} Label={'A Server Error Occured. Please Reload the Application'}/>
 		</div>;
@@ -76,26 +76,26 @@ function User(props: IProps)  {
                          <button className="btn btn-danger pull-right" hidden={user == null} onClick={() => setShowWarning(true)}>Delete User</button>
                      </div>
                  </div>
-							 	<LoadingScreen Show={status == 'loading'}/>
+							 	<LoadingScreen Show={status === 'loading'}/>
                  <hr />
                  <TabSelector CurrentTab={tab} SetTab={(t) => setTab(t)} Tabs={Tabs} />
                  <div className="tab-content" style={{maxHeight: window.innerHeight - 235, overflow: 'hidden' }}>
-                     <div className={"tab-pane " + (tab == "userInfo" ? " active" : "fade")}>
+                     <div className={"tab-pane " + (tab === "userInfo" ? " active" : "fade")}>
                          <UserInfo UserSlice={props.UserSlice}/>
                      </div>
-                     <div className={"tab-pane " + (tab == "permissions" ? " active" : "fade")}>
+                     <div className={"tab-pane " + (tab === "permissions" ? " active" : "fade")}>
                          {user == null? null : <UserPermissions UserID={user.ID} RoleSlice={props.SecurityRoleSlice} />}
                      </div>
-                     <div className={"tab-pane " + (tab == "additionalFields" ? " active" : "fade")} style={{ maxHeight: window.innerHeight - 215 }}>
+                     <div className={"tab-pane " + (tab === "additionalFields" ? " active" : "fade")} style={{ maxHeight: window.innerHeight - 215 }}>
                          <AdditionalField<Application.Types.iAdditionalUserField, Application.Types.iAdditionalUserFieldValue>
 													 Id={props.UserID}
 													 AdditionalFieldSlice={props.AdditionalFieldSlice}
 													 ValueListItemSlice={props.ValueListItemSlice}
 													 ValueListGroupSlice={props.ValueListGroupSlice}
 													 EmptyField={{ID: -1, IsSecure: false, FieldName: '', Type: 'string'}}
-													 GetFieldValueIndex={(field, values) => values.findIndex(v => v.AdditionalUserFieldID == field.ID)}
-													 GetFieldIndex={(value, fields) => fields.findIndex(f => f.ID == value.AdditionalUserFieldID)}
-													 FieldKeySelector={(field) => (field.ID == -1? 'new' : field.ID.toString())}
+													 GetFieldValueIndex={(field, values) => values.findIndex(v => v.AdditionalUserFieldID === field.ID)}
+													 GetFieldIndex={(value, fields) => fields.findIndex(f => f.ID === value.AdditionalUserFieldID)}
+													 FieldKeySelector={(field) => (field.ID === -1? 'new' : field.ID.toString())}
 													 ValidateField={() => []}
 													 FieldUI={(fld, setter) => <CheckBox<Application.Types.iAdditionalUserField> Record={fld} Field='IsSecure' Label="Secure Data" Setter={setter} />}
 													 CreateValue={(fld) => ({Value: '', ID: -1, UserAccountID: props.UserID, AdditionalUserFieldID: fld.ID})}
