@@ -31,7 +31,7 @@ import { IGenericSlice } from '../SliceInterfaces';
 
 interface IProps {
 		Record: SystemCenter.Types.ValueListGroup
-		ValueListItemSlice: iGenericSlice<SystemCenter.Types.ValueListItem>;
+		ValueListItemSlice: IGenericSlice<SystemCenter.Types.ValueListItem>;
 	}
 
 
