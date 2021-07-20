@@ -90,7 +90,7 @@ function UserForm(props: IProps)  {
         <form>
             <div className="row">
                 <div className="col">
-                        <Input<Application.Types.iUserAccount> Record={props.UserAccount} Disabled={props.Edit === true} Field={'Name'} Feedback={'A Name of less than 200 characters is required.'} Valid={field => validUserAccountField(props.UserAccount, field)} Setter={(record) => {
+                        <Input<Application.Types.iUserAccount> Record={props.UserAccount} Disabled={props.Edit} Field={'Name'} Feedback={'A Name of less than 200 characters is required.'} Valid={field => validUserAccountField(props.UserAccount, field)} Setter={(record) => {
                             setUpdatedAD(false);
                         		props.Setter(record);
                         }} />
@@ -109,7 +109,7 @@ function UserForm(props: IProps)  {
                             <div className="row">
                                 <div className="col-xs-4">
                                     <div className="form-check-inline">
-                                            <label className="form-check-label"><input disabled={props.Edit === true} className='form-check-input' type='radio' checked={props.UserAccount.UseADAuthentication} onChange={(e) => {
+                                            <label className="form-check-label"><input disabled={props.Edit} className='form-check-input' type='radio' checked={props.UserAccount.UseADAuthentication} onChange={(e) => {
                                             const record: Application.Types.iUserAccount = _.clone(props.UserAccount);
                                             record.UseADAuthentication = e.target.checked;
                                             props.Setter(record);
@@ -118,7 +118,7 @@ function UserForm(props: IProps)  {
                                 </div>
                                 <div className="col-xs-4">
                                     <div className="form-check-inline">
-                                            <label className="form-check-label"><input disabled={props.Edit === true} className='form-check-input' type='radio' checked={!props.UserAccount.UseADAuthentication} onChange={(e) => {
+                                            <label className="form-check-label"><input disabled={props.Edit} className='form-check-input' type='radio' checked={!props.UserAccount.UseADAuthentication} onChange={(e) => {
                                             const record: Application.Types.iUserAccount = _.clone(props.UserAccount);
                                             record.UseADAuthentication = !e.target.checked;
                                             props.Setter(record);
