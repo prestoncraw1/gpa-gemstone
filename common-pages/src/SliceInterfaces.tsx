@@ -27,7 +27,7 @@ import { ActionCreatorWithPayload, AsyncThunk, ActionCreatorWithoutPayload } fro
 type DBAction = 'POST' | 'DELETE' | 'PATCH';
 export type UserValidation = 'Resolving' | 'Valid' | 'Invalid' | 'Unknown';
 
-export interface iGenericSlice<T> {
+export interface IGenericSlice<T> {
   Fetch: (AsyncThunk<any, void | number, {}>),
 	DBAction: (AsyncThunk<any, { verb: DBAction, record: T }, {}> ),
   Sort: ActionCreatorWithPayload<{ SortField: keyof T, Ascending: boolean}, string>,
@@ -39,7 +39,7 @@ export interface iGenericSlice<T> {
 	ParentID?: (state: any) => number| null
 }
 
-export interface iSearchableSlice<T> extends iGenericSlice<T> {
+export interface ISearchableSlice<T> extends IGenericSlice<T> {
 	DBSearch: (AsyncThunk<any, { filter: Search.IFilter<T>[], sortField?: keyof T, ascending?: boolean }, {}> ),
 
 	SearchFilters: (state: any) => Search.IFilter<T>[],
@@ -47,7 +47,7 @@ export interface iSearchableSlice<T> extends iGenericSlice<T> {
 	SearchStatus: (state: any) => Application.Types.Status,
 }
 
-export interface iAdditionaFieldSlice<F,V> {
+export interface IAdditionalFieldSlice<F,V> {
 	FetchField: AsyncThunk<any, void, {}>,
 	FieldAction: AsyncThunk<any, { Verb: DBAction, Record: F }, {}>,
   FetchValues: AsyncThunk<any, number|string, {}>,
@@ -63,7 +63,7 @@ export interface iAdditionaFieldSlice<F,V> {
   Ascending: (state: any) => boolean,
 }
 
-export interface iUserAccountSlice extends iSearchableSlice<Application.Types.iUserAccount> {
+export interface IUserAccountSlice extends ISearchableSlice<Application.Types.iUserAccount> {
 	ADUpdate: (AsyncThunk<any, void, {}>),
   SetCurrentUser: (AsyncThunk<any, Application.Types.iUserAccount, {}>),
   LoadExistingUser: (AsyncThunk<any, string, {}>),
@@ -74,7 +74,7 @@ export interface iUserAccountSlice extends iSearchableSlice<Application.Types.iU
   ADValidation: (state: any) => UserValidation
 }
 
-export interface iSecurityRoleSlice {
+export interface ISecurityRoleSlice {
   FetchRoles: (AsyncThunk<any, void, {}>),
   FetchUserRoles: (AsyncThunk<any, string, {}>),
   SetUserRoles: (AsyncThunk<any, {UserId: string, Roles: Application.Types.iApplicationRoleUserAccount[]}, {}>),

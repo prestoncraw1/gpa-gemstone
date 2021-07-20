@@ -26,19 +26,19 @@ import { ServerErrorIcon, TabSelector, Warning } from '@gpa-gemstone/react-inter
 import InfoWindow from './GroupInfo';
 import GroupItemsWindow from './GroupItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { iGenericSlice } from '../SliceInterfaces';
+import { IGenericSlice } from '../SliceInterfaces';
 
 interface IProps {
 	Id: number;
-	ValueListSlice: iGenericSlice<SystemCenter.Types.ValueListGroup>;
-	ValueListItemSlice: iGenericSlice<SystemCenter.Types.ValueListItem>;
+	ValueListSlice: IGenericSlice<SystemCenter.Types.ValueListGroup>;
+	ValueListItemSlice: IGenericSlice<SystemCenter.Types.ValueListItem>;
 	OnDelete: () => {};
 }
 
 	export default function ValueListGroup (props: IProps) {
 			const dispatch = useDispatch();
 
-	    const record: SystemCenter.Types.ValueListGroup|undefined = useSelector((state) => props.ValueListSlice.Data(state).find(i => i.ID == props.Id))
+	    const record: SystemCenter.Types.ValueListGroup|undefined = useSelector((state) => props.ValueListSlice.Data(state).find(i => i.ID === props.Id))
 			const recordStatus: Application.Types.Status = useSelector(props.ValueListSlice.Status)
 
 			const [tab, setTab] = React.useState('items');
@@ -56,7 +56,7 @@ interface IProps {
         ];
 
 
-				if (recordStatus == 'error' )
+				if (recordStatus === 'error' )
 					return <div style={{ width: '100%', height: '100%' }}>
 					<ServerErrorIcon Show={true} Label={'A Server Error Occured. Please Reload the Application'}/>
 					</div>;

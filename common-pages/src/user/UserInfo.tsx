@@ -27,11 +27,11 @@ import * as _ from 'lodash';
 import UserForm from './UserForm';
 import { ToolTip } from '@gpa-gemstone/react-interactive';
 import { Warning } from '@gpa-gemstone/gpa-symbols';
-import { iUserAccountSlice } from '../SliceInterfaces';
+import { IUserAccountSlice } from '../SliceInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface IProps {
-	UserSlice: iUserAccountSlice
+	UserSlice: IUserAccountSlice
 }
 
 function UserInfo(props: IProps)  {
@@ -47,28 +47,28 @@ function UserInfo(props: IProps)  {
 		if (currentUser == null || user == null)
 			return;
 
-    const encryptedPwd = (user.Password != currentUser.Password ? CryptoJS.SHA256(user.Password + "0").toString(CryptoJS.enc.Base64) : user.Password)
+    const encryptedPwd = (user.Password !== currentUser.Password ? CryptoJS.SHA256(user.Password + "0").toString(CryptoJS.enc.Base64) : user.Password)
 
     const w = [];
-    if (currentUser.FirstName != user.FirstName)
+    if (currentUser.FirstName !== user.FirstName)
         w.push('Changes to First Name will be lost.')
-    if (currentUser.LastName != user.LastName)
+    if (currentUser.LastName !== user.LastName)
         w.push('Changes to Last Name will be lost.')
-    if (currentUser.Phone != user.Phone)
+    if (currentUser.Phone !== user.Phone)
         w.push('Changes to Phone will be lost.')
-    if (currentUser.Email != user.Email)
+    if (currentUser.Email !== user.Email)
         w.push('Changes to Email will be lost.')
-    if (currentUser.ChangePasswordOn != user.ChangePasswordOn)
+    if (currentUser.ChangePasswordOn !== user.ChangePasswordOn)
         w.push('Changes to Change Password Date will be lost.')
-    if (currentUser.LockedOut != user.LockedOut)
+    if (currentUser.LockedOut !== user.LockedOut)
         w.push('Changes to Account Locked Status will be lost.')
-    if (currentUser.Approved != user.Approved)
+    if (currentUser.Approved !== user.Approved)
         w.push('Changes Account Approved Status will be lost.')
-    if (currentUser.PhoneConfirmed != user.PhoneConfirmed)
+    if (currentUser.PhoneConfirmed !== user.PhoneConfirmed)
         w.push('Changes to Phone Confirmed Status will be lost.')
-    if (currentUser.EmailConfirmed != user.EmailConfirmed)
+    if (currentUser.EmailConfirmed !== user.EmailConfirmed)
         w.push('Changes to Email confirmed Status will be lost.')
-    if (!currentUser.UseADAuthentication && currentUser.Password != encryptedPwd)
+    if (!currentUser.UseADAuthentication && currentUser.Password !== encryptedPwd)
         w.push('Changes to Password will be lost.')
 
     setWarning(w);
@@ -77,7 +77,7 @@ function UserInfo(props: IProps)  {
 		React.useEffect(() => { setUser(currentUser)}, [currentUser])
 
 	function updateUser() {
-			const encryptedPwd = (user.Password != currentUser.Password ? CryptoJS.SHA256(user.Password + "0").toString(CryptoJS.enc.Base64) : user.Password)
+			const encryptedPwd = (user.Password !== currentUser.Password ? CryptoJS.SHA256(user.Password + "0").toString(CryptoJS.enc.Base64) : user.Password)
 			dispatch(props.UserSlice.SetCurrentUser({ ...user, Name: currentUser.Name, Password: encryptedPwd }));
 			dispatch(props.UserSlice.DBAction({verb: 'PATCH', record: { ...user, Name: currentUser.Name, Password: encryptedPwd }}))
 	 }
@@ -96,13 +96,13 @@ function UserInfo(props: IProps)  {
             </div>
             <div className="card-footer">
                 <div className="btn-group mr-2">
-                    <button className="btn btn-primary" onClick={() => updateUser()} disabled={warnings.length == 0}>Update</button>
+                    <button className="btn btn-primary" onClick={() => updateUser()} disabled={warnings.length === 0}>Update</button>
                 </div>
                 <div className="btn-group mr-2">
-                    <button className="btn btn-default" onClick={() => setUser(currentUser)} disabled={warnings.length == 0} data-tooltip={'Clr'}
+                    <button className="btn btn-default" onClick={() => setUser(currentUser)} disabled={warnings.length === 0} data-tooltip={'Clr'}
                         onMouseEnter={() => setHover('Clear')} onMouseLeave={() => setHover('None')}>Reset</button>
                 </div>
-                <ToolTip Show={hover == 'Clear' && (warnings.length > 0)} Position={'top'} Theme={'dark'} Target={"Clr"}>
+                <ToolTip Show={hover === 'Clear' && (warnings.length > 0)} Position={'top'} Theme={'dark'} Target={"Clr"}>
                     {warnings.map((t, i) => <p key={i}>{Warning} {t}</p>)}
                 </ToolTip>
             </div>
