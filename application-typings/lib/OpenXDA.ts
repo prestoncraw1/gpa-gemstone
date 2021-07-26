@@ -46,7 +46,7 @@ namespace OpenXDA {
         export type NoteTypeName = 'Meter' | 'Event' | 'Asset' | 'Location' | 'Customer' | 'User' | 'Company'
 		export type NoteApplicationName = 'OpenMIC' | 'OpenXDA' | 'MiMD' | 'SystemCenter' | 'OpenHistorian' | 'All'
 		export type NoteTagName = 'General' | 'Configuration' | 'Diagnostic' | 'Compliance'
-		
+
         // Tables
         export interface EventType { ID: number, Name: EventTypeName, Description: string, Selected?: boolean }
         export interface Meter { ID: number, AssetKey: string, Alias: string, Make: string, Model: string, Name: string, ShortName: string, TimeZone: string, LocationID: number, Description: string, Selected?: boolean }
@@ -55,7 +55,7 @@ namespace OpenXDA {
         export interface EDNAPoint { ID: number, BreakerID: number, Point: string }
         export interface Channel { ID: number, Meter: string, Asset: string, MeasurementType: string, MeasurementCharacteristic: string, Phase: string, Name: string, Adder: number, Multiplier: number, SamplesPerHour: number, PerUnitValue: number, HarmonicGroup: number, Description: string, Enabled: boolean, Series: Series[], ConnectionPriority: number }
         export interface Series { ID: number, ChannelID: number, SeriesType: string, SourceIndexes: string }
-        export interface Note { ID: number, NoteTypeID: number, ReferenceTableID: number, Note: string, UserAccount: string, Timestamp: string, NoteApplicationID: number, NoteTagID : number }
+        export interface Note { ID: number, NoteTypeID: number, ReferenceTableID: number, Note: string, UserAccount?: string, Timestamp: string, NoteApplicationID: number, NoteTagID : number }
 		export interface NoteApplication { ID: number, Name: NoteApplicationName }
 		export interface NoteTag { ID: number, Name: NoteTagName }
 
@@ -95,6 +95,3 @@ namespace OpenXDA {
 
     }
     }
-
-
-
