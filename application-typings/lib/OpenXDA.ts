@@ -45,8 +45,9 @@ namespace OpenXDA {
         export type EventTypeName = 'Sag' | 'Swell' | 'Transient' | 'Fault' | 'Interruption'
         export type NoteTypeName = 'Meter' | 'Event' | 'Asset' | 'Location' | 'Customer' | 'User' | 'Company'
 		export type NoteApplicationName = 'OpenMIC' | 'OpenXDA' | 'MiMD' | 'SystemCenter' | 'OpenHistorian' | 'All'
-		export type NoteTagName = 'General' | 'Configuration' | 'Diagnostic' | 'Compliance'
-		
+        export type NoteTagName = 'General' | 'Configuration' | 'Diagnostic' | 'Compliance'
+        export type DetailedAsset = (Breaker | Bus | CapBank | Line | Transformer | CapBankRelay)
+
         // Tables
         export interface EventType { ID: number, Name: EventTypeName, Description: string, Selected?: boolean }
         export interface Meter { ID: number, AssetKey: string, Alias: string, Make: string, Model: string, Name: string, ShortName: string, TimeZone: string, LocationID: number, Description: string, Selected?: boolean }
