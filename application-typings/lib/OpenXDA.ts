@@ -60,6 +60,9 @@ namespace OpenXDA {
         export interface Note { ID: number, NoteTypeID: number, ReferenceTableID: number, Note: string, UserAccount?: string, Timestamp: string, NoteApplicationID: number, NoteTagID : number }
 		    export interface NoteApplication { ID: number, Name: NoteApplicationName }
 		    export interface NoteTag { ID: number, Name: NoteTagName }
+        export interface Company { ID: number, CompanyTypeID: number, CompanyID: string, Name: string, Description: string }
+        export interface CompanyMeter { ID: number, CompanyID: number, MeterID: number, DisplayName: string, Enabled: boolean }
+        export interface Customer { ID: number, CustomerKey: string, Name: string, Phone: string, Description: string }
 
         // Assets
         export interface Asset { ID: number, VoltageKV: number, AssetKey: string, Description: string, AssetName: string, AssetType: AssetTypeName, Spare:boolean, Channels: Array<Channel> }
@@ -89,7 +92,8 @@ namespace OpenXDA {
         export interface MeterConfiguration { ID: number, MeterID: number, DiffID: number, ConfigKey: string, ConfigText: string, RevisionMajor: number, RevisionMinor: number }
         export interface DataFile { ID: number, FileGroupID: number, FilePath: string, FilePathHash: number, FileSize: number, CreationTime: string, LastWriteTime: string, LastAccessTime: string, MeterID: number, DataStartTime: string, ProcessingEndTime: string }
 
-
+        export interface CompanyType { ID: number, Name: string, Description: string }
+        export interface CustomerAccess { ID: number, CustomerID: number, PQViewSiteID: number }
 
         // AssetGroups
         export interface AssetGroup { ID: number, Name: string, DisplayDashboard: boolean, AssetGroups: number, Meters: number, Assets: number, Users: number }
