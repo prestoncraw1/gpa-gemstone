@@ -26,9 +26,10 @@
 import Table, {TableProps} from './Table';
 import {SelectTable, ISelectTableProps} from './SelectTable';
 import { SearchableTable } from './SearchableTable';
+import { DynamicTableProps, DynamicTable } from './DynamicTable';
 
 export {
-	TableProps, SelectTable, ISelectTableProps, SearchableTable
+	TableProps, SelectTable, ISelectTableProps, SearchableTable, DynamicTable, DynamicTableProps
 }
 
 export default Table;
