@@ -121,7 +121,7 @@ function ByValueListGroup(props: IProps)  {
 											 return;
 										 setSortKey(d.colField);
 										 if (d.colField === sortKey)
-											 setASC((d) => !d)
+											 setASC((b) => !b)
 										 else
 											 setASC(true)
                    }}
