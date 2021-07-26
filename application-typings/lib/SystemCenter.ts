@@ -42,6 +42,9 @@ namespace SystemCenter {
 		
 		export interface LocationDrawing { ID: number, LocationID: number, Name: string, Link: string, Description: string }
 
+		export interface ExternalDB { name: string, lastupdate: Date }
+		export interface ExternalDBField { DisplayName: string, FieldValueID: number, OpenXDAParentTableID: number, AdditionalFieldID: number, Value: string, FieldName: string, PreviousValue: string, Error: boolean, Message: string, isXDAField: boolean, Changed: boolean }
+
 		}
     }
 

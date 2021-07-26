@@ -25,8 +25,8 @@ export default Application;
 namespace Application{
     export namespace Types{
 
-        export interface iByComponent<T> {
-            (props: { Roles: Array<T> }): any;
+        export interface iByComponent {
+            (props: { Roles: Array<SecurityRoleName> }): any;
         }
 
         export interface iApplicationRole<T> {
