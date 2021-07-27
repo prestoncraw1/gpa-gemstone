@@ -36,15 +36,15 @@ jobs:
         with:
           node-version: 10
           
-      - name: InstallApplicationTypings
-        run: |
-          cd GITHUB_WORKSPACE/application-typings/
-          npm install
+      #- name: InstallApplicationTypings
+      #  run: |
+      #    cd GITHUB_WORKSPACE/application-typings/
+      #    npm install
         
       # Publish npm Packages
-      - uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
+      #- uses: JS-DevTools/npm-publish@v1
+      #  with:
+      #    token: ${{ secrets.NPM_TOKEN }}
           
       #Commit changes
       - uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
