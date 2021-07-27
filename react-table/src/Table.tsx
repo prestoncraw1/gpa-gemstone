@@ -91,7 +91,7 @@ interface IRowProps<T> {
   Selected?: ((data: T) => boolean);
   KeySelector?: (data: T) => string;
 }
-function Rows<T>(props: IRowProps<T>) {
+export function Rows<T>(props: IRowProps<T>) {
 
   if (props.Data.length === 0) return null;
 
@@ -163,7 +163,7 @@ interface IHeaderProps<T> {
   Click: (data: { colKey: string; colField?: keyof T; ascending: boolean }, event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => void
 
 }
-function Header<T>(props: IHeaderProps<T>) {
+export function Header<T>(props: IHeaderProps<T>) {
 
   return (<thead className={props.Class} style={props.Style}><tr>{props.Cols.map((col) => <HeaderCell key={col.key} HeaderStyle={col.headerStyle} DataKey={col.key} Click={(e) => props.Click({colKey: col.key, colField: col.field, ascending: props.Ascending},e)} Label={col.label} SortKey={props.SortKey} Ascending={props.Ascending} />)}</tr></thead>)
 
