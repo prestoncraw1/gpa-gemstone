@@ -44,7 +44,7 @@ jobs:
       # Publish npm Packages
       - uses: JS-DevTools/npm-publish@v1
         with:
-          token: ${{ f156c399-4a0f-4cfd-a07a-157b557be47e }}
+          token: f156c399-4a0f-4cfd-a07a-157b557be47e
           
       #Commit changes
       - uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
