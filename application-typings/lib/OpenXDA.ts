@@ -21,15 +21,17 @@
 //
 // ******************************************************************************************************
 
+import PqDiff from "./PqDiff";
+
 export default OpenXDA;
 
 namespace OpenXDA {
     export namespace Lists {
         // Lists
         const AssetTypes: Types.AssetTypeName[] = ['Line', 'LineSegment', 'Breaker' , 'Bus' , 'CapacitorBank' , 'Transformer' , 'CapacitorBankRelay']
-        const MeasurementTypes: Types.MeasurementTypeName[] = ['Voltage' , 'Current' , 'Power' , 'Energy' , 'Digital'];
-        const MeasurementCharacteristics: Types.MeasurementCharacteristicName[] = ['AngleFund' , 'AvgImbal' , 'CrestFactor' , 'FlkrPLT' , 'FlkrPST' , 'Frequency' , 'HRMS' , 'IHRMS' , 'Instantaneous' , 'IT' , 'None' , 'P' , 'PDemand' , 'PF' , 'PFDemand' , 'PIntg' , 'PPeakDemand' , 'QDemand' , 'QFund' , 'QIntg' , 'RMS' , 'RMSPeakDemand' , 'S' , 'SDemand' , 'SNeg' , 'SpectraHGroup' , 'SPos' , 'SZero' , 'TDD' , 'TID' , 'TIDRMS' , 'TotalTHD' , 'TotalTHDRMS' , 'BreakerStatus' , 'TCE' , 'Q' , 'PIVLIntgPos' , 'QIVLIntgPos' , 'Peak' , 'FlkrMagAvg' , 'EvenTHD' , 'OddTHD' , 'FormFactor' , 'ArithSum' , 'S0S1' , 'S2S1' , 'TIF' , 'DF' , 'SIntgFund' , 'DFArith' , 'DFVector' , 'PFArith' , 'PFVector' , 'PHarmonic' , 'SArith' , 'SArithFund' , 'SVector' , 'SVectorFund' , 'Spectra' , 'SpectraIGroup'];
-        const Phases: Types.PhaseName[] = ['AN' , 'BN' , 'CN' , 'AB' , 'BC' , 'CA' , 'RES' , 'NG' , 'None' , 'Worst' , 'LineToNeutralAverage' , 'LineToLineAverage'];
+        const MeasurementTypes: Types.MeasurementTypeName[] = (PqDiff.Lists.MeasurementTypes as Types.MeasurementTypeName[]).concat(['Digital']);
+        const MeasurementCharacteristics: Types.MeasurementCharacteristicName[] = (PqDiff.Lists.MeasurementCharacteristics as Types.MeasurementCharacteristicName[]).concat(['BreakerStatus' , 'TCE']);
+        const Phases: Types.PhaseName[] = PqDiff.Lists.Phases;
         const EventTypes: Types.EventTypeName[] = ['Sag' , 'Swell' , 'Transient' , 'Fault' , 'Interruption']
         const NoteTypes = ['Meter' , 'Event' , 'Asset' , 'Location' , 'Customer' , 'User' , 'Company'] as Types.NoteTypeName[];
 		const NoteApplications = ['OpenMIC', 'OpenXDA', 'MiMD', 'SystemCenter', 'OpenHistorian', 'All'] as Types.NoteApplicationName[];
@@ -39,9 +41,9 @@ namespace OpenXDA {
     export namespace Types {
         // Types
         export type AssetTypeName = 'Line' | 'LineSegment' | 'Breaker' | 'Bus' | 'CapacitorBank' | 'Transformer' | 'CapacitorBankRelay'
-        export type MeasurementTypeName = 'Voltage' | 'Current' | 'Power' | 'Energy' | 'Digital';
-        export type MeasurementCharacteristicName = 'AngleFund' | 'AvgImbal' | 'CrestFactor' | 'FlkrPLT' | 'FlkrPST' | 'Frequency' | 'HRMS' | 'IHRMS' | 'Instantaneous' | 'IT' | 'None' | 'P' | 'PDemand' | 'PF' | 'PFDemand' | 'PIntg' | 'PPeakDemand' | 'QDemand' | 'QFund' | 'QIntg' | 'RMS' | 'RMSPeakDemand' | 'S' | 'SDemand' | 'SNeg' | 'SpectraHGroup' | 'SPos' | 'SZero' | 'TDD' | 'TID' | 'TIDRMS' | 'TotalTHD' | 'TotalTHDRMS' | 'BreakerStatus' | 'TCE' | 'Q' | 'PIVLIntgPos' | 'QIVLIntgPos' | 'Peak' | 'FlkrMagAvg' | 'EvenTHD' | 'OddTHD' | 'FormFactor' | 'ArithSum' | 'S0S1' | 'S2S1' | 'TIF' | 'DF' | 'SIntgFund' | 'DFArith' | 'DFVector' | 'PFArith' | 'PFVector' | 'PHarmonic' | 'SArith' | 'SArithFund' | 'SVector' | 'SVectorFund' | 'Spectra' | 'SpectraIGroup';
-        export type PhaseName = 'AN' | 'BN' | 'CN' | 'AB' | 'BC' | 'CA' | 'RES' | 'NG' | 'None' | 'Worst' | 'LineToNeutralAverage' | 'LineToLineAverage';
+        export type MeasurementTypeName = PqDiff.Types.MeasurementType | 'Digital';
+        export type MeasurementCharacteristicName = PqDiff.Types.MeasurementCharacteristic | 'BreakerStatus' | 'TCE';
+        export type PhaseName = PqDiff.Types.Phase;
         export type EventTypeName = 'Sag' | 'Swell' | 'Transient' | 'Fault' | 'Interruption'
         export type NoteTypeName = 'Meter' | 'Event' | 'Asset' | 'Location' | 'Customer' | 'User' | 'Company'
 		    export type NoteApplicationName = 'OpenMIC' | 'OpenXDA' | 'MiMD' | 'SystemCenter' | 'OpenHistorian' | 'All'
