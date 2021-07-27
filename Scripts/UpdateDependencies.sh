@@ -102,7 +102,7 @@ function LoadPackage()
         DependencyHash[$key]="$vers"
       fi
     fi
-  done < "$GITHUB_WORKSPACE$1/package.json"
+  done < "$GITHUB_WORKSPACE/$1/package.json"
 }
 
 #Update Package.json as neccesarry
@@ -168,7 +168,7 @@ function UpdatePackage()
       if $(ContainsElement "$key" "${updateRequired[@]}") && ! [[ "${DependencyHash[$key]}" == "$vers" ]]
       then
         newLine="${line/$vers/${DependencyHash[$key]}}"
-        sed -i "s|$line|$newLine|gi" "$GITHUB_WORKSPACE$1/package.json"
+        sed -i "s|$line|$newLine|gi" "$GITHUB_WORKSPACE/$1/package.json"
         incrVersion=1
        fi
       #if it's a GPA-gemstone package we check against the current version instead
@@ -180,13 +180,13 @@ function UpdatePackage()
         if ! [[ "${currentVersion[$sKey]}" == "$vers" ]]
         then
           newLine="${line/$vers/${currentVersion[$sKey]}}"
-          sed -i "s|$line|$newLine|gi" "$GITHUB_WORKSPACE$1/package.json"
+          sed -i "s|$line|$newLine|gi" "$GITHUB_WORKSPACE/$1/package.json"
           incrVersion=1
           echo "Updating gemstone Package"
         fi
       fi
     fi
-  done < "$GITHUB_WORKSPACE$1/package.json"
+  done < "$GITHUB_WORKSPACE/$1/package.json"
 
   #If we need to republish increase version number and set required version for
   # next package in the chain
@@ -199,7 +199,7 @@ function UpdatePackage()
     currentVersion[$1]=$newversion
     newLine="${versionLine/$oldVersion/$newversion}"
     echo $newLine
-    sed -i "s|$versionLine|$newLine|gi" "$GITHUB_WORKSPACE$1/package.json"
+    sed -i "s|$versionLine|$newLine|gi" "$GITHUB_WORKSPACE/$1/package.json"
   fi
 }
 
