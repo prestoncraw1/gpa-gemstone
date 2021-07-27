@@ -25,5 +25,6 @@ import OpenHistorian from './OpenHistorian';
 import SOETools from './SOETools';
 import SystemCenter from './SystemCenter';
 import Application from './Application';
+import PqDiff from './PqDiff'
 
-export {SOETools,OpenHistorian, OpenXDA, SystemCenter, Application}
+export {SOETools,OpenHistorian, OpenXDA, SystemCenter, Application, PqDiff}
