@@ -36,10 +36,13 @@ jobs:
         with:
           node-version: 10
           
-      #- name: InstallApplicationTypings
-      #  run: |
-      #    cd GITHUB_WORKSPACE/application-typings/
-      #    npm install
+      - name: PublisApplicationTyping
+        run: |
+          cd $GITHUB_WORKSPACE/application-typings/
+          npm install
+          npm publish
+          env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         
       # Publish npm Packages
       #- uses: JS-DevTools/npm-publish@v1
@@ -47,12 +50,12 @@ jobs:
       #    token: ${{ secrets.NPM_TOKEN }}
           
       #Commit changes
-      - uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
+      - uses: EndBug/add-and-commit@v7 # Adding all Package.json Files
         with:
-          add: '.'
+          add: '["application-typings/package.json", "common-pages/package.json", "gpa-symbols/package.json", "helper-functions/package.json", "react-forms/package.json", "react-graph/package.json", "react-interactive/package.json", "react-table/package.json"]'
           author_name: buildbot
           author_email: info@GridProtectionAlliance.org
           default_author: github_actor
-          message: 'Updated Dependencies and published Packages as neccesarry'
-          pull_strategy: 'NO-PULL or --no-rebase or --no-ff or --rebase'
-          push: false
+          message: 'Updated Dependencies and published Packages'
+          pull_strategy: '--rebase'
+          push: true
