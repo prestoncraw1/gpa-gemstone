@@ -36,9 +36,73 @@ jobs:
         with:
           node-version: 10
           
-      - name: PublisApplicationTyping
+      - name: PublishApplicationTyping
+        continue-on-error: true
         run: |
           cd $GITHUB_WORKSPACE/application-typings/
+          npm install
+          npm publish
+          env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            
+      - name: PublishCommonPages
+        continue-on-error: true
+        run: |
+          cd $GITHUB_WORKSPACE/common-pages/
+          npm install
+          npm publish
+          env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            
+      - name: PublishGPASymbols
+        continue-on-error: true
+        run: |
+          cd $GITHUB_WORKSPACE/gpa-symbols/
+          npm install
+          npm publish
+          env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            
+      - name: PublishHelperFunctions
+        continue-on-error: true
+        run: |
+          cd $GITHUB_WORKSPACE/helper-functions/
+          npm install
+          npm publish
+          env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            
+      - name: PublishReactForms
+        continue-on-error: true
+        run: |
+          cd $GITHUB_WORKSPACE/react-forms/
+          npm install
+          npm publish
+          env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            
+      - name: PublishReactGraph
+        continue-on-error: true
+        run: |
+          cd $GITHUB_WORKSPACE/react-graph/
+          npm install
+          npm publish
+          env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            
+      - name: PublishReactTable
+        continue-on-error: true
+        run: |
+          cd $GITHUB_WORKSPACE/react-table/
+          npm install
+          npm publish
+          env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            
+      - name: PublishReactInteractive
+        continue-on-error: true
+        run: |
+          cd $GITHUB_WORKSPACE/react-interactive/
           npm install
           npm publish
           env:
