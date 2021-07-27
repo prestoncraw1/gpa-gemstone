@@ -28,8 +28,8 @@ jobs:
       # Runs a a dependency update
       - name: RunDependencyUpdate
         run: |
-          chmod a+rx GITHUB_WORKSPACE/Scripts/UpdateDependencies.sh
-          GITHUB_WORKSPACE/Scripts/UpdateDependencies.sh
+          chmod a+rx $GITHUB_WORKSPACE/Scripts/UpdateDependencies.sh
+          $GITHUB_WORKSPACE/Scripts/UpdateDependencies.sh
           
       # Run npm installs
       - uses: actions/setup-node@v1
