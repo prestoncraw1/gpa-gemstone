@@ -24,7 +24,6 @@ declare -a all_packages=('application-typings' 'gpa-symbols' 'helper-functions' 
 declare -A DependencyHash=()
 declare -a updateRequired=()
 declare -A currentVersion=()
-declare GITHUB_WORKSPACE='Code/gpa-gemstone/'
 
 function LoadPackage()
 {
