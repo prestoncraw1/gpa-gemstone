@@ -1,0 +1,58 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Dependencyupdate
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  chckDependencies:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      
+      # Runs a a dependency update
+      - name: RunDependencyUpdate
+        run: |
+          chmod a+rx GITHUB_WORKSPACE/Scripts/UpdateDependencies.sh
+          GITHUB_WORKSPACE/Scripts/UpdateDependencies.sh
+          
+      # Run npm installs
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+          
+      - name: InstallApplicationTypings
+        run: |
+          cd GITHUB_WORKSPACE/application-typings/
+          npm install
+        
+      # Publish npm Packages
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ f156c399-4a0f-4cfd-a07a-157b557be47e }}
+          
+      #Commit changes
+      - uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
+        with:
+          add: '.'
+          author_name: buildbot
+          author_email: info@GridProtectionAlliance.org
+          default_author: github_actor
+          message: 'Updated Dependencies and published Packages as neccesarry'
+          pull_strategy: 'NO-PULL or --no-rebase or --no-ff or --rebase'
+          push: false
