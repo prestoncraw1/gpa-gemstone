@@ -43,6 +43,7 @@ jobs:
         continue-on-error: true
         run: |
           cd $GITHUB_WORKSPACE/application-typings/
+          npm install -g npm@next
           npm install
           npm login
           npm publish
