@@ -37,7 +37,7 @@ jobs:
         with:
           node-version: 14.17.3
           scope: '@gpa-gemstone'
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: 'https://registry.npmjs.org/'
           
       - name: PublishApplicationTyping
         continue-on-error: true
