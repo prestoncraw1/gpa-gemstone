@@ -30,7 +30,8 @@ jobs:
         run: |
           chmod a+rx $GITHUB_WORKSPACE/Scripts/UpdateDependencies.sh
           $GITHUB_WORKSPACE/Scripts/UpdateDependencies.sh
-          
+      # Get npm Configuration for comparison
+      
       # Run npm installs
       - uses: actions/setup-node@v1
         with:
@@ -38,6 +39,14 @@ jobs:
           scope: '@gpa-gemstone'
           registry-url: 'https://registry.npmjs.org'
           
+      - name: GetNPMConfig
+        continue-on-error: true
+        run: |
+          cd $GITHUB_WORKSPACE/application-typings/
+          npm config list -l
+          env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            
       - name: PublishApplicationTyping
         continue-on-error: true
         run: |
