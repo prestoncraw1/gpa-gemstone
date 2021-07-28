@@ -39,28 +39,12 @@ jobs:
           scope: '@gpa-gemstone'
           registry-url: 'https://registry.npmjs.org'
           
-      - name: GetNPMConfig
-        continue-on-error: true
-        run: |
-          cd $GITHUB_WORKSPACE/application-typings/
-          npm config list -l
-          env:
-            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-            
       - name: PublishApplicationTyping
         continue-on-error: true
         run: |
           cd $GITHUB_WORKSPACE/application-typings/
           npm install
-          npm publish
-          env:
-            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-            
-      - name: PublishCommonPages
-        continue-on-error: true
-        run: |
-          cd $GITHUB_WORKSPACE/common-pages/
-          npm install
+          npm login
           npm publish
           env:
             NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
@@ -118,6 +102,17 @@ jobs:
           npm publish
           env:
             NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            
+      - name: PublishCommonPages
+        continue-on-error: true
+        run: |
+          cd $GITHUB_WORKSPACE/common-pages/
+          npm install
+          npm publish
+          env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            
+      
         
       # Publish npm Packages
       #- uses: JS-DevTools/npm-publish@v1
