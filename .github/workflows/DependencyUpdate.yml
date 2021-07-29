@@ -46,10 +46,9 @@ jobs:
           npm install -g npm@next
           npm install
           npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
+          echo ${{secrets.NPM_TOKEN}}
           npm config list -l
-          env:
-            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-            
+        
       #- name: PublishGPASymbols
       #  continue-on-error: true
       #  run: |
