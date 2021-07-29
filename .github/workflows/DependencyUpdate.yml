@@ -45,10 +45,9 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/application-typings/
           npm install -g npm@next
-          npm install
-          npm set //registry.npmjs.org/:_authToken $NPM_Token
-          echo "A"
-          cat /home/runner/.npmrc
+          npdm install
+          npm set //registry.npmjs.org/:_authToken 4670d000-58d2-45bc-b52c-429162edd489
+          npm publish
         
       #- name: PublishGPASymbols
       #  continue-on-error: true
