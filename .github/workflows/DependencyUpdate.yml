@@ -36,6 +36,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14.17.3
+          scope: '@gpa-gemstone'
           
       - name: PublishApplicationTyping
         continue-on-error: true
