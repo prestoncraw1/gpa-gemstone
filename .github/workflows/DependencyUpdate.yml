@@ -46,80 +46,80 @@ jobs:
           npm install -g npm@next
           npm install
           npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-          npm publish
+          npm config list -l
           env:
             NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
             
-      - name: PublishGPASymbols
-        continue-on-error: true
-        run: |
-          cd $GITHUB_WORKSPACE/gpa-symbols/
-          npm install
-          npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-          npm publish
-          env:
-            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      #- name: PublishGPASymbols
+      #  continue-on-error: true
+      #  run: |
+      #    cd $GITHUB_WORKSPACE/gpa-symbols/
+      #    npm install
+      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
+      #    npm publish
+      #    env:
+      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
             
-      - name: PublishHelperFunctions
-        continue-on-error: true
-        run: |
-          cd $GITHUB_WORKSPACE/helper-functions/
-          npm install
-          npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-          npm publish
-          env:
-            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      #- name: PublishHelperFunctions
+      #  continue-on-error: true
+      #  run: |
+      #    cd $GITHUB_WORKSPACE/helper-functions/
+      #    npm install
+      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
+      #    npm publish
+      #    env:
+      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
             
-      - name: PublishReactForms
-        continue-on-error: true
-        run: |
-          cd $GITHUB_WORKSPACE/react-forms/
-          npm install
-          npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-          npm publish
-          env:
-            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-            
-      - name: PublishReactGraph
-        continue-on-error: true
-        run: |
-          cd $GITHUB_WORKSPACE/react-graph/
-          npm install
-          npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-          npm publish
-          env:
-            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-            
-      - name: PublishReactTable
-        continue-on-error: true
-        run: |
-          cd $GITHUB_WORKSPACE/react-table/
-          npm install
-          npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-          npm publish
-          env:
-            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-            
-      - name: PublishReactInteractive
-        continue-on-error: true
-        run: |
-          cd $GITHUB_WORKSPACE/react-interactive/
-          npm install
-          npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-          npm publish
-          env:
-            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-            
-      - name: PublishCommonPages
-        continue-on-error: true
-        run: |
-          cd $GITHUB_WORKSPACE/common-pages/
-          npm install
-          npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-          npm publish
-          env:
-            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-            
+      #- name: PublishReactForms
+      #  continue-on-error: true
+      #  run: |
+      #    cd $GITHUB_WORKSPACE/react-forms/
+      #    npm install
+      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
+      #    npm publish
+      #    env:
+      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      #      
+      #- name: PublishReactGraph
+      #  continue-on-error: true
+      #  run: |
+      #    cd $GITHUB_WORKSPACE/react-graph/
+      #    npm install
+      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
+      #    npm publish
+      #    env:
+      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      #      
+      #- name: PublishReactTable
+      #  continue-on-error: true
+      #  run: |
+      #    cd $GITHUB_WORKSPACE/react-table/
+      #    npm install
+      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
+      #    npm publish
+      #    env:
+      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      #      
+      #- name: PublishReactInteractive
+      #  continue-on-error: true
+      #  run: |
+      #    cd $GITHUB_WORKSPACE/react-interactive/
+      #    npm install
+      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
+      #    npm publish
+      #    env:
+      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      #      
+      #- name: PublishCommonPages
+      #  continue-on-error: true
+      #  run: |
+      #    cd $GITHUB_WORKSPACE/common-pages/
+      #    npm install
+      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
+      #    npm publish
+      #    env:
+      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      #      
       
         
       # Publish npm Packages
@@ -128,12 +128,12 @@ jobs:
       #    token: ${{ secrets.NPM_TOKEN }}
           
       #Commit changes
-      - uses: EndBug/add-and-commit@v7 # Adding all Package.json Files
-        with:
-          add: '["application-typings/package.json", "common-pages/package.json", "gpa-symbols/package.json", "helper-functions/package.json", "react-forms/package.json", "react-graph/package.json", "react-interactive/package.json", "react-table/package.json"]'
-          author_name: buildbot
-          author_email: info@GridProtectionAlliance.org
-          default_author: github_actor
-          message: 'Updated Dependencies and published Packages'
-          pull_strategy: 'NO-PULL'
-          push: true
+      #- uses: EndBug/add-and-commit@v7 # Adding all Package.json Files
+      #  with:
+      #    add: '["application-typings/package.json", "common-pages/package.json", "gpa-symbols/package.json", "helper-functions/package.json", "react-forms/package.json", "react-graph/package.json", "react-interactive/package.json", "react-table/package.json"]'
+      #    author_name: buildbot
+      #    author_email: info@GridProtectionAlliance.org
+     #   default_author: github_actor
+     #     message: 'Updated Dependencies and published Packages'
+      #    pull_strategy: 'NO-PULL'
+       #   push: true
