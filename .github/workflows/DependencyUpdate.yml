@@ -36,18 +36,20 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14.17.3
-          scope: '@gpa-gemstone'
-          registry-url: 'https://registry.npmjs.org/'
           
       - name: PublishApplicationTyping
         continue-on-error: true
+        env:
+          NPM_Token: ${{ secrets.NPM_TOKEN }}
+      
         run: |
           cd $GITHUB_WORKSPACE/application-typings/
           npm install -g npm@next
           npm install
-          npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-          echo ${{secrets.NPM_TOKEN}}
+          npm set //registry.npmjs.org/:_authToken $NPM_Token
+          echo "$NPM_Token"
           npm config list -l
+          npm publish
         
       #- name: PublishGPASymbols
       #  continue-on-error: true
