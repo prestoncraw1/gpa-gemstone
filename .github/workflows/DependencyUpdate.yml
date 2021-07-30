@@ -14,8 +14,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  chckDependencies:
+  # This workflow contains job that runs Lint on all applicable repositories
+  lint:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -24,116 +24,44 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Repo
         uses: actions/checkout@v2
-      
-      # Runs a a dependency update
-      - name: RunDependencyUpdate
-        run: |
-          chmod a+rx $GITHUB_WORKSPACE/Scripts/UpdateDependencies.sh
-          $GITHUB_WORKSPACE/Scripts/UpdateDependencies.sh
-      # Get npm Configuration for comparison
-      
-      # Run npm installs
+
+      # Set up Node and NPM
       - uses: actions/setup-node@v1
         with:
           node-version: 14.17.3
           scope: '@gpa-gemstone'
-          
-      - name: PublishApplicationTyping
-        continue-on-error: true
-        env:
-          NPM_Token: ${{ secrets.NPM_TOKEN }}
-      
+
+      - name: Lint_CommonPages
         run: |
-          cd $GITHUB_WORKSPACE/application-typings/
-          npm install -g npm@next
-          npm install
-          npm set //registry.npmjs.org/:_authToken 4670d000-58d2-45bc-b52c-429162edd489
-          npm publish
-        
-      #- name: PublishGPASymbols
-      #  continue-on-error: true
-      #  run: |
-      #    cd $GITHUB_WORKSPACE/gpa-symbols/
-      #    npm install
-      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-      #    npm publish
-      #    env:
-      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-            
-      #- name: PublishHelperFunctions
-      #  continue-on-error: true
-      #  run: |
-      #    cd $GITHUB_WORKSPACE/helper-functions/
-      #    npm install
-      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-      #    npm publish
-      #    env:
-      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-            
-      #- name: PublishReactForms
-      #  continue-on-error: true
-      #  run: |
-      #    cd $GITHUB_WORKSPACE/react-forms/
-      #    npm install
-      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-      #    npm publish
-      #    env:
-      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      #      
-      #- name: PublishReactGraph
-      #  continue-on-error: true
-      #  run: |
-      #    cd $GITHUB_WORKSPACE/react-graph/
-      #    npm install
-      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-      #    npm publish
-      #    env:
-      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      #      
-      #- name: PublishReactTable
-      #  continue-on-error: true
-      #  run: |
-      #    cd $GITHUB_WORKSPACE/react-table/
-      #    npm install
-      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-      #    npm publish
-      #    env:
-      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      #      
-      #- name: PublishReactInteractive
-      #  continue-on-error: true
-      #  run: |
-      #    cd $GITHUB_WORKSPACE/react-interactive/
-      #    npm install
-      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-      #    npm publish
-      #    env:
-      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      #      
-      #- name: PublishCommonPages
-      #  continue-on-error: true
-      #  run: |
-      #    cd $GITHUB_WORKSPACE/common-pages/
-      #    npm install
-      #    npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
-      #    npm publish
-      #    env:
-      #      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      #      
-      
-        
-      # Publish npm Packages
-      #- uses: JS-DevTools/npm-publish@v1
-      #  with:
-      #    token: ${{ secrets.NPM_TOKEN }}
-          
-      #Commit changes
-      #- uses: EndBug/add-and-commit@v7 # Adding all Package.json Files
-      #  with:
-      #    add: '["application-typings/package.json", "common-pages/package.json", "gpa-symbols/package.json", "helper-functions/package.json", "react-forms/package.json", "react-graph/package.json", "react-interactive/package.json", "react-table/package.json"]'
-      #    author_name: buildbot
-      #    author_email: info@GridProtectionAlliance.org
-     #   default_author: github_actor
-     #     message: 'Updated Dependencies and published Packages'
-      #    pull_strategy: 'NO-PULL'
-       #   push: true
+          cd $GITHUB_WORKSPACE/common-pages/
+          npm run lint
+
+      - name: Lint_GPASymbols
+        run: |
+          cd $GITHUB_WORKSPACE/gpa-symbols/
+          npm run lint
+
+      - name: Lint_HelperFunctions
+        run: |
+          cd $GITHUB_WORKSPACE/helper-functions/
+          npm run lint
+
+      - name: Lint_ReactForms
+        run: |
+          cd $GITHUB_WORKSPACE/react-forms/
+          npm run lint
+
+      - name: Lint_ReactGraph
+        run: |
+          cd $GITHUB_WORKSPACE/react-graph/
+          npm run lint
+
+      - name: Lint_ReactInteractive
+        run: |
+          cd $GITHUB_WORKSPACE/react-interactive/
+          npm run lint
+
+      - name: Lint_ReactTable
+        run: |
+          cd $GITHUB_WORKSPACE/react-table/
+          npm run lint
