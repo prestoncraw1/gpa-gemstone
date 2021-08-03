@@ -33,7 +33,7 @@ import { CheckBox } from '@gpa-gemstone/react-forms';
 
 interface IProps {
 	UserID: string,
-	OnDelete: () => {},
+	OnDelete: () => void,
 	SecurityRoleSlice: ISecurityRoleSlice,
 	UserSlice: IUserAccountSlice,
 	AdditionalFieldSlice: IAdditionalFieldSlice<Application.Types.iAdditionalUserField, Application.Types.iAdditionalUserFieldValue>,

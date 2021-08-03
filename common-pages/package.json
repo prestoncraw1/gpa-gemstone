@@ -1,6 +1,6 @@
 {
   "name": "@gpa-gemstone/common-pages",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Common UI pages for GPA products",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
