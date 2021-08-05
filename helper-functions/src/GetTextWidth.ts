@@ -21,6 +21,12 @@
 //
 // ******************************************************************************************************
 
+/**
+ * GetTextWidth returns the width of a piece of text given its font, fontSize, and content.
+ * @param font 
+ * @param fontSize
+ * @param word
+ */
 function GetTextWidth(font: string, fontSize: string, word: string): number {
 
     const text = document.createElement("span");

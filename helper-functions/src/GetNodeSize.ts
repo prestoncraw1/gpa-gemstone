@@ -23,6 +23,10 @@
 
 interface INodeSize {height: number, width: number, left: number, top: number}
 
+/**
+ * GetNodeSize returns the dimensions of an html element 
+ * @param node: a HTML element, or null can be passed through
+ */
 function GetNodeSize(node: HTMLElement | null): INodeSize {
   if (node === null)
 	  return {

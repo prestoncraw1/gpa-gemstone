@@ -21,6 +21,10 @@
 //
 // ******************************************************************************************************
 
+/**
+ * This function checks if any value is a number, returning true or false
+ * @param value: value is the input passed through the IsNumber function
+ */
 function IsNumber(value: any): boolean {
   const regex = /^-?[0-9]+(\.[0-9]+)?$/;
   return value.toString().match(regex) != null;

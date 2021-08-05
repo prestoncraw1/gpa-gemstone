@@ -21,6 +21,12 @@
 //
 // ******************************************************************************************************
 
+/**
+ * This function returns the height of a piece of text given a font, fontsize, and a word
+ * @param font
+ * @param fontSize
+ * @param word
+ */
 function GetTextHeight(font: string, fontSize: string, word: string): number {
 
     const text = document.createElement("span");
