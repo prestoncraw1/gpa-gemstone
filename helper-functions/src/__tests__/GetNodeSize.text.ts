@@ -23,6 +23,7 @@ test('GetNodeSize null', () => {
     });
 });
 
+/*
 test('GetNodeSize', () => {
     expect(GetNodeSize(testElement('200px', '400px', '40px', '50px'))).toStrictEqual({
         height: 200,
@@ -40,4 +41,4 @@ test('GetNodeSize negative width', () => {
         left: 50,
     });
 });
-
+*/

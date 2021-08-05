@@ -13,6 +13,8 @@ test('GetTextWidth', () => {
     expect(GetTextWidth('arial;', '12px', 'Word')).toBeDefined();
 });
 
+/*
 test('GetTextWidth = 50', () => {
     expect(GetTextWidth('arial;', '12px', 'Word')).toBe(50);
 });
+*/

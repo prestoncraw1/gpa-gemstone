@@ -23,9 +23,9 @@
 
 /**
  * GetTextWidth returns the width of a piece of text given its font, fontSize, and content.
- * @param font 
- * @param fontSize
- * @param word
+ * @param font: Determines font of given text
+ * @param fontSize: Determines size of given font
+ * @param word: Text to measure
  */
 function GetTextWidth(font: string, fontSize: string, word: string): number {
 
