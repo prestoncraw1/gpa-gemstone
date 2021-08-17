@@ -27,8 +27,8 @@ namespace SystemCenter {
     export namespace Lists {
 	
         // Lists
-		const AdditionalFieldTypes: Types.AdditionalFieldType[] = ['integer', 'number', 'string' , 'boolean']
-            }
+		export const AdditionalFieldTypes: Types.AdditionalFieldType[] = ['integer', 'number', 'string' , 'boolean']
+	}
 
     export namespace Types {
 		// Types

@@ -44,7 +44,7 @@ namespace OpenHistorian{
     
     export namespace Lists{
 
-        const SignalTypes: Types.SignalType[] = ['IPHM' , 'IPHA' , 'VPHM' , 'VPHA' , 'FREQ' , 'DFDT' , 'ALOG' , 'FLAG' , 'DIGI' , 'CALC' , 'STAT' , 'ALARM' , 'QUAL']
-        const Phases: Types.Phase[] = ['A' , 'B' , 'C' , '+' , '-' , '0' , 'None']   
+        export const SignalTypes: Types.SignalType[] = ['IPHM' , 'IPHA' , 'VPHM' , 'VPHA' , 'FREQ' , 'DFDT' , 'ALOG' , 'FLAG' , 'DIGI' , 'CALC' , 'STAT' , 'ALARM' , 'QUAL']
+        export const Phases: Types.Phase[] = ['A' , 'B' , 'C' , '+' , '-' , '0' , 'None']   
     }
 }
