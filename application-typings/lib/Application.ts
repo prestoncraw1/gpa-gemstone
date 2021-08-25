@@ -21,7 +21,6 @@
 //
 // ******************************************************************************************************
 
-export default Application;
 namespace Application{
     export namespace Types{
 
@@ -102,3 +101,6 @@ namespace Application{
 
     }
 }
+
+
+export default Application;

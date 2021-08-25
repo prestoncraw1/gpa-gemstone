@@ -1,6 +1,6 @@
 {
   "name": "@gpa-gemstone/application-typings",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Application typings for GPA products",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -8,7 +8,7 @@
     "lib/**/*"
   ],
   "scripts": {
-    "build": "tsc --module amd",
+    "build": "tsc",
     "prepare": "npm run build",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags"

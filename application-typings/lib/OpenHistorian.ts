@@ -21,7 +21,6 @@
 //
 // ******************************************************************************************************
 
-export default OpenHistorian;
 namespace OpenHistorian{
     export namespace Types{
         export interface iHistorian {
@@ -48,3 +47,5 @@ namespace OpenHistorian{
         export const Phases: Types.Phase[] = ['A' , 'B' , 'C' , '+' , '-' , '0' , 'None']   
     }
 }
+
+export default OpenHistorian;

@@ -23,19 +23,18 @@
 
 import PqDiff from "./PqDiff";
 
-export default OpenXDA;
 
 namespace OpenXDA {
     export namespace Lists {
         // Lists
-        export const AssetTypes: Types.AssetTypeName[] = ['Line', 'LineSegment', 'Breaker' , 'Bus' , 'CapacitorBank' , 'Transformer' , 'CapacitorBankRelay']
+        export const AssetTypes: Types.AssetTypeName[] = ['Line', 'LineSegment', 'Breaker', 'Bus', 'CapacitorBank', 'Transformer', 'CapacitorBankRelay']
         export const MeasurementTypes: Types.MeasurementTypeName[] = (PqDiff.Lists.MeasurementTypes as Types.MeasurementTypeName[]).concat(['Digital']);
-        export const MeasurementCharacteristics: Types.MeasurementCharacteristicName[] = (PqDiff.Lists.MeasurementCharacteristics as Types.MeasurementCharacteristicName[]).concat(['BreakerStatus' , 'TCE']);
+        export const MeasurementCharacteristics: Types.MeasurementCharacteristicName[] = (PqDiff.Lists.MeasurementCharacteristics as Types.MeasurementCharacteristicName[]).concat(['BreakerStatus', 'TCE']);
         export const Phases: Types.PhaseName[] = PqDiff.Lists.Phases;
-        export const EventTypes: Types.EventTypeName[] = ['Sag' , 'Swell' , 'Transient' , 'Fault' , 'Interruption']
-        export const NoteTypes = ['Meter' , 'Event' , 'Asset' , 'Location' , 'Customer' , 'User' , 'Company'] as Types.NoteTypeName[];
-		export const NoteApplications = ['OpenMIC', 'OpenXDA', 'MiMD', 'SystemCenter', 'OpenHistorian', 'All'] as Types.NoteApplicationName[];
-		export const NoteTags = ['General', 'Configuration', 'Diagnostic', 'Compliance'] as Types.NoteTagName[];
+        export const EventTypes: Types.EventTypeName[] = ['Sag', 'Swell', 'Transient', 'Fault', 'Interruption']
+        export const NoteTypes = ['Meter', 'Event', 'Asset', 'Location', 'Customer', 'User', 'Company'] as Types.NoteTypeName[];
+        export const NoteApplications = ['OpenMIC', 'OpenXDA', 'MiMD', 'SystemCenter', 'OpenHistorian', 'All'] as Types.NoteApplicationName[];
+        export const NoteTags = ['General', 'Configuration', 'Diagnostic', 'Compliance'] as Types.NoteTagName[];
     }
 
     export namespace Types {
@@ -102,4 +101,7 @@ namespace OpenXDA {
 
 
     }
-    }
+}
+export default OpenXDA;
+export { OpenXDA }
+
