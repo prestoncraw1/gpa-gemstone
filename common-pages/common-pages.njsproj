@@ -43,12 +43,27 @@
   <ItemGroup>
     <Folder Include="img\" />
     <Folder Include="src\" />
+    <Folder Include="src\user\" />
+    <Folder Include="src\ValueList\" />
     <Folder Include="src\__tests__\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\index.tsx" />
     <TypeScriptCompile Include="src\Note.tsx" />
     <TypeScriptCompile Include="src\Setting.tsx" />
+    <TypeScriptCompile Include="src\SliceInterfaces.tsx" />
+    <TypeScriptCompile Include="src\user\AdditionalField.tsx" />
+    <TypeScriptCompile Include="src\user\ByUser.tsx" />
+    <TypeScriptCompile Include="src\user\User.tsx" />
+    <TypeScriptCompile Include="src\user\UserForm.tsx" />
+    <TypeScriptCompile Include="src\user\UserInfo.tsx" />
+    <TypeScriptCompile Include="src\user\UserPermissions.tsx" />
+    <TypeScriptCompile Include="src\ValueList\ByValueList.tsx" />
+    <TypeScriptCompile Include="src\ValueList\Group.tsx" />
+    <TypeScriptCompile Include="src\ValueList\GroupForm.tsx" />
+    <TypeScriptCompile Include="src\ValueList\GroupInfo.tsx" />
+    <TypeScriptCompile Include="src\ValueList\GroupItem.tsx" />
+    <TypeScriptCompile Include="src\ValueList\ItemForm.tsx" />
     <TypeScriptCompile Include="src\__tests__\Table.test.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
