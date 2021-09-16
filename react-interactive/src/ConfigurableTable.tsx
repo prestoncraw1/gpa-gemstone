@@ -44,7 +44,7 @@ export default function ConfigurableTable<T> (props: IProps<T>)  {
   const [collumns, setCollumns] = React.useState<Column<T>[]>(props.cols);
   const [colKeys, setColKeys] = React.useState<string[]>(props.cols.map(d => d.key));
   const [colEnabled, setColEnabled] = React.useState<boolean[]>(props.cols.map(d => props.defaultColumns.findIndex(v => v === d.key) > -1 ||
-    (props.requiredColumns != undefined && props.requiredColumns.findIndex(v => v === d.key) > -1)
+    (props.requiredColumns !== undefined && props.requiredColumns.findIndex(v => v === d.key) > -1)
   ));
 
   React.useEffect(() => {
@@ -88,7 +88,7 @@ export default function ConfigurableTable<T> (props: IProps<T>)  {
          if (conf)
           setColEnabled(
             props.cols.map(d => props.defaultColumns.findIndex(v => v === d.key) > -1 ||
-              (props.requiredColumns != undefined && props.requiredColumns.findIndex(v => v === d.key) > -1)
+              (props.requiredColumns !== undefined && props.requiredColumns.findIndex(v => v === d.key) > -1)
             ));
         }
        }
@@ -96,7 +96,7 @@ export default function ConfigurableTable<T> (props: IProps<T>)  {
        <div>
        <form>
          <ul style={{ listStyleType: 'none', padding: 0, width: '100%', position: 'relative', float: 'left' }}>
-             {colKeys.map((k, i) => (props.requiredColumns == undefined || props.requiredColumns.findIndex(v => v === k) === -1?
+             {colKeys.map((k, i) => (props.requiredColumns === undefined || props.requiredColumns.findIndex(v => v === k) === -1?
                  <li key={k}><label><input type="checkbox" onChange={() => changeCollums(i)} checked={colEnabled[i]} /> {k} </label></li> : null)
              )}
          </ul>
