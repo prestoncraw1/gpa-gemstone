@@ -31,6 +31,7 @@ import ToolTip from './ToolTip';
 import TabSelector from './TabSelector';
 import ServerErrorIcon from './ServerErrorIcon';
 import GenericSlice from './GenericSlice';
+import ConfigurableTable from './ConfigurableTable';
 
 export {
   Modal,
@@ -42,5 +43,6 @@ export {
   ToolTip,
   TabSelector,
   ServerErrorIcon,
-  GenericSlice
+  GenericSlice,
+  ConfigurableTable
 };
