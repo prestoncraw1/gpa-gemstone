@@ -48,8 +48,9 @@ export default function ConfigurableTable<T> (props: IProps<T>)  {
   ));
 
   React.useEffect(() => {
-    setColEnabled(props.cols.map(d => props.defaultColumns.findIndex(v => v === d.key) > -1));
-  },[props.defaultColumns, props.cols])
+    if (props.cols.length !== colEnabled.length)
+      setColEnabled(props.cols.map(d => props.defaultColumns.findIndex(v => v === d.key) > -1 || (props.requiredColumns !== undefined && props.requiredColumns.findIndex(v => v === d.key) > -1)));
+  },[props.cols])
 
   React.useEffect(() => {
     setColKeys(props.cols.map(d => d.key))
