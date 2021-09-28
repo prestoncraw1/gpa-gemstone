@@ -32,6 +32,7 @@ import TabSelector from './TabSelector';
 import ServerErrorIcon from './ServerErrorIcon';
 import GenericSlice from './GenericSlice';
 import ConfigurableTable from './ConfigurableTable';
+import { IState as IGenericSliceState } from './GenericSlice';
 
 export {
   Modal,
@@ -44,5 +45,6 @@ export {
   TabSelector,
   ServerErrorIcon,
   GenericSlice,
+  IGenericSliceState,
   ConfigurableTable
 };
