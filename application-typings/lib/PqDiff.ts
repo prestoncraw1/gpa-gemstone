@@ -21,7 +21,6 @@
 //
 // ******************************************************************************************************
 
-export default PqDiff;
 namespace PqDiff{
     export namespace Types {
         export type MeasurementCharacteristic = 'None' | 'Instantaneous' | 'Spectra' | 'Peak' | 'RMS' | 'HRMS' | 'Frequency' | 'TotalTHD' | 'EvenTHD' | 'OddTHD' | 'CrestFactor' | 'FormFactor' | 'ArithSum' | 'S0S1' | 'S251' | 'SPos' | 'SNeg' | 'SZero' | 'AvgImbal' | 'TotalTHDRMS' | 'OddTHDRMS' | 'EvenTHDRMS' | 'TID' | 'TIDRMS' | 'IHRMS' | 'SpectraHGroup' | 'TIF' | 'FlkrMagAvg' | 'FlkrMaxDVV' | 'FlkrFreqMax' | 'FlkrMagMax' | 'FlkrWgtAvg' | 'FlkrSpectrum' | 'FlkrPST' | 'FlkrPLT' | 'TIFRMS' | 'PLTSlide' | 'PiLPF' | 'PiMax' | 'PiRoot' | 'PiRootLPF' | 'IT' | 'RMSDemand' | 'ANSITDF' | 'KFactor' | 'TDD' | 'RMSPeakDemand' | 'P' | 'Q' | 'S' | 'PF' | 'DF' | 'PDemand' | 'QDemand' | 'SDemand' | 'DFDemand' | 'PFDemand' | 'PPredDemand' | 'QPredDemand' | 'SPredDemand' | 'PCoQDemand' | 'PCoSDemand' | 'QCoPDemand' | 'QCoSDemand' | 'DFCoSDemand' | 'PFCoSDemand' | 'PFCoPDemand' | 'PFCoQDemand' | 'AngleFund' | 'QFund' | 'PFVector' | 'DFVector' | 'SVector' | 'SVectorFund' | 'SFund' | 'SCoPDemand' | 'SCoQDemand' | 'PFArith' | 'DFArith' | 'SArith' | 'SArithFund' | 'SPeakDemand' | 'QPeakDemand' | 'PPeakDemand' | 'PHarmonic' | 'PHarmonicUnsigned' | 'PFund' | 'PIntg' | 'PIntgPos' | 'PIntgPosFund' | 'PIntgNeg' | 'PIntgNegFund' | 'QIntg' | 'QIntgPos' | 'QIntgPosFund' | 'QIntgNegFund' | 'QIntgNeg' | 'SIntg' | 'SIntgFund' | 'PIVLIntg' | 'PIVLIntgPos' | 'PIVLIntgPosFund' | 'PIVLIntgNeg' | 'PIVLIntgNegFund' | 'QIVLIntg' | 'QIVLIntgPos' | 'QIVLIntgPosFund' | 'QIVLIntgNegFund' | 'QIVLIntgNeg' | 'SIVLIntg' | 'SIVLIntgFund' | 'DAxisField' | 'QAxis' | 'Rotational' | 'DAxis' | 'Linear' | 'TransferFunc' | 'Status' | 'SpectraIGroup'
@@ -35,3 +34,4 @@ namespace PqDiff{
     }
 }
 
+export default PqDiff;

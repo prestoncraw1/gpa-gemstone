@@ -39,6 +39,7 @@
     <Content Include="lib\index.js" />
     <Content Include="lib\OpenHistorian.js" />
     <Content Include="lib\OpenXDA.js" />
+    <Content Include="lib\PqDiff.js" />
     <Content Include="lib\SOETools.js" />
     <Content Include="lib\SystemCenter.js" />
     <Content Include="package.json" />
@@ -59,6 +60,8 @@
     <TypeScriptCompile Include="lib\OpenHistorian.ts" />
     <TypeScriptCompile Include="lib\OpenXDA.d.ts" />
     <TypeScriptCompile Include="lib\OpenXDA.ts" />
+    <TypeScriptCompile Include="lib\PqDiff.d.ts" />
+    <TypeScriptCompile Include="lib\PqDiff.ts" />
     <TypeScriptCompile Include="lib\SOETools.d.ts" />
     <TypeScriptCompile Include="lib\SOETools.ts" />
     <TypeScriptCompile Include="lib\SystemCenter.d.ts" />

@@ -21,7 +21,6 @@
 //
 // ******************************************************************************************************
 
-export default SOETools;
 
 namespace SOETools {
     export namespace Lists{
@@ -63,3 +62,5 @@ namespace SOETools {
     }
     
 }
+
+export default SOETools;

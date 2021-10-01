@@ -20,11 +20,11 @@
 //       Generated original version of source code.
 //
 // ******************************************************************************************************
-import OpenXDA from './OpenXDA';
+import PqDiff from './PqDiff'
 import OpenHistorian from './OpenHistorian';
 import SOETools from './SOETools';
 import SystemCenter from './SystemCenter';
 import Application from './Application';
-import PqDiff from './PqDiff'
+import OpenXDA from './OpenXDA';
 
-export {SOETools,OpenHistorian, OpenXDA, SystemCenter, Application, PqDiff}
+export { PqDiff, SOETools, OpenHistorian, SystemCenter, Application, OpenXDA}

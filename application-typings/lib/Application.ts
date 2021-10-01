@@ -21,7 +21,6 @@
 //
 // ******************************************************************************************************
 
-export default Application;
 namespace Application{
     export namespace Types{
 
@@ -74,7 +73,7 @@ namespace Application{
       LockedOut: boolean,
       Approved: boolean,
       UseADAuthentication: boolean,
-      ChangePasswordOn: Date,
+      ChangePasswordOn: string,
       AccountName?: string
 		}
     export interface iAdditionalUserFieldValue {
@@ -102,3 +101,6 @@ namespace Application{
 
     }
 }
+
+
+export default Application;

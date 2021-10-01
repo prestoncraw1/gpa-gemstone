@@ -23,13 +23,13 @@
 //
 //  ******************************************************************************************************
 
-import Table, {TableProps,Rows} from './Table';
+import Table, {TableProps,Rows, Column} from './Table';
 import {SelectTable, ISelectTableProps} from './SelectTable';
 import { SearchableTable } from './SearchableTable';
 import { DynamicTableProps, DynamicTable } from './DynamicTable';
 
 export {
-	TableProps, SelectTable, ISelectTableProps, SearchableTable, DynamicTable, DynamicTableProps , Rows
+	TableProps, SelectTable, ISelectTableProps, SearchableTable, DynamicTable, DynamicTableProps , Rows, Column
 }
 
 export default Table;

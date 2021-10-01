@@ -34,7 +34,8 @@ interface IError {
 	Verb: 'POST' | 'DELETE' | 'PATCH' | 'FETCH' | 'SEARCH'
 	Time: string
 }
-interface IState<T extends U> {
+
+export interface IState<T extends U> {
   Status: Application.Types.Status,
   SearchStatus: Application.Types.Status,
   Error: ( IError | null ),

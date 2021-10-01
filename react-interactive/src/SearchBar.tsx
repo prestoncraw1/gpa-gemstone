@@ -145,7 +145,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
       <p style={{marginTop: 2, marginBottom: 2}}>{props.ResultNote}</p>
 		</div> : null}
       <div style={{ position: 'relative', display: 'inline-block' }} className='col'>
-          <button className="btn btn-primary" onClick={(evt) => { evt.preventDefault(); createFilter(); }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>Add Filter</button>
+          <button className={"btn btn-" + (filters.length > 0? "warning" : "primary")} onClick={(evt) => { evt.preventDefault(); createFilter(); }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>Add Filter{filters.length > 0 ? ("(" + filters.length + ")") : ""}</button>
           <div style={{ width: window.innerWidth / 3, display: hover ? 'block' : 'none', position: 'absolute', backgroundColor: '#f1f1f1', boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)', zIndex: 1, right: (props.Direction === 'right' ? 0 : undefined), left: (props.Direction === 'left' ? 0: undefined) }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
               <table className='table'>
                   <thead>

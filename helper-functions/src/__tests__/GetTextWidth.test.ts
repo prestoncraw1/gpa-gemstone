@@ -1,4 +1,3 @@
-
 /**
  * @jest-environment jsdom
  */
@@ -18,3 +17,4 @@ test('GetTextWidth = 50', () => {
     expect(GetTextWidth('arial;', '12px', 'Word')).toBe(50);
 });
 */
+

@@ -46,4 +46,5 @@ function GetTextWidth(font: string, fontSize: string, word: string): number {
 
 } 
 
+
 export {GetTextWidth};

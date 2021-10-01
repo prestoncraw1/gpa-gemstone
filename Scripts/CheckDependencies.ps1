@@ -1,11 +1,11 @@
 # Call the script with the path to the project directory as an argument:
 #     .\build-panel.ps1 "C:\Projects\gpa-gemstone\"
 # Uncomment the following line to hardcode the project directory for testing
-$projectDir = "D:\Projects\gpa-gemstone\"
+#$projectDir = "D:\Projects\gpa-gemstone\"
 
-#param(
-#    [string]$projectDir
-#)
+param(
+    [string]$projectDir
+)
 
 if ([string]::IsNullOrWhiteSpace($projectDir)) {
     throw "projectDir parameter was not provided, script terminated."
@@ -70,8 +70,8 @@ foreach($line in Get-Content ".\$package\package.json") {
     }
     if ($inDep) {
       $item =$line.Split(":")
-      if ($DevDependencyHash.ContainsKey($item[0].Trim())) {
-        if ($DevDependencyHash[$item[0].Trim()] -ne $item[1].Trim()) {
+      if ($DevDependencyHash.ContainsKey($item[0].Trim()) {
+        if ($DevDependencyHash[$item[0].Trim()] -ne $item[1].Trim().Trim(",")) {
             $p = $item[0].Trim()
             echo "$p is a different version than that encountered in a previous package"
             }
@@ -81,7 +81,7 @@ foreach($line in Get-Content ".\$package\package.json") {
         echo "$p is specified as a DevDependency here but as a Dependency in another package"
       }
       else{
-        $DevDependencyHash[$item[0].Trim()] = $item[1].Trim()
+        $DevDependencyHash[$item[0].Trim()] = $item[1].Trim().Trim(",")
       }
       $nDevDep ++
     }
