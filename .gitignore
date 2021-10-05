@@ -5,3 +5,4 @@ node_modules
 *.user
 **/bin
 **/package-lock.json
+/gpa-symbols/.vs/gpa-symbols/v16/.suo
