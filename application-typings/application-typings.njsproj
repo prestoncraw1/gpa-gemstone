@@ -34,7 +34,6 @@
     <Content Include=".npmignore" />
     <Content Include=".prettierrc" />
     <Content Include="img\gemstone-wide-600.png" />
-    <Content Include="jestconfig.json" />
     <Content Include="lib\Application.js" />
     <Content Include="lib\index.js" />
     <Content Include="lib\OpenHistorian.js" />

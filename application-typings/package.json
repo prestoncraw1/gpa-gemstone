@@ -1,11 +1,11 @@
 {
   "name": "@gpa-gemstone/application-typings",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "Application typings for GPA products",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "lib/**/*"
+    "dist/**/*"
   ],
   "scripts": {
     "build": "tsc",
@@ -31,9 +31,11 @@
   },
   "homepage": "https://github.com/GridProtectionAlliance/gpa-gemstone#readme",
   "devDependencies": {
-    "typescript": "4.3.4"
+    "typescript": "4.4.4"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@types/webpack": "^5.28.0"
+  },
   "publishConfig": {
     "access": "public"
   }
