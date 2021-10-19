@@ -39,7 +39,7 @@ namespace OpenXDA {
 
     export namespace Types {
         // Types
-        export type AssetTypeName = 'Line' | 'LineSegment' | 'Breaker' | 'Bus' | 'CapacitorBank' | 'Transformer' | 'CapacitorBankRelay'
+        export type AssetTypeName = 'Line' | 'LineSegment' | 'Breaker' | 'Bus' | 'CapacitorBank' | 'Transformer' | 'CapacitorBankRelay' | 'DER1547_2018'
         export type MeasurementTypeName = PqDiff.Types.MeasurementType | 'Digital';
         export type MeasurementCharacteristicName = PqDiff.Types.MeasurementCharacteristic | 'BreakerStatus' | 'TCE';
         export type PhaseName = PqDiff.Types.Phase;
@@ -80,6 +80,8 @@ namespace OpenXDA {
         export interface LineSegment extends Asset { R0: number, X0: number, R1: number, X1: number, ThermalRating: number, Length: number, IsEnd: boolean }
         export interface Transformer extends Asset { R0: number, X0: number, R1: number, X1: number, ThermalRating: number, PrimaryVoltageKV: number, SecondaryVoltageKV: number, Tap: number, TertiaryVoltageKV: number, SecondaryWinding: number, PrimaryWinding: number, TertiaryWinding: number }
         export interface LineDetail { R0: number, X0: number, R1: number, X1: number, ThermalRating: number, Length: number }
+        export interface DER1547_2018 extends Asset { FullRatedOutputCurrent: number; VoltageLevel: 'Low' | 'Medium' }
+
         // Links
         export interface AssetConnection { ID: number, AssetRelationshipTypeID: number, Parent: string, Child: string }
 
