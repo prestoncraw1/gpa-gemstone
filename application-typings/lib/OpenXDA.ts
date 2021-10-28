@@ -101,6 +101,8 @@ namespace OpenXDA {
         // AssetGroups
         export interface AssetGroup { ID: number, Name: string, DisplayDashboard: boolean, AssetGroups: number, Meters: number, Assets: number, Users: number }
 
+        export interface DataOperation { ID: number, AssemblyName: string, TypeName: string, LoadOrder: number }
+        export interface DataReader { ID: number, FilePattern: string, AssemblyName: string, TypeName: string, LoadOrder: number }
 
     }
 }
