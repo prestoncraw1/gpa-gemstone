@@ -91,9 +91,9 @@ export default class GenericSlice<T extends U> {
           return await handle
         });
 
-        const dBSearch = createAsyncThunk(`${name}/Search${name}`, async (args: { filter:  Search.IFilter<T>[], sortfield?: keyof T, ascending?: boolean}, { getState, signal }) => {
+        const dBSearch = createAsyncThunk(`${name}/Search${name}`, async (args: { filter:  Search.IFilter<T>[], sortField?: keyof T, ascending?: boolean}, { getState, signal }) => {
 
-            let sortfield = args.sortfield;
+            let sortfield = args.sortField;
             let asc = args.ascending;
 
             sortfield = sortfield === undefined ? ((getState() as any)[this.Name] as IState<T>).SortField : sortfield;
