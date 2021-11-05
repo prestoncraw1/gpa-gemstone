@@ -89,6 +89,12 @@ namespace Application{
       IsSecure: boolean
     }
 
+    export interface iApplicationNode
+    {
+        ID: string,
+        Name: string
+    }
+
     export type Status = 'loading' | 'idle' | 'error' | 'changed' | 'unintiated';
 		export type NewEdit = 'New' | 'Edit'
 
