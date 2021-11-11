@@ -67,7 +67,7 @@ export default function ConfigurableTable<T> (props: IProps<T>)  {
   return (
     <>
       <Table
-      cols={[...collumns, { key: 'SettingsCog', label: Wrench , headerStyle: { width: 30, padding: 0, verticalAlign: 'middle', textAlign: 'right' }, rowStyle: {padding: 0 } }]}
+      cols={[...collumns, { key: 'SettingsCog', label: Wrench , headerStyle: { width: 30, padding: 0, verticalAlign: 'middle', textAlign: 'right' }, rowStyle: {padding: 0, width: 30 } }]}
       data={props.data}
       onClick={props.onClick}
       sortKey={props.sortKey}
