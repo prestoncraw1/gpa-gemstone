@@ -31,8 +31,6 @@ const MultiSelect = (props: {
   const multiSelect = React.useRef<HTMLDivElement>(null);
 
   function HandleShow(evt: React.MouseEvent<HTMLButtonElement, MouseEvent> | MouseEvent) {
-    evt.preventDefault();
-
     if (multiSelect.current === null) setShow(!show);
     else if (!(multiSelect.current as HTMLDivElement).contains(evt.target as Node)) setShow(false);
     else setShow(true);
