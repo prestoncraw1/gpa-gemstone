@@ -31,6 +31,8 @@ const MultiSelect = (props: {
   const multiSelect = React.useRef<HTMLDivElement>(null);
 
   function HandleShow(evt: React.MouseEvent<HTMLButtonElement, MouseEvent> | MouseEvent) {
+    evt.preventDefault();
+
     if (multiSelect.current === null) setShow(!show);
     else if (!(multiSelect.current as HTMLDivElement).contains(evt.target as Node)) setShow(false);
     else setShow(true);
@@ -46,6 +48,7 @@ const MultiSelect = (props: {
   return (
     <div ref={multiSelect} style={{ position: 'relative', display: 'inline-block', width: 'inherit' }}>
       <button
+        type="button"
         style={{ border: '1px solid #ced4da', padding: '.375rem .75rem', fontSize: '1rem', borderRadius: '.25rem' }}
         className="btn form-control dropdown-toggle"
         onClick={HandleShow}
