@@ -45,7 +45,7 @@ namespace OpenXDA {
         export type PhaseName = PqDiff.Types.Phase;
         export type EventTypeName = 'Sag' | 'Swell' | 'Transient' | 'Fault' | 'Interruption'
         export type NoteTypeName = 'Meter' | 'Event' | 'Asset' | 'Location' | 'Customer' | 'User' | 'Company'
-		    export type NoteApplicationName = 'OpenMIC' | 'OpenXDA' | 'MiMD' | 'SystemCenter' | 'OpenHistorian' | 'All'
+        export type NoteApplicationName = 'OpenMIC' | 'OpenXDA' | 'MiMD' | 'SystemCenter' | 'OpenHistorian' | 'All' | 'SEbrowser'
 
         export type NoteTagName = 'General' | 'Configuration' | 'Diagnostic' | 'Compliance'
         export type DetailedAsset = (Breaker | Bus | CapBank | Line | Transformer | CapBankRelay | DER)
