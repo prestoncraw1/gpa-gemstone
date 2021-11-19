@@ -5,8 +5,10 @@
     "declaration": true,
     "outDir": "dist",
     "strict": true,
-    "inlineSourceMap": false
-   },
+    "inlineSourceMap": false,
+    "skipLibCheck": true
+
+  },
   "include": ["lib"],
   "exclude": ["node_modules"]
 }

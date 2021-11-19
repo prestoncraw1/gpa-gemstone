@@ -8,6 +8,8 @@
       "strict": true,
       "jsx": "react",
       "downlevelIteration": true,
+      "skipLibCheck": true,
+      "inlineSourceMap": true
     },
     "include": ["src"],
     "exclude": ["node_modules", "**/__tests__/*"]
