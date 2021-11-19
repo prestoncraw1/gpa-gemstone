@@ -143,9 +143,9 @@ function Line(props: IProps) {
        enabled?
        <g>
            <path d={generateData()} style={{ fill: 'none', strokeWidth: 3, stroke: props.color, transition: 'd 0.5s' }} strokeDasharray={props.lineStyle === ':'? '10,5' : 'none'} />
-           {props.showPoints && data != null? data.GetFullData().map((pt, i) => <circle key={i} r={3} cx={pt[0] * context.XScale + context.XOffset} cy={pt[1] * context.YScale + context.YOffset} fill={props.color} stroke={'black'} style={{ opacity: 0.8, transition: 'cx 0.5s,cy 0.5s' }} />) : null}
+           {props.showPoints && data != null? data.GetFullData().map((pt, i) => <circle key={i} r={3} cx={pt[0] * context.XScale + context.XOffset} cy={pt[1] * context.YScale + context.YOffset} fill={props.color} stroke={'black'} style={{ opacity: 0.8/*, transition: 'cx 0.5s,cy 0.5s'*/ }} />) : null}
           {props.highlightHover && !isNaN(highlight[0]) && !isNaN(highlight[1])? 
-            <circle r={5} cx={highlight[0] * context.XScale + context.XOffset} cy={highlight[1] * context.YScale + context.YOffset} fill={props.color} stroke={'black'} style={{ opacity: 0.8, transition: 'cx 0.5s,cy 0.5s' }} /> : null}
+            <circle r={5} cx={highlight[0] * context.XScale + context.XOffset} cy={highlight[1] * context.YScale + context.YOffset} fill={props.color} stroke={'black'} style={{ opacity: 0.8/*, transition: 'cx 0.5s,cy 0.5s'*/ }} /> : null}
        </g > : null
    );
 }

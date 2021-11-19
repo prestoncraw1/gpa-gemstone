@@ -23,7 +23,10 @@
 
 const MaxPoints = 20;
 
-
+/**
+ * 
+ * Node in a tree.
+ */
 export class PointNode {
     minT: number;
     maxT: number;
@@ -35,8 +38,9 @@ export class PointNode {
     private points: [number,number][] | null;
 
     constructor(data: [number,number][]) {
-
+        // That minimum time stamp that fits in this bucket
         this.minT = data[0][0];
+        // The maximum time stamp that might fit in this bucket
         this.maxT = data[data.length - 1][0];
         this.avgY = 0;
         this.children = null;
@@ -101,7 +105,10 @@ export class PointNode {
      * Retrieves a point from the PointNode tree
      * @param {number} point - The point to retrieve from the tree
      */
-    public GetPoint(point: number): [number, number] | null {
+    public GetPoint(point: number): [number, number] {
+        // round point back to whole integer 
+        point = Math.round(point)
+
         // if the point is less than the minimum value of the subsection, return the first point
         if (point < this.minT && this.points !== null)
             return this.points[0];
@@ -113,40 +120,40 @@ export class PointNode {
         // if the subsection is null, and the point is less than the minimum value of the subsection, ??Start over again lookign for the point in the first subsection??
         if (point < this.minT && this.points === null)
           return this.children![0].GetPoint(point);
-        if (point > this.maxT && this.points === null)
+        else if (point > this.maxT && this.points === null)
             return this.children![this.children!.length - 1].GetPoint(point);
 
+
         if (this.points != null) {
-          let upper = this.points.length -1;
-          let lower = 0;
+            let upper = this.points.length - 1;
+            let lower = 0;
 
-          let Tlower = this.minT;
-          let Tupper = this.maxT;
+            let Tlower = this.minT;
+            let Tupper = this.maxT;
 
-          while (Tupper !== point && Tlower !== point && upper !== lower && Tupper !== Tlower)
-          {
-            const center = Math.round((upper + lower)/2);
-            const Tcenter = this.points[center][0];
+            while (Tupper !== point && Tlower !== point && upper !== lower && Tupper !== Tlower) {
+                const center = Math.round((upper + lower) / 2);
+                const Tcenter = this.points[center][0];
 
-            if (center === upper || center === lower)
-              break;
-            if (Tcenter <= point)
-              lower = center;
-            if (Tcenter > point)
-              upper = center;
-            Tupper = this.points[upper][0];
-            Tlower = this.points[lower][0];
-          }
-          if (Math.abs(point - Tlower) < Math.abs(point- Tupper))
-            return this.points[lower];
+                if (center === upper || center === lower)
+                    break;
+                if (Tcenter <= point)
+                    lower = center;
+                if (Tcenter > point)
+                    upper = center;
+                Tupper = this.points[upper][0];
+                Tlower = this.points[lower][0];
+            }
+            if (Math.abs(point - Tlower) < Math.abs(point - Tupper))
+                return this.points[lower];
 
-          return this.points[upper];
+            return this.points[upper];
 
         }
-        const child = this.children!.find(n => n.minT <= point && n.maxT > point);
-        if (child == null) return null;
-        else 
+        else {
+            const child = this.children!.find(n => /*n.minT <= point &&*/ n.maxT > point);
             return child!.GetPoint(point);
+        }
 
     }
 }
