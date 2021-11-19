@@ -70,9 +70,11 @@ function LineWithThreshold(props: IProps) {
    React.useEffect(() => {
        if (props.data.length === 0 || isNaN(context.XHover) || data === null)
            setHighlight([NaN, NaN]);
-       else
-           setHighlight(data.GetPoint(context.XHover));
-
+       else {
+           let point = data.GetPoint(context.XHover);
+           if (point != null)
+               setHighlight(point);
+       }
    }, [data, context.XHover])
 
    React.useEffect(() => {
@@ -120,13 +122,15 @@ function LineWithThreshold(props: IProps) {
      if (props.highlightHover && !isNaN(highlight[0]) && !isNaN(highlight[1]))
       txt = txt + ` (${moment.utc(highlight[0]).format('MM/DD/YY hh:mm:ss')}: ${highlight[1].toPrecision(6)})`
 
-    return (<div onClick={() => setEnabled((e) => !e)} style={{width: wLegend, display: 'flex', alignItems: 'center', marginRight: '20px'}}>
-      {(props.lineStyle === '-' ?
-        <div style={{ width: ' 10px', height: 0, borderTop: '2px solid', borderRight: '10px solid', borderBottom: '2px solid', borderLeft: '10px solid', borderColor: props.color, overflow: 'hidden', marginRight: '5px', opacity: (enabled? 1 : 0.5) }}></div> :
-        <div style={{ width: ' 10px', height: '4px', borderTop: '0px solid', borderRight: '3px solid', borderBottom: '0px solid', borderLeft: '3px solid', borderColor: props.color, overflow: 'hidden', marginRight: '5px', opacity: (enabled? 1 : 0.5) }}></div>
-      )}
-      <label style={{ marginTop: '0.5rem' }}> {txt}</label>
-      </div>);
+       return (
+           <div onClick={() => setEnabled((e) => !e)} style={{ width: wLegend, display: 'flex', alignItems: 'center', marginRight: '20px' }}>
+              {(props.lineStyle === '-' ?
+                <div style={{ width: ' 10px', height: 0, borderTop: '2px solid', borderRight: '10px solid', borderBottom: '2px solid', borderLeft: '10px solid', borderColor: props.color, overflow: 'hidden', marginRight: '5px', opacity: (enabled? 1 : 0.5) }}></div> :
+                <div style={{ width: ' 10px', height: '4px', borderTop: '0px solid', borderRight: '3px solid', borderBottom: '0px solid', borderLeft: '3px solid', borderColor: props.color, overflow: 'hidden', marginRight: '5px', opacity: (enabled? 1 : 0.5) }}></div>
+              )}
+              <label style={{ marginTop: '0.5rem' }}> {txt}</label>
+           </div>
+       );
    }
 
    function generateData() {

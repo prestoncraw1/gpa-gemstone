@@ -23,6 +23,7 @@
 
 const MaxPoints = 20;
 
+
 export class PointNode {
     minT: number;
     maxT: number;
@@ -30,8 +31,8 @@ export class PointNode {
     maxY: number;
     avgY: number;
 
-    children: PointNode[] | null;
-    points: [number,number][] | null;
+    private children: PointNode[] | null;
+    private points: [number,number][] | null;
 
     constructor(data: [number,number][]) {
 
@@ -64,7 +65,7 @@ export class PointNode {
         this.minY = Math.min(...this.children.map(node => node.minY));
     }
 
-    GetData(Tstart: number, Tend: number): [number,number][] {
+    public GetData(Tstart: number, Tend: number): [number,number][] {
         if (this.points != null && Tstart <= this.minT && Tend >= this.maxT)
             return this.points;
         if (this.points != null)
@@ -74,11 +75,11 @@ export class PointNode {
         return result.concat(...this.children!.filter(node => Tstart <= node.minT && Tend >= node.maxT).map(node => node.GetData(Tstart, Tend)));
     }
 
-    GetFullData(): [number,number][] {
+    public GetFullData(): [number,number][] {
       return this.GetData(this.minT,this.maxT);
     }
 
-    GetLimits(Tstart: number, Tend: number): [number,number] {
+    public GetLimits(Tstart: number, Tend: number): [number,number] {
       let max = this.maxY;
       let min = this.minY;
 
@@ -96,16 +97,24 @@ export class PointNode {
       return [min,max];
     }
 
-    GetPoint(T: number): [number, number] {
-        if (T < this.minT && this.points !== null)
-          return this.points[0];
-        if (T > this.maxT && this.points !== null)
+    /**
+     * Retrieves a point from the PointNode tree
+     * @param {number} point - The point to retrieve from the tree
+     */
+    public GetPoint(point: number): [number, number] | null {
+        // if the point is less than the minimum value of the subsection, return the first point
+        if (point < this.minT && this.points !== null)
+            return this.points[0];
+
+        // if the point is greater than the largest value of the subsection, return the last point
+        if (point > this.maxT && this.points !== null)
           return this.points[this.points.length - 1];
 
-        if (T < this.minT && this.points === null)
-          return this.children![0].GetPoint(T);
-        if (T > this.maxT && this.points === null)
-          return this.children![this.children!.length -1].GetPoint(T);
+        // if the subsection is null, and the point is less than the minimum value of the subsection, ??Start over again lookign for the point in the first subsection??
+        if (point < this.minT && this.points === null)
+          return this.children![0].GetPoint(point);
+        if (point > this.maxT && this.points === null)
+            return this.children![this.children!.length - 1].GetPoint(point);
 
         if (this.points != null) {
           let upper = this.points.length -1;
@@ -114,28 +123,30 @@ export class PointNode {
           let Tlower = this.minT;
           let Tupper = this.maxT;
 
-          while (Tupper !== T && Tlower !== T && upper !== lower && Tupper !== Tlower)
+          while (Tupper !== point && Tlower !== point && upper !== lower && Tupper !== Tlower)
           {
             const center = Math.round((upper + lower)/2);
             const Tcenter = this.points[center][0];
 
             if (center === upper || center === lower)
               break;
-            if (Tcenter <= T)
+            if (Tcenter <= point)
               lower = center;
-            if (Tcenter > T)
+            if (Tcenter > point)
               upper = center;
             Tupper = this.points[upper][0];
             Tlower = this.points[lower][0];
           }
-          if (Math.abs(T - Tlower) < Math.abs(T- Tupper))
+          if (Math.abs(point - Tlower) < Math.abs(point- Tupper))
             return this.points[lower];
 
           return this.points[upper];
 
         }
-        const child = this.children!.find(n => n.minT <= T && n.maxT > T);
-        return child!.GetPoint(T);
+        const child = this.children!.find(n => n.minT <= point && n.maxT > point);
+        if (child == null) return null;
+        else 
+            return child!.GetPoint(point);
 
     }
 }
