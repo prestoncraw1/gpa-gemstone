@@ -113,7 +113,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
   function editFilter(index: number) {
 	  setIsNew(false);
 	  const oldFilters = [...filters];
-	  const filt = oldFilters[index];
+	  const filt = {...oldFilters[index]};
       oldFilters.splice(index,1);
 	  if (filt.Type === 'string' && filt.Operator === 'LIKE')
 		filt.SearchText = filt.SearchText.substr(1,filt.SearchText.length -2);
