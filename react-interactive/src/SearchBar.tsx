@@ -152,7 +152,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
                       <tr><th>Column</th><th>Operator</th><th>Search Text</th><th>Edit</th><th>Remove</th></tr>
                   </thead>
                   <tbody>
-                      {filters.map((f, i) => <tr key={i}><td>{f.FieldName}</td><td>{f.Operator}</td><td>{f.SearchText}</td><td><button className="btn btn-sm" onClick={(e) => editFilter(i)}><span>{Pencil}</span></button></td><td><button className="btn btn-sm" onClick={(e) => deleteFilter(f)}><span>{TrashCan}</span></button></td></tr>)}
+                      {filters.map((f, i) => <tr key={i}><td>{f.FieldName}</td><td>{f.Operator}</td><td>{f.SearchText}</td><td><button type='button' className="btn btn-sm" onClick={(e) => editFilter(i)}><span>{Pencil}</span></button></td><td><button type='button' className="btn btn-sm" onClick={(e) => deleteFilter(f)}><span>{TrashCan}</span></button></td></tr>)}
                   </tbody>
               </table>
           </div>
