@@ -1,6 +1,6 @@
 {
   "name": "@gpa-gemstone/application-typings",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "description": "Application typings for GPA products",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
