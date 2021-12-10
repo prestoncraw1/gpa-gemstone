@@ -237,9 +237,9 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
                         </select>
                     </div>
                     <div className='col'>
-                        <input className='form-control' value={props.Filter.SearchText} onChange={(evt) => {
+                        <input className='form-control' value={props.Filter.SearchText.replace('$_', '_')} onChange={(evt) => {
                             const value = evt.target.value as string;
-                            props.Setter((prevState) => ({ ...prevState, SearchText: value }));
+                            props.Setter((prevState) => ({ ...prevState, SearchText: value.replace('_', '$_')}));
                         }} />
                     </div>
 
