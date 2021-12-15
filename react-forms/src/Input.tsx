@@ -47,7 +47,14 @@ export default function Input<T>(props: IProps<T>) {
 	 React.useEffect(() => {
 		setGuid(CreateGuid());
 	  }, []);
-	  
+
+	function valueChange(evt: any) {
+    if (props.Type == 'number')
+      props.Setter({ ...props.Record, [props.Field]: evt.target.value !== '' ? parseFloat(evt.target.value) : null })
+    else
+      props.Setter({ ...props.Record, [props.Field]: evt.target.value !== '' ? evt.target.value : null })
+    }
+    
   return (
     <div className="form-group">
 		<label>{props.Label == null ? props.Field : props.Label} 
@@ -62,9 +69,7 @@ export default function Input<T>(props: IProps<T>) {
 		data-help={guid}
         type={props.Type === undefined ? 'text' : props.Type}
         className={props.Valid(props.Field) ? 'form-control' : 'form-control is-invalid'}
-        onChange={(evt) =>
-          props.Setter({ ...props.Record, [props.Field]: evt.target.value !== '' ? evt.target.value : null })
-        }
+        onChange={(evt) => valueChange(evt)}
         value={props.Record[props.Field] == null ? '' : (props.Record[props.Field] as any).toString()}
         disabled={props.Disabled == null ? false : props.Disabled}
       />
