@@ -79,8 +79,8 @@ export default function SelectPopup<T extends U>(props: IProps<T>) {
 
     return (<>
         <Modal Show={props.Show} Title={props.Title} ShowX={true} Size={'xlg'} CallBack={(conf) => props.OnClose(selectedData, conf)} 
-        DisableConfirm={props.MinSelection != undefined && selectedData.length < props.MinSelection} 
-        ConfirmShowToolTip={props.MinSelection != undefined && selectedData.length < props.MinSelection}
+        DisableConfirm={props.MinSelection !== undefined && selectedData.length < props.MinSelection} 
+        ConfirmShowToolTip={props.MinSelection !== undefined && selectedData.length < props.MinSelection}
         ConfirmToolTipContent={<p>{CrossMark} Atleast {props.MinSelection} items must be selected. </p>}
         >
             <div className="row">
@@ -89,7 +89,7 @@ export default function SelectPopup<T extends U>(props: IProps<T>) {
                     SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: flds, sortField, ascending }))}
                     Width={'50%'}
                     Label={'Search'}
-                    ShowLoading={searchStatus == 'loading'}
+                    ShowLoading={searchStatus === 'loading'}
                     >
                     <li className="nav-item" style={{ width: '20%', paddingRight: 10 }}>
                             <fieldset className="border" style={{ padding: '10px', height: '100%' }}>
@@ -125,11 +125,11 @@ export default function SelectPopup<T extends U>(props: IProps<T>) {
                                 dispatch(props.Slice.Sort({SortField: d.colField as keyof T, Ascending: true}));
                             }
                         }}
-                        onClick={(d) => setSelectedData([...selectedData.filter(item => item.ID != d.row.ID), d.row])}
+                        onClick={(d) => setSelectedData([...selectedData.filter(item => item.ID !== d.row.ID), d.row])}
                         theadStyle={{ fontSize: 'smaller', display: 'table', tableLayout: 'fixed', width: '100%' }}
                         tbodyStyle={{ display: 'block', overflowY: 'scroll', maxHeight: '400px', width: '100%' }}
                         rowStyle={{ fontSize: 'smaller', display: 'table', tableLayout: 'fixed', width: '100%' }}
-                        selected={props.Type === undefined || props.Type === 'single' ? (item) => selectedData.findIndex(d => d.ID == item.ID) > -1 : (item) => false}
+                        selected={props.Type === undefined || props.Type === 'single' ? (item) => selectedData.findIndex(d => d.ID === item.ID) > -1 : (item) => false}
                     />
                 </div>
                 {props.Type === 'multiple' ? <div className="col" style={{ width: '40%' }}>
@@ -143,19 +143,19 @@ export default function SelectPopup<T extends U>(props: IProps<T>) {
                         sortKey={sortKeySelected}
                         ascending={ascendingSelected}
                         onSort={(d) => {
-                            if (d.colKey == sortKeySelected) {
-                                let ordered = _.orderBy(selectedData, [d.colKey], [(!ascendingSelected ? "asc" : "desc")]);
+                            if (d.colKey === sortKeySelected) {
+                                const ordered = _.orderBy(selectedData, [d.colKey], [(!ascendingSelected ? "asc" : "desc")]);
                                 setAscendingSelected(!ascendingSelected);
                                 setSelectedData(ordered);
                             }
                             else {
-                                let ordered = _.orderBy(selectedData, [d.colKey], ["asc"]);
+                                const ordered = _.orderBy(selectedData, [d.colKey], ["asc"]);
                                 setAscendingSelected(!ascendingSelected);
                                 setSelectedData(ordered);
                                 setSortKeySelected(d.colKey);
                             }
                         }}
-                        onClick={() => { }}
+                        onClick={() => true}
                         theadStyle={{ fontSize: 'smaller', display: 'table', tableLayout: 'fixed', width: '100%' }}
                         tbodyStyle={{ display: 'block', overflowY: 'scroll', maxHeight: '400px', width: '100%' }}
                         rowStyle={{ fontSize: 'smaller', display: 'table', tableLayout: 'fixed', width: '100%' }}

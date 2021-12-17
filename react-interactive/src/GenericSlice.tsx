@@ -140,7 +140,7 @@ export default class GenericSlice<T extends U> {
                     state.Data = _.orderBy(action.payload as Draft<T[]>, [state.SortField], [state.Ascending ? "asc" : "desc"]);
                 });
                 builder.addCase(fetch.pending, (state: WritableDraft<IState<T>>, action: PayloadAction<undefined, string,  {arg: number | void},never>) => {
-                    if (state.ParentID != (action.meta.arg == null? null : action.meta.arg))
+                    if (state.ParentID !== (action.meta.arg == null? null : action.meta.arg))
                         state.SearchStatus = 'changed';
                     state.ParentID = (action.meta.arg == null? null : action.meta.arg);
                     state.Status = 'loading';
@@ -238,7 +238,7 @@ export default class GenericSlice<T extends U> {
     private Search(filter: Search.IFilter<T>[], ascending: (boolean | undefined), sortField: keyof T, parentID?: number): JQuery.jqXHR<string> {
         return $.ajax({
             type: 'POST',
-            url: `${this.APIPath}/${parentID != undefined ? `${parentID}/` : ''}SearchableList`,
+            url: `${this.APIPath}/${parentID != null ? `${parentID}/` : ''}SearchableList`,
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
             data: JSON.stringify({ Searches: filter, OrderBy: sortField, Ascending: ascending }),

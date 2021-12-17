@@ -47,7 +47,7 @@ export namespace DefaultSearch {
         const ascending = useSelector(props.Slice.Ascending)
         const data: SystemCenter.Types.DetailedMeter[] = useSelector(props.Slice.SearchResults);
 
-        const defaultSearchcols: Array<Search.IField<SystemCenter.Types.DetailedMeter>> = [
+        const defaultSearchcols: Search.IField<SystemCenter.Types.DetailedMeter>[] = [
             { label: 'AssetKey', key: 'AssetKey', type: 'string', isPivotField: false },
             { label: 'Name', key: 'Name', type: 'string', isPivotField: false },
             { label: 'Location', key: 'Location', type: 'string', isPivotField: false },
@@ -64,8 +64,8 @@ export namespace DefaultSearch {
             defaultCollumn={standardSearch}
             Width={'50%'}
             Label={'Search'}
-            ShowLoading={searchStatus == 'loading'}
-            ResultNote={searchStatus == 'error' ? 'Could not complete Search' : 'Found ' + data.length + ' Meters'}
+            ShowLoading={searchStatus === 'loading'}
+            ResultNote={searchStatus === 'error' ? 'Could not complete Search' : 'Found ' + data.length + ' Meters'}
             GetEnum={props.GetEnum}
         >
             {props.children}
@@ -82,7 +82,7 @@ export namespace DefaultSearch {
         const ascending = useSelector(props.Slice.Ascending)
         const data: SystemCenter.Types.DetailedLocation[] = useSelector(props.Slice.SearchResults);
 
-        const defaultSearchcols: Array<Search.IField<SystemCenter.Types.DetailedLocation>> = [
+        const defaultSearchcols: Search.IField<SystemCenter.Types.DetailedLocation>[] = [
             { label: 'Name', key: 'Name', type: 'string', isPivotField: false },
             { label: 'Key', key: 'LocationKey', type: 'string', isPivotField: false },
             { label: 'Asset', key: 'Asset', type: 'string', isPivotField: false },
@@ -98,8 +98,8 @@ export namespace DefaultSearch {
             defaultCollumn={standardSearch} 
             Width={'50%'} 
             Label={'Search'}
-            ShowLoading={searchStatus == 'loading'} 
-            ResultNote={searchStatus == 'error' ? 'Could not complete Search' : 'Found ' + data.length + ' Locations'}
+            ShowLoading={searchStatus === 'loading'} 
+            ResultNote={searchStatus === 'error' ? 'Could not complete Search' : 'Found ' + data.length + ' Locations'}
             GetEnum={props.GetEnum}
         >
             {props.children}
@@ -116,7 +116,7 @@ export namespace DefaultSearch {
         const ascending = useSelector(props.Slice.Ascending)
         const data: SystemCenter.Types.DetailedAsset[] = useSelector(props.Slice.SearchResults);
 
-        const defaultSearchcols: Array<Search.IField<SystemCenter.Types.DetailedAsset>> = [
+        const defaultSearchcols: Search.IField<SystemCenter.Types.DetailedAsset>[] = [
             { label: 'Key', key: 'AssetKey', type: 'string', isPivotField: false },
             { label: 'Name', key: 'AssetName', type: 'string', isPivotField: false },
             { label: 'Voltage (kV)', key: 'VoltageKV', type: 'number', isPivotField: false },
@@ -132,8 +132,8 @@ export namespace DefaultSearch {
             defaultCollumn={standardSearch} 
             Width={'50%'} 
             Label={'Search'}
-            ShowLoading={searchStatus == 'loading'} 
-            ResultNote={searchStatus == 'error' ? 'Could not complete Search' : 'Found ' + data.length + ' Transmission Assets'}
+            ShowLoading={searchStatus === 'loading'} 
+            ResultNote={searchStatus === 'error' ? 'Could not complete Search' : 'Found ' + data.length + ' Transmission Assets'}
             GetEnum={props.GetEnum}
 
         >
@@ -151,7 +151,7 @@ export namespace DefaultSearch {
         const ascending = useSelector(props.Slice.Ascending)
         const data: OpenXDA.Types.AssetGroup[] = useSelector(props.Slice.SearchResults);
 
-        const defaultSearchcols: Array<Search.IField<OpenXDA.Types.AssetGroup>> = [
+        const defaultSearchcols: Search.IField<OpenXDA.Types.AssetGroup>[] = [
             { label: 'Name', key: 'Name', type: 'string', isPivotField: false },
             { label: 'Number of Meter', key: 'Meters', type: 'integer', isPivotField: false },
             { label: 'Number of Transmission Assets', key: 'Assets', type: 'integer', isPivotField: false },
@@ -166,8 +166,8 @@ export namespace DefaultSearch {
             defaultCollumn={standardSearch} 
             Width={'50%'} 
             Label={'Search'}
-            ShowLoading={searchStatus == 'loading'} 
-            ResultNote={searchStatus == 'error' ? 'Could not complete Search' : 'Found ' + data.length + ' Asset Group(s)'}
+            ShowLoading={searchStatus === 'loading'} 
+            ResultNote={searchStatus === 'error' ? 'Could not complete Search' : 'Found ' + data.length + ' Asset Group(s)'}
             GetEnum={props.GetEnum}
         >
             {props.children}
