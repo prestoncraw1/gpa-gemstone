@@ -99,7 +99,7 @@ export default class GenericSlice<T extends U> {
             sortfield = sortfield === undefined ? ((getState() as any)[this.Name] as IState<T>).SortField : sortfield;
             asc = asc === undefined ? (getState() as any)[this.Name].Ascending : asc;
 
-            const handle = this.Search(args.filter, asc,sortfield);
+            const handle = this.Search(args.filter, asc,sortfield, (getState() as any)[this.Name].ParentID);
 
             signal.addEventListener('abort', () => {
                 if (handle.abort !== undefined) handle.abort();
@@ -139,6 +139,8 @@ export default class GenericSlice<T extends U> {
                     state.Data = _.orderBy(action.payload as Draft<T[]>, [state.SortField], [state.Ascending ? "asc" : "desc"]);
                 });
                 builder.addCase(fetch.pending, (state: WritableDraft<IState<T>>, action: PayloadAction<undefined, string,  {arg: number | void},never>) => {
+                    if (state.ParentID != (action.meta.arg == null? null : action.meta.arg))
+                        state.SearchStatus = 'changed';
                     state.ParentID = (action.meta.arg == null? null : action.meta.arg);
                     state.Status = 'loading';
                 });
@@ -232,10 +234,10 @@ export default class GenericSlice<T extends U> {
         });
     }
 
-    private Search(filter: Search.IFilter<T>[], ascending: (boolean | undefined), sortField: keyof T): JQuery.jqXHR<string> {
+    private Search(filter: Search.IFilter<T>[], ascending: (boolean | undefined), sortField: keyof T, parentID?: number): JQuery.jqXHR<string> {
         return $.ajax({
             type: 'POST',
-            url: `${this.APIPath}/SearchableList`,
+            url: `${this.APIPath}/${parentID != undefined ? `${parentID}/` : ''}SearchableList`,
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
             data: JSON.stringify({ Searches: filter, OrderBy: sortField, Ascending: ascending }),
