@@ -129,6 +129,7 @@ export default class GenericSlice<T extends U> {
                         state.SortField = action.payload.SortField as Draft<keyof T>;
 
                     state.Data = _.orderBy(state.Data, [state.SortField], [state.Ascending ? "asc" : "desc"])
+                    state.SearchResults = _.orderBy(state.SearchResults, [state.SortField], [state.Ascending ? "asc" : "desc"])
                 }
             },
             extraReducers: (builder: ActionReducerMapBuilder<IState<T>>) => {
