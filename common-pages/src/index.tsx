@@ -27,6 +27,9 @@ import ByValueList from './ValueList/ByValueList';
 import ValueList from './ValueList/Group';
 import ByUser from './user/ByUser';
 import User from './user/User';
+import { DefaultSearch } from './SearchBar';
+import SelectPopup from './StandardSelectPopup';
+import DefaultSelects from './StandardSelectPopup';
 
 export {
   Setting,
@@ -34,5 +37,9 @@ export {
   ValueList,
   ByValueList,
   User,
-  ByUser
+  ByUser,
+  DefaultSearch,
+  SelectPopup,
+  DefaultSelects
+
 };

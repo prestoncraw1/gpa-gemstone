@@ -1,7 +1,7 @@
 // ******************************************************************************************************
-//  SelectDefault.tsx - Gbtc
+//  StandardSelectPopup.tsx - Gbtc
 //
-//  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
+//  Copyright © 2021, Grid Protection Alliance.  All Rights Reserved.
 //
 //  Licensed to the Grid Protection Alliance (GPA) under one or more contributor license agreements. See
 //  the NOTICE file distributed with this work for additional information regarding copyright ownership.
@@ -16,51 +16,37 @@
 //
 //  Code Modification History:
 //  ----------------------------------------------------------------------------------------------------
-//  12/17/2021 - Samuel Robinson
+//  12/19/2021 - C. Lackner
 //       Generated original version of source code.
 // ******************************************************************************************************
 
 import Table, { Column } from "@gpa-gemstone/react-table";
-import React = require("react");
+import * as React from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import GenericSlice from "./GenericSlice";
-import { Search } from "./SearchBar";
-import Modal from "./Modal";
-import { SearchBar } from ".";
+import { GenericSlice, Modal, SearchBar, Search } from "@gpa-gemstone/react-interactive";
 import _ = require("lodash");
 import { CrossMark } from "@gpa-gemstone/gpa-symbols";
 
 interface U { ID: number|string }
-
-interface ISearchbarProps<T> {
-    CollumnList: Search.IField<T>[],
-    defaultCollumn?: Search.IField<T>,
-    Label?: string,
-    GetEnum?: EnumSetter<T>,
-    ResultNote?: string,
-}
 
 interface IProps<T extends U> {
     Slice: GenericSlice<T>,
     Selection: T[],
     OnClose: (selected: T[], conf: boolean ) => void
     Show: boolean,
-    Searchbar: ISearchbarProps<T>,
+    Searchbar: (children: React.ReactNode) => React.ReactNode,
     Type?: 'single'|'multiple',
     Columns: Column<T>[],
     Title: string,
     MinSelection?: number
 }
 
-interface IOptions {Value: string, Label: string}
-type EnumSetter<T> = (setOptions: (options: IOptions[]) => void, field: Search.IField<T>) => () => void
 
 export default function SelectPopup<T extends U>(props: IProps<T>) {
     const dispatch = useDispatch();
     const sortField = useSelector(props.Slice.SortField) as keyof T;
     const ascending = useSelector(props.Slice.Ascending);
     const data: T[] = useSelector(props.Slice.SearchResults);
-    const searchStatus = useSelector(props.Slice.SearchStatus);
 
     const [selectedData, setSelectedData] = React.useState<T[]>(props.Selection);
 
@@ -81,17 +67,12 @@ export default function SelectPopup<T extends U>(props: IProps<T>) {
         <Modal Show={props.Show} Title={props.Title} ShowX={true} Size={'xlg'} CallBack={(conf) => props.OnClose(selectedData, conf)} 
         DisableConfirm={props.MinSelection !== undefined && selectedData.length < props.MinSelection} 
         ConfirmShowToolTip={props.MinSelection !== undefined && selectedData.length < props.MinSelection}
-        ConfirmToolTipContent={<p>{CrossMark} Atleast {props.MinSelection} items must be selected. </p>}
+        ConfirmToolTipContent={<p>{CrossMark} At least {props.MinSelection} items must be selected. </p>}
         >
             <div className="row">
                 <div className="col">
-                    <SearchBar<T> {...props.Searchbar} 
-                    SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: flds, sortField, ascending }))}
-                    Width={'50%'}
-                    Label={'Search'}
-                    ShowLoading={searchStatus === 'loading'}
-                    >
-                    <li className="nav-item" style={{ width: '20%', paddingRight: 10 }}>
+                   {props.Searchbar(
+                    props.Type === 'multiple'? <li className="nav-item" style={{ width: '20%', paddingRight: 10 }}>
                             <fieldset className="border" style={{ padding: '10px', height: '100%' }}>
                                 <legend className="w-auto" style={{ fontSize: 'large' }}>Quick Selects:</legend>
                                 <form>
@@ -103,8 +84,8 @@ export default function SelectPopup<T extends U>(props: IProps<T>) {
                                     </div>
                                 </form>
                             </fieldset>
-                        </li>    
-                    </SearchBar>
+                        </li>: null
+                   )}
                 </div>
             </div>
             <div className="row">

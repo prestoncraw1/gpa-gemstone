@@ -33,8 +33,6 @@ import ServerErrorIcon from './ServerErrorIcon';
 import GenericSlice from './GenericSlice';
 import ConfigurableTable from './ConfigurableTable';
 import { IState as IGenericSliceState } from './GenericSlice';
-import { DefaultSearch } from './SearchBarDefault';
-import SelectPopup from './SelectPopup';
 
 export {
   Modal,
@@ -49,6 +47,4 @@ export {
   GenericSlice,
   IGenericSliceState,
   ConfigurableTable,
-  DefaultSearch,
-  SelectPopup
 };
