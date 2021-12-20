@@ -193,7 +193,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
                 if (column !== undefined && (column.type === 'number' || column.type === 'integer' || column.type === 'boolean' || column.type === 'datetime' ))
                     operator = '='
 
-                  setFilter((prevFilter) => ({ ...prevFilter, FieldName: record.FieldName, SearchText: '', Operator: operator, Type: (column !== undefined ? column.type : 'string') }))
+                  setFilter((prevFilter) => ({ ...prevFilter, FieldName: record.FieldName, SearchText: '', Operator: operator, Type: (column !== undefined ? column.type : 'string'), isPivotColumn: (column !== undefined ? column.isPivotField : true)  }))
             }} Label='Column' />
             <FilterCreator Filter={filter} Field={props.CollumnList.find(fl => fl.key === filter.FieldName)} Setter={(record) => setFilter(record)} Enum={(props.GetEnum === undefined? undefined : props.GetEnum)}/>
           </Modal>
