@@ -72,7 +72,7 @@ export namespace DefaultSearch {
         const standardSearch: Search.IField<SystemCenter.Types.DetailedMeter> = { label: 'Name', key: 'Name', type: 'string', isPivotField: false };
 
         return <GenericSearchBar<SystemCenter.Types.DetailedMeter>
-            CollumnList={[...addlFieldCols, ...defaultSearchcols]}
+            CollumnList={[...defaultSearchcols, ...addlFieldCols]}
             SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: flds, sortField, ascending }))}
             Direction={'left'}
             defaultCollumn={standardSearch}
@@ -105,6 +105,7 @@ export namespace DefaultSearch {
             { label: 'Meter', key: 'Meter', type: 'string', isPivotField: false },
             { label: 'Number of Assets', key: 'Assets', type: 'integer', isPivotField: false },
             { label: 'Number of Meters', key: 'Meters', type: 'integer', isPivotField: false },
+            { label: 'Description', key: 'Description', type: 'string', isPivotField: false }
         ]; 
 
         React.useEffect(() => {
@@ -112,7 +113,7 @@ export namespace DefaultSearch {
         }, []);
 
         return <GenericSearchBar<SystemCenter.Types.DetailedLocation> 
-            CollumnList={[...addlFieldCols, ...defaultSearchcols]}
+            CollumnList={[...defaultSearchcols, ...addlFieldCols]}
             SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: flds, sortField, ascending }))}
             Direction={'left'} 
             defaultCollumn={standardSearch} 
@@ -152,7 +153,7 @@ export namespace DefaultSearch {
         }, []);
 
         return <GenericSearchBar<SystemCenter.Types.DetailedAsset> 
-            CollumnList={[...addlFieldCols, ...defaultSearchcols]}
+            CollumnList={[...defaultSearchcols, ...addlFieldCols]}
             SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: flds, sortField, ascending }))} 
             Direction={'left'} 
             defaultCollumn={standardSearch} 
@@ -191,7 +192,7 @@ export namespace DefaultSearch {
         }, []);
         
         return <GenericSearchBar<OpenXDA.Types.AssetGroup> 
-            CollumnList={[...addlFieldCols, ...defaultSearchcols]}
+            CollumnList={[...defaultSearchcols, ...addlFieldCols]}
             SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: flds, sortField, ascending }))} 
             Direction={'left'} 
             defaultCollumn={standardSearch} 
