@@ -98,7 +98,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
   function addFilter() {
       const oldFilters = [...filters];
       const adjustedFilter = {...filter};
-      if (adjustedFilter.Type === 'string' && adjustedFilter.Operator === 'LIKE')
+      if (adjustedFilter.Type === 'string' && (adjustedFilter.Operator === 'LIKE' || adjustedFilter.Operator === 'NOT LIKE') )
         adjustedFilter.SearchText = '*' + adjustedFilter.SearchText + '*';
       oldFilters.push(adjustedFilter);
 
@@ -115,7 +115,7 @@ export default function SearchBar<T> (props: IProps<T>)  {
 	  const oldFilters = [...filters];
 	  const filt = {...oldFilters[index]};
       oldFilters.splice(index,1);
-	  if (filt.Type === 'string' && filt.Operator === 'LIKE')
+	  if (filt.Type === 'string' && (filt.Operator === 'LIKE' || filt.Operator === 'NOT LIKE'))
 		filt.SearchText = filt.SearchText.substr(1,filt.SearchText.length -2);
 	  setShow(true);
       setFilters(oldFilters);
@@ -310,9 +310,19 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
         );
     }
     else if (props.Field.type === "boolean") {
-        return <CheckBox Record={props.Filter} Field='SearchText' Setter={(filter: Search.IFilter<T>) => {
-            props.Setter((prevFilter) => ({ ...prevFilter, Operator: '=', SearchText: filter.SearchText.toString() === 'true' ? '1' : '0' }))
-        }} Label="Column type is boolean. Yes/On is checked." />
+        return <div className="form-check">
+        <input
+          type="checkbox"
+          className="form-check-input"
+          style={{ zIndex: 1 }}
+          onChange={(evt) => {
+            props.Setter((prevFilter) => ({ ...prevFilter, Operator: '=', SearchText: evt.target.checked ? "1" : "0"}));
+          }}
+          value={props.Filter.SearchText == "1" ? 'on' : 'off'}
+          checked={props.Filter.SearchText == "1" ? true : false}
+        />
+        <label className="form-check-label">Column type is boolean. Yes/On is checked.</label>
+      </div>
     }
     else {
 
