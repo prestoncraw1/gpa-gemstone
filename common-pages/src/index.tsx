@@ -29,7 +29,7 @@ import ByUser from './user/ByUser';
 import User from './user/User';
 import { DefaultSearch } from './SearchBar';
 import SelectPopup from './StandardSelectPopup';
-import DefaultSelects from './StandardSelectPopup';
+import {DefaultSelects} from './SelectionPopup';
 
 export {
   Setting,
