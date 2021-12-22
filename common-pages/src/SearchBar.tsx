@@ -101,9 +101,9 @@ export namespace DefaultSearch {
         const defaultSearchcols: Search.IField<SystemCenter.Types.DetailedLocation>[] = [
             { label: 'Name', key: 'Name', type: 'string', isPivotField: false },
             { label: 'Key', key: 'LocationKey', type: 'string', isPivotField: false },
-            { label: 'Asset', key: 'Asset', type: 'string', isPivotField: false },
+            { label: 'Transmission Asset', key: 'Asset', type: 'string', isPivotField: false },
             { label: 'Meter', key: 'Meter', type: 'string', isPivotField: false },
-            { label: 'Number of Assets', key: 'Assets', type: 'integer', isPivotField: false },
+            { label: 'Number of Transmission Assets', key: 'Assets', type: 'integer', isPivotField: false },
             { label: 'Number of Meters', key: 'Meters', type: 'integer', isPivotField: false },
             { label: 'Description', key: 'Description', type: 'string', isPivotField: false }
         ]; 
@@ -144,8 +144,10 @@ export namespace DefaultSearch {
             { label: 'Name', key: 'AssetName', type: 'string', isPivotField: false },
             { label: 'Voltage (kV)', key: 'VoltageKV', type: 'number', isPivotField: false },
             { label: 'Type', key: 'AssetType', type: 'enum', isPivotField: false },
-            { label: 'Meters', key: 'Meters', type: 'integer', isPivotField: false },
-            { label: 'Substations', key: 'Locations', type: 'integer', isPivotField: false },
+            { label: 'Meter', key: 'Meter', type: 'string', isPivotField: false },
+            { label: 'Substation', key: 'Location', type: 'string', isPivotField: false },
+            { label: 'Number of Meters', key: 'Meters', type: 'integer', isPivotField: false },
+            { label: 'Number of Substations', key: 'Locations', type: 'integer', isPivotField: false },
         ];
 
         React.useEffect(() => {
