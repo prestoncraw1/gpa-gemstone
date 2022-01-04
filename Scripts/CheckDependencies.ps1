@@ -70,7 +70,7 @@ foreach($line in Get-Content ".\$package\package.json") {
     }
     if ($inDep) {
       $item =$line.Split(":")
-      if ($DevDependencyHash.ContainsKey($item[0].Trim()) {
+      if ($DevDependencyHash.ContainsKey($item[0].Trim())) {
         if ($DevDependencyHash[$item[0].Trim()] -ne $item[1].Trim().Trim(",")) {
             $p = $item[0].Trim()
             echo "$p is a different version than that encountered in a previous package"

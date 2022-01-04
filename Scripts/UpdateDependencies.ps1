@@ -20,13 +20,13 @@
 #       Generated original version of source code.
 #
 #******************************************************************************************************
-#param(
-#   [string]$projectDir,
-#   [int]$publish
-#)
+param(
+   [string]$projectDir,
+   [int]$publish
+)
 
-$projectDir = "D:\\Projects\gpa-gemstone\"
-$publish=1
+#$projectDir = "D:\\Projects\gpa-gemstone\"
+#$publish=1
 
 if ([string]::IsNullOrWhiteSpace($projectDir)) {
     throw "projectDir parameter was not provided, script terminated."
@@ -60,16 +60,18 @@ function LoadPackage($package)
       $hasVersion=1
     }
 
-    $r="`"dependencies`": \{"
+    $r="`"dependencies`": {"
     if ( $line -match $r)
     {
       $inDep=1
-      $r="\}"
+      $r="}"
       if ( $line -match $r)
       {
           $inDep = 0
       }
-      continue
+	  else {
+		  continue
+	  }
     }
     $r="`"devDependencies`": \{"
     if ( $line -match $r)
@@ -83,7 +85,7 @@ function LoadPackage($package)
       continue
     }
 
-    $r="\}"
+    $r="}"
     if ( $line -match $r -and $inDev -eq 1)
     {
       $inDev = 0
@@ -93,11 +95,11 @@ function LoadPackage($package)
       $inDep = 0
     }
 
-    if ( $inDep -eq 1 -and $inDev -eq 1)
+    if ( $inDep -eq 1 -or $inDev -eq 1)
     {
       $item = $line.Split(":")
       $key = $item[0]
-      $key = $key.Trim("`"")
+      $key = $key.Trim()
       $vers = $item[1]
       $vers = $vers.Trim()
       $vers = $vers.Trim(",")
@@ -107,18 +109,24 @@ function LoadPackage($package)
       {
         if ($DependencyHash[$key] -ne $vers)
         {
-          $updateRequired+= $key
-          $nVers= GetNewerVersion($DependencyHash[$key],$vers)
-
+		
+          $updateRequired+=@("$key")
+          $nVers=GetNewerVersion $DependencyHash[$key] $vers
+		  echo "Version $nVers found for $key"
           $DependencyHash[$key] = $nVers
         }
-        else
-        {
-            $DependencyHash[$key] = $vers
-        }
-      }
+	  }
+	  else
+	  {
+	    $DependencyHash[$key] = $vers
+	  }
+     
+	  
     }
   }
+  
+  echo "Current Version: $($currentVersion[$package])"
+  echo "$($updateRequired.count) packages need to be updated"
 }
 
 #Update Package.json as neccesarry
@@ -173,18 +181,19 @@ function UpdatePackage($package)
     {
       $item = $line.Split(":")
       $key = $item[0]
-      $key = $key.Trim("`"")
+      $key = $key.Trim()
       $vers = $item[1]
       $vers = $vers.Trim()
       $vers = $vers.Trim(",")
       $vers = $vers.Trim("`"")
-
+	  
       #If Key is in To be updated we will need to update the version
-      if ( $updateRequired.Contains($key) -and $DependencyHash[$key] -ne $vers)
+      if ( $updateRequired.Contains($key) )
       {
         $newLine = $line -replace "$vers", "$($DependencyHash[$key])"
         (Get-Content "$projectDir\$package\package.json").replace($line, $newLine) | Set-Content "$projectDir\$package\package.json"
         $incrVersion = 1
+		echo "updating $key"
       }
       #if it's a GPA-gemstone package we check against the current version instead
       $r = "@gpa-gemstone/"
@@ -197,12 +206,12 @@ function UpdatePackage($package)
             $newLine = $line -replace "$vers", "$($currentVersion[$sKey])"
             (Get-Content "$projectDir\$package\package.json").replace($line, $newLine) | Set-Content "$projectDir\$package\package.json"          
             $incrVersion = 1
-            echo "Updating gemstone Package"
+            echo "Updating $sKey"
         }
       }
     }
   }
-
+  
   #If we need to republish increase version number and set required version for
   # next package in the chain
   if ( $incrVersion -eq 1 )
@@ -221,33 +230,36 @@ function UpdatePackage($package)
 
 function GetNewerVersion($version1, $version2)
 {
+
   $v1=$version1.Trim("^")
   $v2=$version2.Trim("^")
+
 
   $n1=$v1.Split(".")
   $n2=$v2.Split(".")
 
   #Fill up empty fields
-  if ($n1.length() -le $n2.length())
+  if ($n1.length -le $n2.length)
   {
-    for ($i=$n1.length(); $i -le $n2.length(); $i++)
+	
+    for ($i=$n1.length; $i -le $n2.length; $i++)
     {
-      $n1[$i] = 0
+      $n1 += 0
     }
   }
 
-  for ($i=0; $i -le $n1.length(); $i++)
+  for ($i=0; $i -le $n1.length; $i++)
   {
-    if ( ! $ne.ContainsKey($i) )
+    if ($n2.length -le $i )
     {
-      n2[i] = 0
+      n2 += 0
     }
-    if ($n1[$i] -gt $n2[$i])
+    if ([int]$n1[$i] -gt $n2[$i])
     {
       return $version1
       
     }
-    if ($n1[$i] -lt $n2[$i])
+    if ([int]$n1[$i] -lt $n2[$i])
     {
       return $version2
     } 
