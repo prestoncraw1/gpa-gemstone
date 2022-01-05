@@ -318,8 +318,8 @@ function FilterCreator<T>(props: IPropsFilterCreator<T> ) {
           onChange={(evt) => {
             props.Setter((prevFilter) => ({ ...prevFilter, Operator: '=', SearchText: evt.target.checked ? "1" : "0"}));
           }}
-          value={props.Filter.SearchText == "1" ? 'on' : 'off'}
-          checked={props.Filter.SearchText == "1" ? true : false}
+          value={props.Filter.SearchText === "1" ? 'on' : 'off'}
+          checked={props.Filter.SearchText === "1" ? true : false}
         />
         <label className="form-check-label">Column type is boolean. Yes/On is checked.</label>
       </div>

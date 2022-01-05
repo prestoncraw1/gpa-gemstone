@@ -49,7 +49,7 @@ export default function Input<T>(props: IProps<T>) {
 	  }, []);
 
 	function valueChange(evt: any) {
-    if (props.Type == 'number')
+    if (props.Type === 'number')
       props.Setter({ ...props.Record, [props.Field]: evt.target.value !== '' ? parseFloat(evt.target.value) : null })
     else
       props.Setter({ ...props.Record, [props.Field]: evt.target.value !== '' ? evt.target.value : null })
