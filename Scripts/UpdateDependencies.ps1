@@ -34,10 +34,10 @@ if ([string]::IsNullOrWhiteSpace($projectDir)) {
 
 $AllPackages = "application-typings", "gpa-symbols", "helper-functions", "react-forms", "react-graph", "react-interactive", "react-table", "common-pages"
 
-$DependencyHash = @{}
+$global:DependencyHash = @{}
 $updateRequired = @()
-$currentVersion = @{}
-$updated = @()
+$global:currentVersion = @{}
+$global:updated = @()
 
 function LoadPackage($package)
 {
@@ -56,7 +56,7 @@ function LoadPackage($package)
       $vers= $vers.Trim()
       $vers=$vers.Trim(",")
       $vers=$vers.Trim("`"")
-      $currentVersion[$package] = $vers
+      $global:currentVersion[$package] = $vers
       $hasVersion=1
     }
 
@@ -105,27 +105,27 @@ function LoadPackage($package)
       $vers = $vers.Trim(",")
       $vers = $vers.Trim("`"")
 
-      if ($DependencyHash.ContainsKey($key))
+      if ($global:DependencyHash.ContainsKey($key))
       {
-        if ($DependencyHash[$key] -ne $vers)
+        if ($global:DependencyHash[$key] -ne $vers)
         {
 		
           $updateRequired+=@("$key")
-          $nVers=GetNewerVersion $DependencyHash[$key] $vers
+          $nVers=GetNewerVersion $global:DependencyHash[$key] $vers
 		  echo "Version $nVers found for $key"
-          $DependencyHash[$key] = $nVers
+          $global:DependencyHash[$key] = $nVers
         }
 	  }
 	  else
 	  {
-	    $DependencyHash[$key] = $vers
+	    $global:DependencyHash[$key] = $vers
 	  }
      
 	  
     }
   }
   
-  echo "Current Version: $($currentVersion[$package])"
+  echo "Current Version: $($global:currentVersion[$package])"
   echo "$($updateRequired.count) packages need to be updated"
 }
 
@@ -190,7 +190,7 @@ function UpdatePackage($package)
       #If Key is in To be updated we will need to update the version
       if ( $updateRequired.Contains($key) )
       {
-        $newLine = $line -replace "$vers", "$($DependencyHash[$key])"
+        $newLine = $line -replace "$vers", "$($global:DependencyHash[$key])"
         (Get-Content "$projectDir\$package\package.json").replace($line, $newLine) | Set-Content "$projectDir\$package\package.json"
         $incrVersion = 1
 		echo "updating $key"
@@ -201,9 +201,9 @@ function UpdatePackage($package)
       {
         $item = $key.Split("/")
         $sKey = $item[1]
-        if ( $currentVersion[$sKey] -ne $vers )
+        if ( $global:currentVersion[$sKey] -ne $vers )
         {
-            $newLine = $line -replace "$vers", "$($currentVersion[$sKey])"
+            $newLine = $line -replace "$vers", "$($global:currentVersion[$sKey])"
             (Get-Content "$projectDir\$package\package.json").replace($line, $newLine) | Set-Content "$projectDir\$package\package.json"          
             $incrVersion = 1
             echo "Updating $sKey"
@@ -216,13 +216,17 @@ function UpdatePackage($package)
   # next package in the chain
   if ( $incrVersion -eq 1 )
   {
-    $oldVersion = $currentVersion[$package]
+    $oldVersion = $global:currentVersion[$package]
     $newversion = IncrementVersion($oldVersion)
     echo "Move $package to $newversion"
-    $currentVersion[$package] = $newversion
+    $global:currentVersion[$package] = $newversion
     $newLine = $versionLine -replace "$oldVersion", "$newversion"
     (Get-Content "$projectDir\$package\package.json").replace($versionLine, $newLine) | Set-Content "$projectDir\$package\package.json"  
-    $updated += $package 
+    echo $global:updated
+	$global:updated.GetType()
+	$global:updated+=@("$package")
+	$global:updated.GetType()
+	echo $global:updated
   }
 
   
@@ -288,7 +292,7 @@ foreach ($p in $AllPackages)
 
 if ( $publish -gt 0 )
 {
-    foreach ($p in $updated)
+    foreach ($p in $global:updated)
     {
       cd "$projectDir\$p"
       npm install
