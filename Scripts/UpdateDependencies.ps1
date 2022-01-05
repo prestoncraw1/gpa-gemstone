@@ -188,7 +188,7 @@ function UpdatePackage($package)
       $vers = $vers.Trim("`"")
 	  
       #If Key is in To be updated we will need to update the version
-      if ( $global:updateRequired.Contains($key) )
+      if ( $global:updateRequired.Contains($key) -and $vers.Trim("^") -ne $global:DependencyHash[$key].Trim("^") )
       {
         $newLine = $line -replace "$vers".Trim("^"), "$($global:DependencyHash[$key])".Trim("^")
         ((Get-Content "$projectDir\$package\package.json").replace($line, $newLine)) | Set-Content "$projectDir\$package\package.json"
@@ -288,6 +288,7 @@ foreach ($p in $AllPackages)
 }
 
 echo $global:updated
+
 if ( $publish -gt 0 )
 {
     foreach ($p in $global:updated)
