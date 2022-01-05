@@ -222,11 +222,6 @@ function UpdatePackage($package)
     $global:currentVersion[$package] = $newversion
     $newLine = $versionLine -replace "$oldVersion", "$newversion"
     (Get-Content "$projectDir\$package\package.json").replace($versionLine, $newLine) | Set-Content "$projectDir\$package\package.json"  
-    echo $global:updated
-	$global:updated.GetType()
-	$global:updated+=@("$package")
-	$global:updated.GetType()
-	echo $global:updated
   }
 
   
