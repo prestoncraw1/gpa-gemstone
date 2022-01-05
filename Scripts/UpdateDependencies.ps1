@@ -205,7 +205,7 @@ function UpdatePackage($package)
         if ( $global:currentVersion[$sKey] -ne $vers )
         {
             $newLine = $line -replace "$vers", "$($global:currentVersion[$sKey])"
-            (Get-Content "$projectDir\$package\package.json").replace($line, $newLine) | Set-Content "$projectDir\$package\package.json"          
+            ((Get-Content "$projectDir\$package\package.json").replace($line, $newLine)) | Set-Content "$projectDir\$package\package.json" 
             $incrVersion = 1
             echo "Updating $sKey from $vers to $($global:currentVersion[$sKey])"
         }
@@ -222,7 +222,7 @@ function UpdatePackage($package)
     echo "Move $package to $newversion"
     $global:currentVersion[$package] = $newversion
     $newLine = $versionLine -replace "$oldVersion", "$newversion"
-    (Get-Content "$projectDir\$package\package.json").replace($versionLine, $newLine) | Set-Content "$projectDir\$package\package.json"  
+    ((Get-Content "$projectDir\$package\package.json").replace($versionLine, $newLine)) | Set-Content "$projectDir\$package\package.json"  
 	$global:updated+=@("$package")
   }
 
@@ -253,7 +253,7 @@ function GetNewerVersion($version1, $version2)
   {
     if ($n2.length -le $i )
     {
-      n2 += 0
+      $n2 += 0
     }
     if ([int]$n1[$i] -gt $n2[$i])
     {
