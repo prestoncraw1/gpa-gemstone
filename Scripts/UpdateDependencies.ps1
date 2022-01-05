@@ -190,10 +190,10 @@ function UpdatePackage($package)
       #If Key is in To be updated we will need to update the version
       if ( $global:updateRequired.Contains($key) )
       {
-        $newLine = $line -replace "$vers", "$($global:DependencyHash[$key])"
-        (Get-Content "$projectDir\$package\package.json").replace($line, $newLine) | Set-Content "$projectDir\$package\package.json"
+        $newLine = $line -replace "$vers".Trim("^"), "$($global:DependencyHash[$key])".Trim("^")
+        ((Get-Content "$projectDir\$package\package.json").replace($line, $newLine)) | Set-Content "$projectDir\$package\package.json"
         $incrVersion = 1
-		echo "updating $key"
+		echo "updating $key from $vers to $($global:DependencyHash[$key])"
       }
       #if it's a GPA-gemstone package we check against the current version instead
       $r = "@gpa-gemstone/"
@@ -201,12 +201,13 @@ function UpdatePackage($package)
       {
         $item = $key.Split("/")
         $sKey = $item[1]
+		$sKey = $sKey.Trim("`"")
         if ( $global:currentVersion[$sKey] -ne $vers )
         {
             $newLine = $line -replace "$vers", "$($global:currentVersion[$sKey])"
             (Get-Content "$projectDir\$package\package.json").replace($line, $newLine) | Set-Content "$projectDir\$package\package.json"          
             $incrVersion = 1
-            echo "Updating $sKey"
+            echo "Updating $sKey from $vers to $($global:currentVersion[$sKey])"
         }
       }
     }
