@@ -36,15 +36,15 @@ interface IError {
 }
 
 export interface IState<T extends U> {
-  Status: Application.Types.Status,
-  SearchStatus: Application.Types.Status,
-  Error: ( IError | null ),
-  Data: T[],
-  SortField: keyof T,
-  Ascending: boolean,
-  ParentID: (number | null ),
-  SearchResults: T[],
-	Filter: Search.IFilter<T>[]
+    Status: Application.Types.Status,
+    SearchStatus: Application.Types.Status,
+    Error: ( IError | null ),
+    Data: T[],
+    SortField: keyof T,
+    Ascending: boolean,
+    ParentID: (number | null ),
+    SearchResults: T[],
+    Filter: Search.IFilter<T>[]
 }
 
 export default class GenericSlice<T extends U> {
@@ -54,7 +54,7 @@ export default class GenericSlice<T extends U> {
     Fetch: (AsyncThunk<any, void | number, {}>);
     DBAction: (AsyncThunk<any, { verb: 'POST' | 'DELETE' | 'PATCH', record: T }, {}> );
     DBSearch: (AsyncThunk<any, { filter: Search.IFilter<T>[], sortField?: keyof T, ascending?: boolean }, {}> );
-    Sort: ActionCreatorWithPayload<{ SortField: keyof T, Ascending: boolean}, string>;
+    Sort: (AsyncThunk<any, {SortField: keyof T, Ascending: boolean}, {}>);
     Reducer: any;
 
     /**
@@ -71,14 +71,16 @@ export default class GenericSlice<T extends U> {
         this.Name = name;
         this.APIPath = apiPath;
 
-        const fetch = createAsyncThunk(`${name}/Fetch${name}`, async (parentID:number | void, { signal }) => {
-        const handle = this.GetRecords(parentID);
+        const fetch = createAsyncThunk(`${name}/Fetch${name}`, async (parentID:number | void, { signal, getState }) => {
 
-        signal.addEventListener('abort', () => {
-            if (handle.abort !== undefined) handle.abort();
-        });
+            const state = (getState() as any)[name] as IState<T>;
+            const handle = this.GetRecords(state.Ascending, state.SortField, parentID);
 
-        return await handle;
+            signal.addEventListener('abort', () => {
+                if (handle.abort !== undefined) handle.abort();
+            });
+
+            return await handle;
         });
 
         const dBAction = createAsyncThunk(`${name}/DBAction${name}`, async (args: {verb: 'POST' | 'DELETE' | 'PATCH', record: T}, { signal }) => {
@@ -100,7 +102,7 @@ export default class GenericSlice<T extends U> {
             asc = asc === undefined ? (getState() as any)[this.Name].Ascending : asc;
 
             const handle = this.Search(args.filter, asc,sortfield, (getState() as any)[this.Name].ParentID);
-
+           
             signal.addEventListener('abort', () => {
                 if (handle.abort !== undefined) handle.abort();
             });
@@ -108,6 +110,28 @@ export default class GenericSlice<T extends U> {
             return await handle;
         });
 
+        const dBSort = createAsyncThunk(`${name}/DBSort${name}`, async (args: {SortField: keyof T, Ascending: boolean}, { signal, getState, dispatch }) => {
+            const state = (getState() as any)[name] as IState<T>;
+
+            let sortFld = state.SortField;
+            let asc = state.Ascending;
+
+            if (state.SortField === args.SortField)
+                asc = !args.Ascending;
+            else
+                sortFld = args.SortField;
+
+            dispatch(dBSearch({filter: state.Filter, sortField: sortFld, ascending: asc}));
+            const handle = this.GetRecords(asc,sortFld,(state.ParentID != null? state.ParentID : undefined));
+
+            signal.addEventListener('abort', () => {
+                if (handle.abort !== undefined) handle.abort();
+            });
+  
+            
+            return await handle
+          });
+          
         const slice = createSlice({
             name: this.Name,
             initialState: {
@@ -119,25 +143,15 @@ export default class GenericSlice<T extends U> {
                 Ascending: ascending,
                 ParentID: null,
                 SearchResults: [],
-								Filter: []
+				Filter: []
             } as IState<T>,
-            reducers: {
-                Sort: (state: any, action: PayloadAction<{SortField: keyof T, Ascending: boolean}>)  => {
-                    if (state.SortField === action.payload.SortField)
-                        state.Ascending = !action.payload.Ascending;
-                    else
-                        state.SortField = action.payload.SortField as Draft<keyof T>;
-
-                    state.Data = _.orderBy(state.Data, [state.SortField], [state.Ascending ? "asc" : "desc"])
-                    state.SearchResults = _.orderBy(state.SearchResults, [state.SortField], [state.Ascending ? "asc" : "desc"])
-                }
-            },
+            reducers: {},
             extraReducers: (builder: ActionReducerMapBuilder<IState<T>>) => {
 
                 builder.addCase(fetch.fulfilled, (state: WritableDraft<IState<T>>, action: PayloadAction<T[]>) => {
                     state.Status = 'idle';
                     state.Error = null;
-                    state.Data = _.orderBy(action.payload as Draft<T[]>, [state.SortField], [state.Ascending ? "asc" : "desc"]);
+                    state.Data = JSON.parse(action.payload.toString()) as Draft<T[]>;
                 });
                 builder.addCase(fetch.pending, (state: WritableDraft<IState<T>>, action: PayloadAction<undefined, string,  {arg: number | void},never>) => {
                     if (state.ParentID !== (action.meta.arg == null? null : action.meta.arg))
@@ -161,15 +175,15 @@ export default class GenericSlice<T extends U> {
                 builder.addCase(dBAction.rejected, (state: WritableDraft<IState<T>>, action: PayloadAction<unknown, string,  {arg: {verb: 'POST' | 'DELETE' | 'PATCH', record: T}},SerializedError>) => {
                     state.Status = 'error';
                     state.Error = {
-												Message: (action.error.message == null? '' : action.error.message),
-												Verb: action.meta.arg.verb,
-												Time: new Date().toString()
-											}
+                        Message: (action.error.message == null? '' : action.error.message),
+                        Verb: action.meta.arg.verb,
+                        Time: new Date().toString()
+                    }
 
                 });
                 builder.addCase(dBAction.fulfilled, (state: WritableDraft<IState<T>>) => {
                     state.Status = 'changed';
-										state.SearchStatus = 'changed';
+                    state.SearchStatus = 'changed';
                     state.Error = null;
                 });
 
@@ -178,19 +192,40 @@ export default class GenericSlice<T extends U> {
                 });
                 builder.addCase(dBSearch.rejected, (state: WritableDraft<IState<T>>, action: PayloadAction<unknown, string,  any,SerializedError> ) => {
                     state.SearchStatus = 'error';
-										state.Error = {
-											Message: (action.error.message == null? '' : action.error.message),
-											Verb: 'SEARCH',
-											Time: new Date().toString()
-										}
+                    state.Error = {
+                        Message: (action.error.message == null? '' : action.error.message),
+                        Verb: 'SEARCH',
+                        Time: new Date().toString()
+                    }
 
                 });
                 builder.addCase(dBSearch.fulfilled, (state: WritableDraft<IState<T>>, action: PayloadAction<string, string,  {arg: { filter:  Search.IFilter<T>[], sortfield?: keyof T, ascending?: boolean}},never>) => {
                     state.SearchStatus = 'idle';
                     state.SearchResults = JSON.parse(action.payload);
-										state.Filter = action.meta.arg.filter;
+                    state.Filter = action.meta.arg.filter;
                 });
+                builder.addCase(dBSort.pending, (state: WritableDraft<IState<T>>) => {
+                    state.Status = 'loading';
+                });
+                builder.addCase(dBSort.rejected, (state: WritableDraft<IState<T>>, action: PayloadAction<unknown, string,  any,SerializedError> ) => {
+                    state.Status = 'error';
+                    state.Error = {
+                        Message: (action.error.message == null? '' : action.error.message),
+                        Verb: 'FETCH',
+                        Time: new Date().toString()
+                    }
 
+                });
+                builder.addCase(dBSort.fulfilled, (state: WritableDraft<IState<T>>, action: PayloadAction<T[],string,{arg: {SortField: keyof T, Ascending: boolean}}>) => {
+                    state.Status = 'idle';
+                    state.Error = null;
+                    state.Data = JSON.parse(action.payload.toString()) as Draft<T[]>;
+
+                    if (state.SortField === action.meta.arg.SortField)
+                        state.Ascending = !state.Ascending;
+                    else
+                        state.SortField = action.meta.arg.SortField as Draft<keyof T>;
+                });
             }
 
         });
@@ -200,17 +235,16 @@ export default class GenericSlice<T extends U> {
         this.DBAction = dBAction;
         this.Slice = slice;
         this.DBSearch = dBSearch;
-        const { Sort } = slice.actions
-        this.Sort = Sort;
+        this.Sort = dBSort;
         this.Reducer = slice.reducer;
     }
 
 
 
-    private GetRecords(parentID: number | void): JQuery.jqXHR<T[]> {
+    private GetRecords(ascending: (boolean | undefined), sortField: keyof T, parentID: number | void,): JQuery.jqXHR<T[]> {
         return $.ajax({
             type: "GET",
-            url: `${this.APIPath}${(parentID != null ? '/' + parentID : '')}`,
+            url: `${this.APIPath}${(parentID != null ? '/' + parentID : '')}/${sortField}/${ascending? '1' : '0'}`,
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
             cache: true,
@@ -249,7 +283,7 @@ export default class GenericSlice<T extends U> {
 
 
     public Data = (state: any) => state[this.Name].Data as T[];
-		public Error = (state: any) => state[this.Name].Error as IError;
+	public Error = (state: any) => state[this.Name].Error as IError;
     public Datum = (state: any, id: number|string) => (state[this.Name] as IState<T>).Data.find((d: T) => d.ID === id) as T;
     public Status = (state: any) => state[this.Name].Status as Application.Types.Status;
     public SortField = (state: any) => state[this.Name].SortField as keyof T;
