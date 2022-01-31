@@ -37,7 +37,9 @@ interface IError {
 
 export interface IState<T extends U> {
     Status: Application.Types.Status,
+    LastFetchID: string,
     SearchStatus: Application.Types.Status,
+    LastSearchID: string
     Error: ( IError | null ),
     Data: T[],
     SortField: keyof T,
@@ -57,6 +59,9 @@ export default class GenericSlice<T extends U> {
     Sort: (AsyncThunk<any, {SortField: keyof T, Ascending: boolean}, {}>);
     Reducer: any;
 
+    private fetchHandle: JQuery.jqXHR<any>|null;
+    private searchHandle: JQuery.jqXHR<any>|null;
+
     /**
      * Creates a new GenericSlice of type T, which can be used to perform basic CRUD operations against
      * a specified web api.
@@ -71,11 +76,18 @@ export default class GenericSlice<T extends U> {
         this.Name = name;
         this.APIPath = apiPath;
 
+        this.fetchHandle = null;
+        this.searchHandle = null;
+
         const fetch = createAsyncThunk(`${name}/Fetch${name}`, async (parentID:number | void, { signal, getState }) => {
 
             const state = (getState() as any)[name] as IState<T>;
-            const handle = this.GetRecords(state.Ascending, state.SortField, parentID);
+            if (this.fetchHandle != null && this.fetchHandle.abort != null)
+                this.fetchHandle.abort('Prev');
 
+            const handle = this.GetRecords(state.Ascending, state.SortField, parentID);
+            this.fetchHandle = handle;
+            
             signal.addEventListener('abort', () => {
                 if (handle.abort !== undefined) handle.abort();
             });
@@ -101,8 +113,12 @@ export default class GenericSlice<T extends U> {
             sortfield = sortfield === undefined ? ((getState() as any)[this.Name] as IState<T>).SortField : sortfield;
             asc = asc === undefined ? (getState() as any)[this.Name].Ascending : asc;
 
+            if (this.searchHandle != null && this.searchHandle.abort != null)
+                this.searchHandle.abort('Prev');
+
             const handle = this.Search(args.filter, asc,sortfield, (getState() as any)[this.Name].ParentID);
-           
+            this.searchHandle = handle;
+
             signal.addEventListener('abort', () => {
                 if (handle.abort !== undefined) handle.abort();
             });
@@ -122,8 +138,13 @@ export default class GenericSlice<T extends U> {
                 sortFld = args.SortField;
 
             dispatch(dBSearch({filter: state.Filter, sortField: sortFld, ascending: asc}));
-            const handle = this.GetRecords(asc,sortFld,(state.ParentID != null? state.ParentID : undefined));
 
+            if (this.fetchHandle != null && this.fetchHandle.abort != null)
+                this.fetchHandle.abort('Prev');
+
+            const handle = this.GetRecords(asc,sortFld,(state.ParentID != null? state.ParentID : undefined));
+            this.fetchHandle = handle;
+            
             signal.addEventListener('abort', () => {
                 if (handle.abort !== undefined) handle.abort();
             });
@@ -143,7 +164,9 @@ export default class GenericSlice<T extends U> {
                 Ascending: ascending,
                 ParentID: null,
                 SearchResults: [],
-				Filter: []
+				Filter: [],
+                LastFetchID: '',
+                LastSearchID: ''
             } as IState<T>,
             reducers: {},
             extraReducers: (builder: ActionReducerMapBuilder<IState<T>>) => {
