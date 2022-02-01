@@ -37,9 +37,9 @@ interface IError {
 
 export interface IState<T extends U> {
     Status: Application.Types.Status,
-    LastFetchID: string,
+    ActiveFetchID: string[],
     SearchStatus: Application.Types.Status,
-    LastSearchID: string
+    ActiveSearchID: string[],
     Error: ( IError | null ),
     Data: T[],
     SortField: keyof T,
@@ -165,26 +165,30 @@ export default class GenericSlice<T extends U> {
                 ParentID: null,
                 SearchResults: [],
 				Filter: [],
-                LastFetchID: '',
-                LastSearchID: ''
+                ActiveFetchID: [],
+                ActiveSearchID: []
             } as IState<T>,
             reducers: {},
             extraReducers: (builder: ActionReducerMapBuilder<IState<T>>) => {
-
-                builder.addCase(fetch.fulfilled, (state: WritableDraft<IState<T>>, action: PayloadAction<T[]>) => {
+                builder.addCase(fetch.fulfilled, (state: WritableDraft<IState<T>>, action: PayloadAction<T[], string, {requestId: string}, never>) => {
+                    state.ActiveFetchID = state.ActiveFetchID.filter(id => id !== action.meta.requestId);
                     state.Status = 'idle';
                     state.Error = null;
                     state.Data = JSON.parse(action.payload.toString()) as Draft<T[]>;
                 });
-                builder.addCase(fetch.pending, (state: WritableDraft<IState<T>>, action: PayloadAction<undefined, string,  {arg: number | void},never>) => {
+                builder.addCase(fetch.pending, (state: WritableDraft<IState<T>>, action: PayloadAction<undefined, string,  {arg: number | void, requestId: string},never>) => {
                     if (state.ParentID !== (action.meta.arg == null? null : action.meta.arg))
                         state.SearchStatus = 'changed';
                     state.ParentID = (action.meta.arg == null? null : action.meta.arg);
                     state.Status = 'loading';
+                    state.ActiveFetchID.push(action.meta.requestId);
                 });
-
-                builder.addCase(fetch.rejected, (state: WritableDraft<IState<T>>, action: PayloadAction<unknown, string,  {arg: number | void},SerializedError>) => {
+                builder.addCase(fetch.rejected, (state: WritableDraft<IState<T>>, action: PayloadAction<unknown, string,  {arg: number | void, requestId: string},SerializedError>) => {
+                    state.ActiveFetchID = state.ActiveFetchID.filter(id => id !== action.meta.requestId);
+                    if (state.ActiveFetchID.length > 0)
+                        return;
                     state.Status = 'error';
+
                     state.Error = {
 						Message: (action.error.message == null? '' : action.error.message),
 						Verb: 'FETCH',
@@ -210,10 +214,14 @@ export default class GenericSlice<T extends U> {
                     state.Error = null;
                 });
 
-                builder.addCase(dBSearch.pending, (state: WritableDraft<IState<T>>) => {
+                builder.addCase(dBSearch.pending, (state: WritableDraft<IState<T>>, action: PayloadAction<undefined, string,  {requestId: string},never>) => {
                     state.SearchStatus = 'loading';
+                    state.ActiveSearchID.push(action.meta.requestId);
                 });
-                builder.addCase(dBSearch.rejected, (state: WritableDraft<IState<T>>, action: PayloadAction<unknown, string,  any,SerializedError> ) => {
+                builder.addCase(dBSearch.rejected, (state: WritableDraft<IState<T>>, action: PayloadAction<unknown, string,   {requestId: string} ,SerializedError> ) => {
+                    state.ActiveSearchID = state.ActiveSearchID.filter(id => id !== action.meta.requestId);
+                    if (state.ActiveSearchID.length > 0)
+                        return;
                     state.SearchStatus = 'error';
                     state.Error = {
                         Message: (action.error.message == null? '' : action.error.message),
@@ -222,15 +230,20 @@ export default class GenericSlice<T extends U> {
                     }
 
                 });
-                builder.addCase(dBSearch.fulfilled, (state: WritableDraft<IState<T>>, action: PayloadAction<string, string,  {arg: { filter:  Search.IFilter<T>[], sortfield?: keyof T, ascending?: boolean}},never>) => {
+                builder.addCase(dBSearch.fulfilled, (state: WritableDraft<IState<T>>, action: PayloadAction<string, string,  {arg: { filter:  Search.IFilter<T>[], sortfield?: keyof T, ascending?: boolean}, requestId: string},never>) => {
+                    state.ActiveSearchID = state.ActiveSearchID.filter(id => id !== action.meta.requestId);
                     state.SearchStatus = 'idle';
                     state.SearchResults = JSON.parse(action.payload);
                     state.Filter = action.meta.arg.filter;
                 });
-                builder.addCase(dBSort.pending, (state: WritableDraft<IState<T>>) => {
+                builder.addCase(dBSort.pending, (state: WritableDraft<IState<T>>, action: PayloadAction<undefined, string,  {requestId: string},never>) => {
                     state.Status = 'loading';
+                    state.ActiveFetchID.push(action.meta.requestId);
                 });
-                builder.addCase(dBSort.rejected, (state: WritableDraft<IState<T>>, action: PayloadAction<unknown, string,  any,SerializedError> ) => {
+                builder.addCase(dBSort.rejected, (state: WritableDraft<IState<T>>, action: PayloadAction<unknown, string,  {requestId: string},SerializedError> ) => {
+                    state.ActiveFetchID = state.ActiveFetchID.filter(id => id !== action.meta.requestId);
+                    if (state.ActiveFetchID.length > 0)
+                        return;
                     state.Status = 'error';
                     state.Error = {
                         Message: (action.error.message == null? '' : action.error.message),
@@ -239,7 +252,8 @@ export default class GenericSlice<T extends U> {
                     }
 
                 });
-                builder.addCase(dBSort.fulfilled, (state: WritableDraft<IState<T>>, action: PayloadAction<T[],string,{arg: {SortField: keyof T, Ascending: boolean}}>) => {
+                builder.addCase(dBSort.fulfilled, (state: WritableDraft<IState<T>>, action: PayloadAction<T[],string,{arg: {SortField: keyof T, Ascending: boolean}, requestId: string}>) => {
+                    state.ActiveFetchID = state.ActiveFetchID.filter(id => id !== action.meta.requestId);
                     state.Status = 'idle';
                     state.Error = null;
                     state.Data = JSON.parse(action.payload.toString()) as Draft<T[]>;
