@@ -29,6 +29,7 @@ export default function EnumCheckBoxes<T>(props: {
   Setter: (record: T) => void;
   Enum: string[];
   Label?: string;
+  IsDisabled?: (item: string) => boolean
 }) {
   /* tslint:disable-next-line:no-bitwise */
   const EquateFlag = (index: number) => (((props.Record[props.Field] as any) / Math.pow(2, index)) & 1) !== 0;
@@ -57,6 +58,7 @@ export default function EnumCheckBoxes<T>(props: {
             className="form-check-input"
             type="checkbox"
             checked={EquateFlag(i)}
+            disabled={props.IsDisabled !== undefined? props.IsDisabled(flag) : false}
             onChange={(evt) =>
               props.Setter({ ...props.Record, [props.Field]: evt.target.checked ? IncrementFlag(i) : DecrementFlag(i) })
             }
