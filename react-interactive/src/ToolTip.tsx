@@ -166,7 +166,7 @@ const ToolTip: React.FunctionComponent<IProps> = (props) => {
       result[0] = targetLocation.top + 0.5*targetLocation.height - 0.5*tipLocation.height
       result[1] = targetLocation.left + targetLocation.width + offset;
     }
-    else if (props.Position === 'top' || props.Postion === undefined) {
+    else if (props.Position === 'top' || props.Position === undefined) {
       result[0] = targetLocation.top - tipLocation.height - offset;
       result[1] = targetLocation.left + 0.5* targetLocation.width - 0.5* tipLocation.width;
     }
