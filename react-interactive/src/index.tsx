@@ -33,6 +33,10 @@ import ServerErrorIcon from './ServerErrorIcon';
 import GenericSlice from './GenericSlice';
 import ConfigurableTable from './ConfigurableTable';
 import { IState as IGenericSliceState } from './GenericSlice';
+import Application from './Menue/Application';
+import Page from './Menue/Page';
+import Section from './Menue/Section';
+import { SVGIcons } from './Menue/Icons';
 
 export {
   Modal,
@@ -47,4 +51,8 @@ export {
   GenericSlice,
   IGenericSliceState,
   ConfigurableTable,
+  Application,
+  Page,
+  Section,
+  SVGIcons
 };
