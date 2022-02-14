@@ -1,4 +1,4 @@
-﻿//******************************************************************************************************
+﻿// ******************************************************************************************************
 //  Page.tsx - Gbtc
 //
 //  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
@@ -19,7 +19,7 @@
 //  10/05/2020 - Billy Ernest
 //       Generated original version of source code.
 //
-//******************************************************************************************************
+// ******************************************************************************************************
 
 import { Application } from '@gpa-gemstone/application-typings';
 import ToolTip from '../ToolTip';
@@ -45,7 +45,7 @@ const Page: React.FunctionComponent<IProps> = (props) => {
     const [hover, setHover] = React.useState<boolean>(false);
     const context = React.useContext(Context)
 
-    if (props.RequiredRoles !== undefined && props.RequiredRoles.filter(r => context.userRoles.findIndex(i => i == r) > -1).length == 0)
+    if (props.RequiredRoles !== undefined && props.RequiredRoles.filter(r => context.userRoles.findIndex(i => i === r) > -1).length === 0)
         return null;
     if (props.Label !== undefined || props.Icon !== undefined)
         return (
@@ -54,7 +54,7 @@ const Page: React.FunctionComponent<IProps> = (props) => {
                     <NavLink data-tooltip={props.Name} className="nav-link" to={`${context.homePath}${props.Name}`}
                         style={(a) => ({ color: a.isActive ? '#007bff' : '#78828d' })}
                         onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-                        {props.Icon != undefined ? props.Icon : null}
+                        {props.Icon !== undefined ? props.Icon : null}
                         {!context.collapsed ? < span > {props.Label}</span> : null}
                     </NavLink>
                 </li>

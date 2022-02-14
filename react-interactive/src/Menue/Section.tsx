@@ -1,4 +1,4 @@
-﻿//******************************************************************************************************
+﻿// ******************************************************************************************************
 //  Header.tsx - Gbtc
 //
 //  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
@@ -19,7 +19,7 @@
 //  02/13/2022 - C. Lackner
 //       Generated original version of source code.
 //
-//******************************************************************************************************
+// ******************************************************************************************************
 
 import * as React from 'react';
 import { Context } from './Context';
@@ -34,7 +34,7 @@ const Section: React.FunctionComponent<IProps> = (props) => {
     return (
         <>
             <hr />
-            {props.Label != undefined && !context.collapsed ?
+            {props.Label !== undefined && !context.collapsed ?
                 <>
                     <h6 className={"sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"}>
                     <span>{props.Label}</span>

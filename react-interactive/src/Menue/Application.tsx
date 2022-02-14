@@ -1,4 +1,4 @@
-﻿//******************************************************************************************************
+﻿// ******************************************************************************************************
 //  Application.tsx - Gbtc
 //
 //  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
@@ -19,7 +19,7 @@
 //  02/13/2022 - C. Lackner
 //       Generated original version of source code.
 //
-//******************************************************************************************************
+// ******************************************************************************************************
 
 import { Context, IContext } from "./Context";
 import * as React from 'react';
@@ -87,12 +87,12 @@ const Applications: React.FunctionComponent<IProps> = (props) => {
         return {
             homePath: props.HomePath,
             userRoles: (props.UserRoles ?? ['Viewer']),
-            collapsed: collapsed
+            collapsed
         } as IContext
     }
 
     function CreateRoute(element: React.ReactElement) {
-        if (element.props.RequiredRoles !== undefined && element.props.RequiredRoles.filter((r: Application.Types.SecurityRoleName) => GetContext().userRoles.findIndex(i => i == r) > -1).length == 0)
+        if (element.props.RequiredRoles !== undefined && element.props.RequiredRoles.filter((r: Application.Types.SecurityRoleName) => GetContext().userRoles.findIndex(i => i === r) > -1).length === 0)
             return <Route path={`${props.HomePath}${element.props.Name}`} element={<ServerErrorIcon Show={true} Label={'You are not authorized to view this page'} />} />;
         return <Route path={`${props.HomePath}${element.props.Name}`} element={element.props.children} />
     }
@@ -122,7 +122,7 @@ const Applications: React.FunctionComponent<IProps> = (props) => {
                             {React.Children.map(props.children, (e) => {
                                 if (!React.isValidElement(e))
                                     return null;
-                                if ((e as React.ReactElement<any>).type == Page)
+                                if ((e as React.ReactElement<any>).type === Page)
                                     return e;
                                 return null
                             })}
@@ -130,7 +130,7 @@ const Applications: React.FunctionComponent<IProps> = (props) => {
                         {React.Children.map(props.children, (e) => {
                             if (!React.isValidElement(e))
                                 return null;
-                            if ((e as React.ReactElement<any>).type == Section)
+                            if ((e as React.ReactElement<any>).type === Section)
                                 return e;
                             return null
                         })}
@@ -150,13 +150,13 @@ const Applications: React.FunctionComponent<IProps> = (props) => {
                                 {React.Children.map(props.children, (element) => {
                                     if (!React.isValidElement(element))
                                         return null;
-                                    if ((element as React.ReactElement<any>).type == Page && React.Children.count(element.props.children) > 0)
+                                    if ((element as React.ReactElement<any>).type === Page && React.Children.count(element.props.children) > 0)
                                         return CreateRoute(element)
-                                    if ((element as React.ReactElement<any>).type == Section)
+                                    if ((element as React.ReactElement<any>).type === Section)
                                         return React.Children.map(element.props.children, (e) => {
                                             if (!React.isValidElement(e))
                                                 return null;
-                                            if ((e as React.ReactElement<any>).type == Page && React.Children.count((e.props as any).children) > 0)
+                                            if ((e as React.ReactElement<any>).type === Page && React.Children.count((e.props as any).children) > 0)
                                                 return CreateRoute(e)
                                             return null;
                                         })
