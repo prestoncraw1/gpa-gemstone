@@ -108,8 +108,8 @@ const Applications: React.FunctionComponent<IProps> = (props) => {
                             {SVGIcons.ArrowBackward}
                         </a> : null}
                     {props.Logo !== undefined ?
-                        < a className="navbar-brand col-sm-3 col-md-2 mr-0" href={props.HomePath} ><img style={{ width: '100%', margin: -5 }} src={props.Logo} /></a> : null}
-                    <ul className="navbar-nav px-3">
+                        < a className="navbar-brand col-sm-3 col-md-2 mr-0 mr-auto" href={props.HomePath} ><img style={{ maxHeight: 35, margin: -5 }} src={props.Logo} /></a> : null}
+                    <ul className="navbar-nav px-3 ml-auto">
                         <li className="nav-item text-nowrap">
                             {props.OnSignOut !== undefined ? <a className="nav-link" onClick={props.OnSignOut} >Sign out</a> : null}
                         </li>
