@@ -23,7 +23,6 @@
 
 import { Context, IContext } from "./Context";
 import * as React from 'react';
-import './Style.css'
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import Page from "./Page";
 import Section from './Section';
