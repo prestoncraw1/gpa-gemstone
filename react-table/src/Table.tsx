@@ -21,110 +21,111 @@
 //
 //  ******************************************************************************************************
 
+import { SVGIcons } from '@gpa-gemstone/gpa-symbols';
 import * as React from 'react';
 
 export interface Column<T> {
-  key: string;
-  label: string;
-  field?: keyof T;
-  headerStyle?: React.CSSProperties;
-  rowStyle?: React.CSSProperties;
-  content?(item: T, key: string, field: keyof T|undefined, style: React.CSSProperties, index: number): React.ReactNode;
+    key: string;
+    label: string|React.ReactNode;
+    field?: keyof T;
+    headerStyle?: React.CSSProperties;
+    rowStyle?: React.CSSProperties;
+    content?(item: T, key: string, field: keyof T | undefined, style: React.CSSProperties, index: number): React.ReactNode;
 }
 
 
 export interface TableProps<T> {
-  /**
-   * List of Collumns in this Table
-   */
-  cols: Column<T>[];
-  /**
-   * List of T objects used to generate rows
-   */
-  data: T[];
-  onClick: (data: { colKey: string; colField?: keyof T; row: T; data: T[keyof T]|null, index: number }, event: any) => void;
-  /**
-   * Key of the collumn to sort by
-   */
-  sortKey: string;
-  /**
-   * Boolen to indicate whether the sort is ascending or descending
-   */
-  ascending: boolean;
-  onSort(data: { colKey: string; colField?: keyof T; ascending: boolean }): void;
-  tableClass?: string;
-  tableStyle?: React.CSSProperties;
-  theadStyle?: React.CSSProperties;
-  theadClass?: string;
-  tbodyStyle?: React.CSSProperties;
-  tbodyClass?: string;
-  selected?(data: T): boolean;
-  rowStyle?: React.CSSProperties;
-  keySelector?: (data: T) => string;
+    /**
+     * List of Collumns in this Table
+     */
+    cols: Column<T>[];
+    /**
+     * List of T objects used to generate rows
+     */
+    data: T[];
+    onClick?: (data: { colKey: string; colField?: keyof T; row: T; data: T[keyof T] | null, index: number }, event: any) => void;
+    /**
+     * Key of the collumn to sort by
+     */
+    sortKey: string;
+    /**
+     * Boolen to indicate whether the sort is ascending or descending
+     */
+    ascending: boolean;
+    onSort(data: { colKey: string; colField?: keyof T; ascending: boolean }): void;
+    tableClass?: string;
+    tableStyle?: React.CSSProperties;
+    theadStyle?: React.CSSProperties;
+    theadClass?: string;
+    tbodyStyle?: React.CSSProperties;
+    tbodyClass?: string;
+    selected?(data: T): boolean;
+    rowStyle?: React.CSSProperties;
+    keySelector?: (data: T) => string;
 }
 
-export default function Table<T> (props: TableProps<T>) {
+export default function Table<T>(props: TableProps<T>) {
 
-  return (
-    <table className={props.tableClass !== undefined ? props.tableClass : ''} style={props.tableStyle}>
-      <Header<T> Class={props.theadClass} Style={props.theadStyle} Cols={props.cols} SortKey={props.sortKey} Ascending={props.ascending} Click={(d,e) => handleSort(d,e)} />
-      <Rows<T> Data={props.data} Cols={props.cols} RowStyle={props.rowStyle} BodyStyle={props.tbodyStyle} BodyClass={props.tbodyClass} Click={(data,e) => props.onClick(data, e)} Selected={props.selected} KeySelector={props.keySelector} />
-    </table>
-  );
+    return (
+        <table className={props.tableClass !== undefined ? props.tableClass : ''} style={props.tableStyle}>
+            <Header<T> Class={props.theadClass} Style={props.theadStyle} Cols={props.cols} SortKey={props.sortKey} Ascending={props.ascending} Click={(d, e) => handleSort(d, e)} />
+            <Rows<T> Data={props.data} Cols={props.cols} RowStyle={props.rowStyle} BodyStyle={props.tbodyStyle} BodyClass={props.tbodyClass} Click={(data, e) => (props.onClick === undefined? null : props.onClick(data, e))} Selected={props.selected} KeySelector={props.keySelector} />
+        </table>
+    );
 
-  function handleSort(
-    data: { colKey: string; colField?: keyof T; ascending: boolean },
-    event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>,
-  ) {
-    if (data.colKey !== null)
-      props.onSort(data);
-  }
+    function handleSort(
+        data: { colKey: string; colField?: keyof T; ascending: boolean },
+        event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>,
+    ) {
+        if (data.colKey !== null)
+            props.onSort(data);
+    }
 }
 
 interface IRowProps<T> {
-  Data: T[],
-  Cols: Column<T>[],
-  RowStyle?: React.CSSProperties,
-  BodyStyle?: React.CSSProperties,
-  BodyClass?: string,
-  Click :( data: { colKey: string, colField?: keyof T, row: T, data: T[keyof T] | null, index: number },e : React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => void,
-  Selected?: ((data: T) => boolean);
-  KeySelector?: (data: T) => string;
+    Data: T[],
+    Cols: Column<T>[],
+    RowStyle?: React.CSSProperties,
+    BodyStyle?: React.CSSProperties,
+    BodyClass?: string,
+    Click: (data: { colKey: string, colField?: keyof T, row: T, data: T[keyof T] | null, index: number }, e: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => void,
+    Selected?: ((data: T) => boolean);
+    KeySelector?: (data: T) => string;
 }
 export function Rows<T>(props: IRowProps<T>) {
 
-  if (props.Data.length === 0) return null;
+    if (props.Data.length === 0) return null;
 
-  const rows = props.Data.map((item, rowIndex) => {
-    const cells = props.Cols.map((colData) => {
-      return <Cell<T> key={colData.key} Style={colData.rowStyle} DataKey={colData.key} DataField={colData.field} Object={item} RowIndex={rowIndex} Content={colData.content} Click={(data,e) => props.Click(data,e)} />
+    const rows = props.Data.map((item, rowIndex) => {
+        const cells = props.Cols.map((colData) => {
+            return <Cell<T> key={colData.key} Style={colData.rowStyle} DataKey={colData.key} DataField={colData.field} Object={item} RowIndex={rowIndex} Content={colData.content} Click={(data, e) => props.Click(data, e)} />
+        });
+
+        const style: React.CSSProperties = (props.RowStyle !== undefined) ? { ...props.RowStyle } : {};
+
+        if (style.cursor === undefined)
+            style.cursor = 'pointer';
+
+        if (props.Selected !== undefined && props.Selected(item))
+            style.backgroundColor = 'yellow';
+
+        function ToKey(index: number, data: T): string {
+            if (props.KeySelector === undefined)
+                return index.toString();
+            return props.KeySelector(data);
+
+        }
+
+        return (
+            <tr style={style} key={ToKey(rowIndex, item)}>
+                {cells}
+            </tr>
+        );
     });
 
-    const style: React.CSSProperties = (props.RowStyle !== undefined) ? { ...props.RowStyle } : {};
-
-    if (style.cursor === undefined)
-      style.cursor = 'pointer';
-
-    if (props.Selected !== undefined && props.Selected(item))
-      style.backgroundColor = 'yellow';
-
-    function ToKey(index: number, data: T): string {
-      if (props.KeySelector === undefined)
-        return index.toString();
-      return props.KeySelector(data);
-
-    }
-
     return (
-      <tr style={style} key={ToKey(rowIndex,item)}>
-        {cells}
-      </tr>
+        <tbody style={props.BodyStyle} className={props.BodyClass}>{rows}</tbody>
     );
-  });
-
-  return (
-    <tbody style={props.BodyStyle} className={props.BodyClass}>{rows}</tbody>
-  );
 }
 
 interface ICellProps<T> {
@@ -133,91 +134,88 @@ interface ICellProps<T> {
     DataField?: keyof T,
     Object: T,
     RowIndex: number,
-    Content?: ((item: T, key: string, field: keyof T|undefined, style: React.CSSProperties, index: number) => React.ReactNode),
-    Click :( data: { colKey: string, colField?: keyof T, row: T, data: T[keyof T] | null, index: number },e: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => void
+    Content?: ((item: T, key: string, field: keyof T | undefined, style: React.CSSProperties, index: number) => React.ReactNode),
+    Click: (data: { colKey: string, colField?: keyof T, row: T, data: T[keyof T] | null, index: number }, e: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => void
 }
 
 function Cell<T>(props: ICellProps<T>) {
-  const css: React.CSSProperties = (props.Style !== undefined) ? { ...props.Style } : {};
+    const css: React.CSSProperties = (props.Style !== undefined) ? { ...props.Style } : {};
 
-  const getFieldValue = () => props.DataField !== undefined ? props.Object[props.DataField] : null;
+    const getFieldValue = () => props.DataField !== undefined ? props.Object[props.DataField] : null;
 
-  const getFieldContent = () => props.Content !== undefined ? props.Content(props.Object, props.DataKey, props.DataField, css, props.RowIndex) : getFieldValue();
+    const getFieldContent = () => props.Content !== undefined ? props.Content(props.Object, props.DataKey, props.DataField, css, props.RowIndex) : getFieldValue();
 
-  return (
-    <td
-      style={css}
-      onClick={(e) => props.Click({colKey: props.DataKey, colField: props.DataField, row: props.Object, data: getFieldValue(), index: props.RowIndex }, e)}
-    >
-      {getFieldContent()}
-    </td>
-  );
+    return (
+        <td
+            style={css}
+            onClick={(e) => props.Click({ colKey: props.DataKey, colField: props.DataField, row: props.Object, data: getFieldValue(), index: props.RowIndex }, e)}
+        >
+            {getFieldContent()}
+        </td>
+    );
 }
 
 interface IHeaderProps<T> {
-  Class?: string,
-  Style?: React.CSSProperties,
-  Cols: Column<T>[],
-  SortKey: string,
-  Ascending: boolean,
-  Click: (data: { colKey: string; colField?: keyof T; ascending: boolean }, event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => void
+    Class?: string,
+    Style?: React.CSSProperties,
+    Cols: Column<T>[],
+    SortKey: string,
+    Ascending: boolean,
+    Click: (data: { colKey: string; colField?: keyof T; ascending: boolean }, event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => void
 
 }
 export function Header<T>(props: IHeaderProps<T>) {
 
-  return (<thead className={props.Class} style={props.Style}><tr>{props.Cols.map((col) => <HeaderCell key={col.key} HeaderStyle={col.headerStyle} DataKey={col.key} Click={(e) => props.Click({colKey: col.key, colField: col.field, ascending: props.Ascending},e)} Label={col.label} SortKey={props.SortKey} Ascending={props.Ascending} />)}</tr></thead>)
+    return (<thead className={props.Class} style={props.Style}><tr>{props.Cols.map((col) => <HeaderCell key={col.key} HeaderStyle={col.headerStyle} DataKey={col.key} Click={(e) => props.Click({ colKey: col.key, colField: col.field, ascending: props.Ascending }, e)} Label={col.label} SortKey={props.SortKey} Ascending={props.Ascending} />)}</tr></thead>)
 
 }
 
 interface IHeaderCellProps {
-  HeaderStyle?: React.CSSProperties,
-  DataKey: string,
-  Click: (e: any) => void,
-  Label: string,
-  SortKey: string,
-  Ascending: boolean
+    HeaderStyle?: React.CSSProperties,
+    DataKey: string,
+    Click: (e: any) => void,
+    Label: string|React.ReactNode,
+    SortKey: string,
+    Ascending: boolean
 }
-function HeaderCell (props: IHeaderCellProps) {
-  const style: React.CSSProperties = (props.HeaderStyle !== undefined) ? props.HeaderStyle : {};
+function HeaderCell(props: IHeaderCellProps) {
+    const style: React.CSSProperties = (props.HeaderStyle !== undefined) ? props.HeaderStyle : {};
 
-  if (style.cursor === undefined && props.DataKey !== null) {
-    style.cursor = 'pointer';
-  }
+    if (style.cursor === undefined && props.DataKey !== null) {
+        style.cursor = 'pointer';
+    }
 
-  if (style.position === undefined) {
-    style.position = 'relative';
-  }
+    if (style.position === undefined) {
+        style.position = 'relative';
+    }
 
-  return (
-    <th
-      style={style}
-      onClick={(e) => props.Click(e)}
-    >
+    return (
+        <th
+            style={style}
+            onClick={(e) => props.Click(e)}
+        >
 
-      <RenderAngleIcon SortKey={props.SortKey} Key={props.DataKey} Ascending={props.Ascending} />
-      <div style={{marginLeft: 10}}>{props.Label}</div>
-    </th>
-  );
+            <div style={{position: 'absolute', width: 25}}><RenderAngleIcon SortKey={props.SortKey} Key={props.DataKey} Ascending={props.Ascending} /></div>
+            <div style={{ marginLeft: 25 }}>{props.Label}</div>
+        </th>
+    );
 }
 
 interface IRenderAngleProps {
-  SortKey: string,
-  Key: string,
-  Ascending: boolean
+    SortKey: string,
+    Key: string,
+    Ascending: boolean
 }
 
 function RenderAngleIcon(props: IRenderAngleProps) {
 
-  const AngleIcon: React.FunctionComponent<{ ascending: boolean }> = () => (
-    <div
-      style={{ position: 'absolute', top: 10, transform: (props.Ascending ? 'rotate(0deg)' : 'rotate(180deg)') }}>{ '^'}</div>
-  );
+    const AngleIcon: React.FunctionComponent<{ ascending: boolean }> = (a) => a.ascending ? SVGIcons.ArrowDropUp : SVGIcons.ArrowDropDown;
 
-  if (props.SortKey === null)
-    return null;
+    if (props.SortKey === null)
+        return null;
 
-  if (props.SortKey !== props.Key)
-    return null;
+    if (props.SortKey !== props.Key)
+        return null;
 
-  return <AngleIcon ascending={props.Ascending} />
+    return <AngleIcon ascending={props.Ascending} />
 };
