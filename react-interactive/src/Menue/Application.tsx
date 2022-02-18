@@ -29,7 +29,7 @@ import Section from './Section';
 import LoadingScreen from '../LoadingScreen';
 import ServerErrorIcon from '../ServerErrorIcon';
 import styled from "styled-components";
-import { SVGIcons } from "./Icons";
+import { SVGIcons } from "@gpa-gemstone/gpa-symbols";
 import { Application } from '@gpa-gemstone/application-typings';
 
 interface IProps {
