@@ -115,7 +115,7 @@ export default function SelectPopup<T extends U>(props: IProps<T>) {
                 </div>
                 {props.Type === 'multiple' ? <div className="col" style={{ width: '40%' }}>
                     <div style={{ width: '100%' }}>
-                        <h3> Selected Assets </h3>
+                        <h3> Current Selection </h3>
                     </div>
                     <Table
                         cols={props.Columns}
@@ -136,7 +136,7 @@ export default function SelectPopup<T extends U>(props: IProps<T>) {
                                 setSortKeySelected(d.colKey);
                             }
                         }}
-                        onClick={() => true}
+                        onClick={(d) => setSelectedData([...selectedData.filter(item => item.ID !== d.row.ID)])}
                         theadStyle={{ fontSize: 'smaller', display: 'table', tableLayout: 'fixed', width: '100%' }}
                         tbodyStyle={{ display: 'block', overflowY: 'scroll', maxHeight: '400px', width: '100%' }}
                         rowStyle={{ fontSize: 'smaller', display: 'table', tableLayout: 'fixed', width: '100%' }}
