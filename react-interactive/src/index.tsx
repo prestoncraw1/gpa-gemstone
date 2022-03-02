@@ -36,7 +36,7 @@ import { IState as IGenericSliceState } from './GenericSlice';
 import Application from './Menue/Application';
 import Page from './Menue/Page';
 import Section from './Menue/Section';
-import { SVGIcons } from './Menue/Icons';
+import FilterableTable from './FilterableTable/FilterableTable';
 
 export {
   Modal,
@@ -54,5 +54,5 @@ export {
   Application,
   Page,
   Section,
-  SVGIcons
+  FilterableTable
 };
