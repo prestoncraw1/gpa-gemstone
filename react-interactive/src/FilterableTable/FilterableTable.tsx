@@ -50,7 +50,7 @@ interface IProps<T> extends TableProps<T> {
 export default function FilterableTable<T>(props: IProps<T>) {
     const [filters, setFilters] = React.useState<Search.IFilter<T>[]>((props.DefaultFilter === undefined ? [] : props.DefaultFilter));
 
-    function updateFilters(flts: Search.IFilter<T>[], fld: string | number | symbol) {
+    function updateFilters(flts: Search.IFilter<T>[], fld: string | number | symbol| undefined) {
         setFilters((fls) => {
             const otherFilters = fls.filter(item => item.FieldName !== fld);
             return otherFilters.concat(flts);
@@ -65,7 +65,7 @@ export default function FilterableTable<T>(props: IProps<T>) {
                 cols={props.cols.map(c => ({
                     ...c, label: <Header
                         Label={c.label}
-                        Filter={filters.filter(f => f.FieldName === c.field.toString())}
+                        Filter={filters.filter(f => f.FieldName === c.field?.toString())}
                         SetFilter={(f) => updateFilters(f, c.field)}
                         Field={c.field}
                         Type={c.Type}
@@ -97,8 +97,8 @@ interface IHeaderProps<T> {
     Label: string | React.ReactNode,
     Type?: Search.FieldType,
     Filter: Search.IFilter<T>[],
-    SetFilter?: (flt: Search.IFilter<T>[]) => void,
-    Field: string | number | symbol,
+    SetFilter: (flt: Search.IFilter<T>[]) => void,
+    Field: string | number | symbol | undefined,
     Options?: IOptions[]
 }
 
@@ -133,29 +133,29 @@ function Header<T>(props: IHeaderProps<T>) {
                             {props.Type === 'boolean' ? <BooleanFilter
                                 SetFilter={props.SetFilter}
                                 Filter={props.Filter}
-                                FieldName={props.Field.toString()} /> : null}
+                                FieldName={props.Field?.toString() ?? ''} /> : null}
                             {props.Type === 'string' ? <TextFilter
                                 SetFilter={props.SetFilter}
                                 Filter={props.Filter}
-                                FieldName={props.Field.toString()} /> : null}
+                                FieldName={props.Field?.toString() ?? ''} /> : null}
                             {props.Type === 'enum' && props.Options !== undefined ? <EnumFilter
-                                FieldName={props.Field.toString()}
+                                FieldName={props.Field?.toString() ?? ''}
                                 Filter={props.Filter}
                                 SetFilter={props.SetFilter}
                                 Options={props.Options}
                             /> : null}
                             {props.Type === 'date' ? <DateFilter
-                                FieldName={props.Field.toString()}
+                                FieldName={props.Field?.toString() ?? ''}
                                 Filter={props.Filter}
                                 SetFilter={props.SetFilter}
                             /> : null}
                             {props.Type === 'time' ? <TimeFilter
-                                FieldName={props.Field.toString()}
+                                FieldName={props.Field?.toString() ?? ''}
                                 Filter={props.Filter}
                                 SetFilter={props.SetFilter}
                             /> : null}
                             {props.Type === 'number' ? <NumberFilter
-                                FieldName={props.Field.toString()}
+                                FieldName={props.Field?.toString() ?? ''}
                                 Filter={props.Filter}
                                 SetFilter={props.SetFilter}
                             /> : null}
