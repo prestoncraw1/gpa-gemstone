@@ -41,7 +41,7 @@ interface IFilterableCollumn<T> extends Column<T> {
 interface IProps<T> extends TableProps<T> {
     SetFilter: (filters: Search.IFilter<T>[]) => void,
     cols: IFilterableCollumn<T>[],
-    DefaultFilter?: []
+    DefaultFilter?: Search.IFilter<T>[]
 }
 
 /**
