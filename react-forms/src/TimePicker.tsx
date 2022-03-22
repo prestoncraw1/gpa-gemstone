@@ -24,7 +24,14 @@
 import * as React from 'react';
 
 export default class TimePicker<T> extends React.Component<
-  { Record: T; Field: keyof T; Setter: (record: T) => void; Label?: string; Disabled?: boolean },
+  { Record: T;
+    Field: keyof T;
+    Setter: (record: T) => void;
+    Label?: string;
+    Disabled?: boolean
+    Feedback?: string;
+    Valid: (field: keyof T) => boolean;
+    },
   {},
   {}
 > {
@@ -33,7 +40,7 @@ export default class TimePicker<T> extends React.Component<
       <div className="form-group">
         <label>{this.props.Label == null ? this.props.Field : this.props.Label}</label>
         <input
-          className="form-control"
+          className={this.props.Valid(this.props.Field) ? 'form-control' : 'form-control is-invalid'}
           type="time"
           onChange={(evt) => {
             const record: T = { ...this.props.Record };
@@ -47,6 +54,9 @@ export default class TimePicker<T> extends React.Component<
           }
           disabled={this.props.Disabled == null ? false : this.props.Disabled}
         />
+        <div className="invalid-feedback">
+        {this.props.Feedback == null ? this.props.Field + ' is a required field.' : this.props.Feedback}
+      </div>
       </div>
     );
   }
