@@ -1,7 +1,7 @@
 // ******************************************************************************************************
-//  index.tsx - Gbtc
+//  TimePicker.tsx - Gbtc
 //
-//  Copyright © 2020, Grid Protection Alliance.  All Rights Reserved.
+//  Copyright © 2022, Grid Protection Alliance.  All Rights Reserved.
 //
 //  Licensed to the Grid Protection Alliance (GPA) under one or more contributor license agreements. See
 //  the NOTICE file distributed with this work for additional information regarding copyright ownership.
@@ -16,35 +16,38 @@
 //
 //  Code Modification History:
 //  ----------------------------------------------------------------------------------------------------
-//  09/25/2020 - Billy Ernest
+//  03/21/2022 - C. Lackner
 //       Generated original version of source code.
 //
 // ******************************************************************************************************
 
-import CheckBox from './CheckBox';
-import Input from './Input';
-import DatePicker from './DatePicker';
-import Select from './Select';
-import TextArea from './TextArea';
-import DateRangePicker from './DateRangePicker';
-import EnumCheckBoxes from './EnumCheckBoxes';
-import ArrayMultiSelect from './ArrayMultiSelect';
-import ArrayCheckBoxes from './ArrayCheckBoxes';
-import MultiCheckBoxSelect from './MutliCheckBoxSelect';
-import DoubleInput from './DoubleInput';
-import TimePicker from './TimePicker';
+import * as React from 'react';
 
-export {
-  CheckBox,
-  Input,
-  DatePicker,
-  Select,
-  TextArea,
-  DateRangePicker,
-  EnumCheckBoxes,
-  ArrayMultiSelect,
-  ArrayCheckBoxes,
-  MultiCheckBoxSelect,
-  DoubleInput,
-  TimePicker
-};
+export default class TimePicker<T> extends React.Component<
+  { Record: T; Field: keyof T; Setter: (record: T) => void; Label?: string; Disabled?: boolean },
+  {},
+  {}
+> {
+  render() {
+    return (
+      <div className="form-group">
+        <label>{this.props.Label == null ? this.props.Field : this.props.Label}</label>
+        <input
+          className="form-control"
+          type="time"
+          onChange={(evt) => {
+            const record: T = { ...this.props.Record };
+            if (evt.target.value !== '') record[this.props.Field] = evt.target.value as any;
+            else record[this.props.Field] = null as any;
+
+            this.props.Setter(record);
+          }}
+          value={
+            this.props.Record[this.props.Field] == null ? '' : (this.props.Record[this.props.Field] as any).toString()
+          }
+          disabled={this.props.Disabled == null ? false : this.props.Disabled}
+        />
+      </div>
+    );
+  }
+}
