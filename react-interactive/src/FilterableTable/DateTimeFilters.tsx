@@ -66,12 +66,15 @@ export function DateFilter<T>(props: IProps<T>) {
 
 
     React.useEffect(() => {
+        let handle:any = null;
+
         if (date === '' && secondDate === '' && props.Filter.length !== 0) 
-            props.SetFilter([]);
+            handle = setTimeout(() => props.SetFilter([]),500);
         if (date === '' && secondDate === '')
-            return;
-        if (operator === 'between') {
-            props.SetFilter([
+            return () => { if (handle !== null) clearTimeout(handle); };
+            
+        if (operator === 'between') 
+            handle = setTimeout(() =>props.SetFilter([
                 {
                     FieldName: props.FieldName,
                     isPivotColumn: false,
@@ -86,17 +89,18 @@ export function DateFilter<T>(props: IProps<T>) {
                     Type: 'datetime',
                     SearchText: secondDate
                 }
-            ])
-        }
-        else {
-            props.SetFilter([{
+            ]), 500);
+        
+        else 
+            handle = setTimeout(() =>props.SetFilter([{
                 FieldName: props.FieldName,
                 isPivotColumn: false,
                 Operator: (operator === 'after'? '>' : '<'),
                 Type: 'datetime',
                 SearchText: date
-            }])
-        }
+            }]),500);
+        
+        return () => { if (handle !== null) clearTimeout(handle); };
     }, [operator, date, secondDate])
 
     return <>
@@ -172,12 +176,14 @@ export function TimeFilter<T>(props: IProps<T>) {
 
 
     React.useEffect(() => {
+        let handle:any = null;
+
         if (time === '' && secondTime === '' && props.Filter.length !== 0)
-            props.SetFilter([]);
+            handle = setTimeout(() => props.SetFilter([]),500);
         if (time === '' && secondTime === '')
-            return;
-        if (operator === 'between') {
-            props.SetFilter([
+            return () => { if (handle !== null) clearTimeout(handle); };
+        if (operator === 'between') 
+            handle = setTimeout(() =>props.SetFilter([
                 {
                     FieldName: props.FieldName,
                     isPivotColumn: false,
@@ -192,17 +198,19 @@ export function TimeFilter<T>(props: IProps<T>) {
                     Type: 'datetime',
                     SearchText: secondTime
                 }
-            ])
-        }
-        else {
-            props.SetFilter([{
+            ]),500);
+        
+        else 
+            handle = setTimeout(() => props.SetFilter([{
                 FieldName: props.FieldName,
                 isPivotColumn: false,
                 Operator: (operator === 'after' ? '>' : '<'),
                 Type: 'datetime',
                 SearchText: time
-            }])
-        }
+            }]),500)
+
+        return () => { if (handle !== null) clearTimeout(handle); };
+        
     }, [operator, time, secondTime])
 
     return <>

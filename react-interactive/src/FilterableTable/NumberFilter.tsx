@@ -66,12 +66,13 @@ export function NumberFilter<T>(props: IProps<T>) {
     
     
         React.useEffect(() => {
+            let handle:any = null;
             if (value === '' && secondValue === '' && props.Filter.length !== 0)
-                props.SetFilter([]);
+                handle = setTimeout(() => props.SetFilter([]), 500);
             if (value === '' && secondValue === '')
-                return;
-            if (operator === 'between') {
-                props.SetFilter([
+                return () => { if (handle !== null) clearTimeout(handle); };  
+            if (operator === 'between') 
+                handle = setTimeout(() => props.SetFilter([
                     {
                         FieldName: props.FieldName,
                         isPivotColumn: false,
@@ -86,17 +87,18 @@ export function NumberFilter<T>(props: IProps<T>) {
                         Type: 'number',
                         SearchText: secondValue
                     }
-                ])
-            }
-            else {
-                props.SetFilter([{
+                ]), 500);
+            
+            else 
+                handle = setTimeout(() => props.SetFilter([{
                     FieldName: props.FieldName,
                     isPivotColumn: false,
                     Operator: transformSymbol(operator),
                     Type: 'number',
                     SearchText: value
-                }])
-            }
+                }]),500);
+            
+            return () => { if (handle !== null) clearTimeout(handle); };  
         }, [operator, value, secondValue])
     
         function transformSymbol(s: FilterType) {
@@ -106,6 +108,7 @@ export function NumberFilter<T>(props: IProps<T>) {
                 return '>';
             return '='
         }
+
         return <>
             <tr onClick={(evt) => { evt.preventDefault(); }}>
                 <td>

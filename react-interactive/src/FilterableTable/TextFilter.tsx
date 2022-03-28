@@ -45,16 +45,21 @@ export function TextFilter<T>(props: IProps<T>) {
     }, [props.Filter]);
 
     React.useEffect(() => {
+        let handle: any = null;
+
         if ((txt == null || txt.trim().length === 0) && props.Filter.length !== 0) 
-            props.SetFilter([])
+            handle = setTimeout(() =>  props.SetFilter([]), 500);
+
         if (txt != null && txt.trim().length > 0 && (props.Filter.length === 0 || props.Filter[0].SearchText !== txt.trim()))
-            props.SetFilter([{
+            handle = setTimeout(() => props.SetFilter([{
                   FieldName: props.FieldName,
                   isPivotColumn: false, 
                   SearchText: (props.ApproxMatches === undefined || props.ApproxMatches? '%' + txt.trim() + '%' : txt.trim()),
                   Operator: 'LIKE', 
                   Type: 'string'
-                }])
+                }]), 500);
+
+        return () => { if (handle !== null) clearTimeout(handle); };    
     }, [txt])
 
     return <>
