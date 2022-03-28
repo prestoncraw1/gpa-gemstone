@@ -25,7 +25,8 @@ import { Search } from '../SearchBar'
 interface IProps<T> { 
     SetFilter: (evt: Search.IFilter<T>[]) => void,
     Filter: Search.IFilter<T>[],
-    FieldName: string
+    FieldName: string,
+    ApproxMatches?: boolean,
 }
 
 export function TextFilter<T>(props: IProps<T>) {
@@ -36,14 +37,24 @@ export function TextFilter<T>(props: IProps<T>) {
             setTxt('');
             return;
         }
-        setTxt(props.Filter[0].SearchText);
+
+        if (props.ApproxMatches || props.ApproxMatches === undefined)
+            setTxt(props.Filter[0].SearchText.substring(1, props.Filter[0].SearchText.length -1 ));
+        else
+            setTxt(props.Filter[0].SearchText);
     }, [props.Filter]);
 
     React.useEffect(() => {
         if ((txt == null || txt.trim().length === 0) && props.Filter.length !== 0) 
             props.SetFilter([])
         if (txt != null && txt.trim().length > 0 && (props.Filter.length === 0 || props.Filter[0].SearchText !== txt.trim()))
-            props.SetFilter([{ FieldName: props.FieldName, isPivotColumn: false, SearchText: txt.trim(), Operator: 'LIKE', Type: 'string' }])
+            props.SetFilter([{
+                  FieldName: props.FieldName,
+                  isPivotColumn: false, 
+                  SearchText: (props.ApproxMatches === undefined || props.ApproxMatches? '%' + txt.trim() + '%' : txt.trim()),
+                  Operator: 'LIKE', 
+                  Type: 'string'
+                }])
     }, [txt])
 
     return <>
