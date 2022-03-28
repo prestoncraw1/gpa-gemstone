@@ -28,8 +28,8 @@ interface IProps<T> {
     SetFilter: (evt: Search.IFilter<T>[]) => void,
     Filter: Search.IFilter<T>[],
     FieldName: string,
-     Options: IOptions[]
-     }
+    Options: IOptions[]
+    }
 
 interface IOptionsExtended extends IOptions { Selected: boolean }
 
@@ -37,7 +37,10 @@ export function EnumFilter<T>(props: IProps<T>) {
     const [options, setOptions] = React.useState<IOptionsExtended[]>([]);
 
     React.useEffect(() => {
-        setOptions(props.Options.map(item => ({ ...item, Selected: true })));
+        if (props.Options.length !== options.length)
+            setOptions(props.Options.map(item => ({ ...item, Selected: true })));
+        else if (props.Options.some((o,i) => o.Label !== options[i].Label || o.Value !== options[i].Value))
+            setOptions(props.Options.map(item => ({ ...item, Selected: true })));
     }, [props.Options])
 
     React.useEffect(() => {
