@@ -30,6 +30,9 @@ import {cloneDeep} from 'lodash';
 import TimeAxis from './TimeAxis';
 import ValueAxis from './ValueAxis';
 import Legend from './Legend';
+import LineWithThreshold from './LineWithThreshold';
+import Line from './Line';
+import Button from './Button';
 
 export interface IProps {
     defaultTdomain: [number, number],
@@ -312,7 +315,13 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
                        </defs>
 
                        <g clipPath={'url(#cp-' + guid + ')' }>
-                          {props.children}
+                          {React.Children.map(props.children, (element) => {
+                                    if (!React.isValidElement(element))
+                                        return null;
+                                    if ((element as React.ReactElement<any>).type === Line || (element as React.ReactElement<any>).type === LineWithThreshold)
+                                        return element;
+                                    return null;
+                                })}
                           {props.showMouse === undefined || props.showMouse ?
                                <path stroke='black' style={{ strokeWidth: 2, opacity: mouseIn? 0.8: 0.0 }} d={`M ${mousePosition[0]} ${offsetTop} V ${SVGHeight - offsetBottom}`} />
                                : null}
@@ -331,7 +340,15 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
                            else if (s === "download") props.onDataInspect!(tDomain);
                            else setSelectedMode(s as ('zoom'|'pan'|'select'))}}
                          x={SVGWidth - offsetRight - 12}
-                         y={22} />
+                         y={22} > 
+                         {React.Children.map(props.children, (element) => {
+                                    if (!React.isValidElement(element))
+                                        return null;
+                                    if ((element as React.ReactElement<any>).type === Button)
+                                        return element;
+                                    return null;
+                                })}
+                         </InteractiveButtons>
 
                    </svg>
                </div>

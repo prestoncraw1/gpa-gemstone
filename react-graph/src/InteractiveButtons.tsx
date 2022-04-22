@@ -23,6 +23,7 @@
 
 import * as React from 'react';
 import {MagnifyingGlass, House, FourWayArrow, InputNumbers, Flag} from '@gpa-gemstone/gpa-symbols'
+import Button from './Button'
 
 interface IProps {
     showZoom: boolean,
@@ -38,13 +39,14 @@ interface IProps {
 
 type ButtonType = ('zoom' | 'pan' | 'reset' | 'select' | 'download');
 
-function InteractiveButtons(props: IProps) {
+const InteractiveButtons: React.FunctionComponent<IProps> = (props) => {
     /*
       Used to select Zoom, Drag or Reset
     */
     const [expand, setExpand] = React.useState<boolean>(false);
 
-    const nButtons = (props.showZoom? 1 : 0) + (props.showPan? 1 : 0) + (props.showReset? 1 : 0) + (props.showSelect? 1 : 0) + (props.showDownload? 1 : 0);
+    const nChildren = (props.children == null) ? 0 : React.Children.count(props.children);
+    const nButtons = (props.showZoom? 1 : 0) + (props.showPan? 1 : 0) + (props.showReset? 1 : 0) + (props.showSelect? 1 : 0) + (props.showDownload? 1 : 0) + nChildren;
 
     function openTray(evt: React.MouseEvent): void {
       evt.stopPropagation();
@@ -69,36 +71,55 @@ function InteractiveButtons(props: IProps) {
         </g>)
 
     const width = 25*nButtons - 25;
-    const symbols = [] as ButtonType[];
-    if (props.showZoom)
-      symbols.push('zoom' as ButtonType);
-    if (props.showPan)
-      symbols.push('pan' as ButtonType);
-    if (props.showSelect)
-        symbols.push('select' as ButtonType);
-    if (props.showReset)
-      symbols.push('reset' as ButtonType);
-    if (props.showDownload)
-      symbols.push('download' as ButtonType);
+    const symbols = [] as React.ReactElement[];
+    const symbolNames = [] as ButtonType[];
+    if (props.showZoom) {
+      symbolNames.push('zoom' as ButtonType);
+      symbols.push(<Button onClick={() => {props.setSelection('zoom'); setExpand(false) }}>{MagnifyingGlass}</Button>)
+    }
+    if (props.showPan) {
+      symbolNames.push('pan' as ButtonType);
+      symbols.push(<Button onClick={() => {props.setSelection('pan'); setExpand(false) }}>{FourWayArrow}</Button>)
+    }
+    if (props.showSelect) {
+        symbolNames.push('select' as ButtonType);
+        symbols.push(<Button onClick={() => {props.setSelection('select'); setExpand(false) }}>{Flag}</Button>)
+    }
+    if (props.showReset) {
+      symbolNames.push('reset' as ButtonType);
+      symbols.push(<Button onClick={() => {setExpand(false) }}>{House}</Button>)
+    }
+    if (props.showDownload) {
+      symbolNames.push('download' as ButtonType);
+      symbols.push(<Button onClick={() => {setExpand(false) }}>{InputNumbers}</Button>)
+    }
 
     return (
      <g>
          <path d={`M ${props.x} ${props.y - 10} A 10 10 180 0 1 ${props.x} ${props.y + 10} h -${width} A 10 10 180 0 1 ${props.x - width} ${props.y - 10} h ${width}`} style={{
              fill: '#1e90ff'}} />
-          {symbols.map((s,i) => <Button key={i} symbol={s} x={props.x - i*25} y={props.y} active={props.currentSelection === s} onClick={() => {props.setSelection(s); setExpand(false) }}/>)}
+          {symbols.map((s,i) => <CircleButton key={i} x={props.x - i*25} y={props.y} active={props.currentSelection === symbolNames[i]} button={s} />)}
+
+          {React.Children.map(props.children, (element, i) => {
+                                    if (!React.isValidElement(element))
+                                        return null;
+                                    if ((element as React.ReactElement<any>).type === Button)
+                                        return <CircleButton active={false} x={props.x - (i+symbols.length)*25} y={props.y} button={element} />;
+                                    return null;
+                                })}
 
          <path d={`M ${props.x} ${props.y - 10} A 10 10 180 0 1 ${props.x} ${props.y + 10} h -${width} A 10 10 180 0 1 ${props.x - width} ${props.y - 10} h ${width}`} stroke={'black'} />
      </g>)
 
 }
 
-function Button(props: {symbol: ButtonType, x: number, y: number, active: boolean, onClick: () => void}) {
+function CircleButton(props: {button: React.ReactElement, x: number, y: number, active: boolean}) {
   return ( <>
     <circle r={10} cx={props.x} cy={props.y} style={{ fill: (props.active ? '#002eff' : '#1e90ff'), pointerEvents: 'all' }}
      onMouseDown={(evt) => evt.stopPropagation()}
-     onClick={(evt) => { evt.stopPropagation(); props.onClick()}} onMouseUp={(evt) => evt.stopPropagation()}/>
+     onClick={(evt) => { evt.stopPropagation(); props.button.props.onClick()}} onMouseUp={(evt) => evt.stopPropagation()}/>
     <text fill={'black'} style={{ fontSize: '1em', textAnchor: 'middle', dominantBaseline: 'middle' }} x={props.x} y={props.y}>
-    {props.symbol === 'zoom' ? MagnifyingGlass : props.symbol === 'pan'? FourWayArrow : props.symbol === 'select'? Flag  : props.symbol === 'download'? InputNumbers : House}
+    {props.button}
     </text>
   </>)
 }
