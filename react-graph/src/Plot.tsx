@@ -34,6 +34,7 @@ import LineWithThreshold from './LineWithThreshold';
 import Line from './Line';
 import Button from './Button';
 import HorizontalMarker from './HorizontalMarker';
+import VerticalMarker from './VerticalMarker';
 
 export interface IProps {
     defaultTdomain: [number, number],
@@ -349,7 +350,7 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
                                     if (!React.isValidElement(element))
                                         return null;
                                     if ((element as React.ReactElement<any>).type === Line || (element as React.ReactElement<any>).type === LineWithThreshold ||
-                                    (element as React.ReactElement<any>).type === HorizontalMarker
+                                    (element as React.ReactElement<any>).type === HorizontalMarker || (element as React.ReactElement<any>).type === VerticalMarker
                                      )
                                         return element;
                                     return null;
