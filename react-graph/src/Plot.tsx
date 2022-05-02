@@ -24,15 +24,16 @@
 
 import * as React from 'react';
 import InteractiveButtons from './InteractiveButtons';
-import {IGraphContext, IDataSeries, GraphContext} from './GraphContext';
+import {IGraphContext, IDataSeries, GraphContext, IHandlers} from './GraphContext';
 import {CreateGuid} from '@gpa-gemstone/helper-functions';
-import {cloneDeep} from 'lodash';
+import {cloneDeep, toString} from 'lodash';
 import TimeAxis from './TimeAxis';
 import ValueAxis from './ValueAxis';
 import Legend from './Legend';
 import LineWithThreshold from './LineWithThreshold';
 import Line from './Line';
 import Button from './Button';
+import HorizontalMarker from './HorizontalMarker';
 
 export interface IProps {
     defaultTdomain: [number, number],
@@ -73,6 +74,7 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
     const SVGref = React.useRef<any>(null);
     const guid = React.useMemo(() => CreateGuid(),[]);
     const [data, setData] = React.useState<Map<string, IDataSeries>>(new Map<string, IDataSeries>());
+    const [handlers, setHandlers] = React.useState<Map<string,IHandlers>>(new Map<string, IHandlers>());
 
     const [tDomain, setTdomain] = React.useState<[number,number]>(props.defaultTdomain);
     const [tOffset, setToffset] = React.useState<number>(0);
@@ -182,21 +184,39 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
         });
     }
 
+    function RegisterSelect(handler: IHandlers): string {
+      const key = CreateGuid();
+      setHandlers((fld) => { const updated = cloneDeep(fld); updated.set(key,handler); return updated; });
+      return key;
+    }
+
+    function RemoveSelect(key: string) {
+      setHandlers((fld) => { const updated = cloneDeep(fld); updated.delete(key); return updated;})
+    }
+    
+    function UpdateSelect(key: string,handler: IHandlers) {
+      setHandlers((fld) => { const updated = cloneDeep(fld); updated.set(key, handler); return updated; });
+    }
+
     function GetContext(): IGraphContext {
       return {
           XDomain: tDomain,
           XScale: tScale,
           XOffset: tOffset,
           XHover: mouseIn? (mousePosition[0] - tOffset) / tScale : NaN,
+          YHover: mouseIn? (mousePosition[1] - yOffset) / yScale : NaN,
           YDomain: yDomain,
           YScale: yScale,
           YOffset: yOffset,
-
+          CurrentMode: selectedMode,
           Data: data,
           AddData,
           RemoveData,
           UpdateData,
-          SetLegend
+          SetLegend,
+          RegisterSelect,
+          RemoveSelect,
+          UpdateSelect
       } as IGraphContext
     }
 
@@ -267,6 +287,9 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
             setMouseMode('pan');
         if (selectedMode === 'select' && props.onSelect !== undefined)
           props.onSelect((ptTransform.x - tOffset)/ tScale)
+        if (handlers.size > 0 && selectedMode === 'select')
+          handlers.forEach((v) => (v.onClick !== undefined? v.onClick((ptTransform.x - tOffset)/ tScale, (ptTransform.y - yOffset)/ yScale) : null));
+
     }
 
     function handleMouseUp(_: any) {
@@ -282,14 +305,21 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
 
             setTdomain((curr) => (Math.min(curr[1], t1) - Math.max(curr[0], t0)) > 10? [Math.max(curr[0], t0), Math.min(curr[1], t1)] : [curr[0],curr[1]]);
         }
-
         setMouseMode('none');
+
+        if (handlers.size > 0 && selectedMode === 'select')
+          handlers.forEach((v) => (v.onRelease !== undefined? v.onRelease((mousePosition[0] - tOffset)/ tScale, (mousePosition[1] - yOffset)/ yScale) : null));
+
     }
 
     function handleMouseOut(_: any) {
         setMouseIn(false);
         if (mouseMode === 'pan')
             setMouseMode('none');
+
+        if (handlers.size > 0 && selectedMode === 'select')
+          handlers.forEach((v) => (v.onPlotLeave !== undefined? v.onPlotLeave((mousePosition[0] - tOffset)/ tScale, (mousePosition[1] - yOffset)/ yScale) : null));
+  
     }
 
     function handleMouseIn(_: any) {
@@ -318,7 +348,9 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
                           {React.Children.map(props.children, (element) => {
                                     if (!React.isValidElement(element))
                                         return null;
-                                    if ((element as React.ReactElement<any>).type === Line || (element as React.ReactElement<any>).type === LineWithThreshold)
+                                    if ((element as React.ReactElement<any>).type === Line || (element as React.ReactElement<any>).type === LineWithThreshold ||
+                                    (element as React.ReactElement<any>).type === HorizontalMarker
+                                     )
                                         return element;
                                     return null;
                                 })}
@@ -332,7 +364,7 @@ const Plot: React.FunctionComponent<IProps> = (props) => {
                         <InteractiveButtons showPan={(props.pan === undefined || props.pan)}
                          showZoom={props.zoom === undefined || props.zoom}
                          showReset={!(props.pan !== undefined && props.zoom !== undefined && !props.zoom && !props.pan)}
-                         showSelect={props.onSelect !== undefined}
+                         showSelect={props.onSelect !== undefined || handlers.size > 0}
                          showDownload={props.onDataInspect !== undefined}
                          currentSelection={selectedMode}
                          setSelection={(s) => {

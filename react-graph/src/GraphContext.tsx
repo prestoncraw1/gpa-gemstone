@@ -26,34 +26,44 @@ export interface IGraphContext {
   XDomain: [number, number],
   XScale: number,
   XOffset: number,
-
   XHover: number,
+
+  YHover: number,
   YDomain: [number, number],
   YScale: number,
   YOffset: number,
 
+  CurrentMode: 'zoom'|'pan'|'select',
   Data: Map<string, IDataSeries>,
   AddData: ((d: IDataSeries) => string),
   RemoveData: (key: string) => void,
   UpdateData: (key: string, d: IDataSeries) => void,
-  SetLegend: (key: string, legend: HTMLElement|undefined) => void
+  SetLegend: (key: string, legend: HTMLElement|undefined) => void,
+  RegisterSelect: (handlers: IHandlers) => string,
+  RemoveSelect: (key: string) => void,
+  UpdateSelect: (key: string, handlers: IHandlers) => void
 };
 
 export const GraphContext = React.createContext({
   XDomain: [0, 0],
   XScale: 0,
   XOffset: 0,
-
   XHover: NaN,
+  
+  YHover: NaN,
   YDomain: [0, 0],
   YScale: 0,
   YOffset: 0,
+  CurrentMode: 'select',
 
   Data: new Map<string, IDataSeries>(),
   AddData: ((_: IDataSeries) => ""),
   RemoveData: (_: string) => undefined,
   UpdateData: (_) => undefined,
-  SetLegend: (_) => undefined
+  SetLegend: (_) => undefined,
+  RegisterSelect: (_) => "",
+  RemoveSelect: (_) => undefined,
+  UpdateSelect: (_) => undefined
 } as IGraphContext);
 
 export interface IDataSeries {
@@ -63,3 +73,9 @@ export interface IDataSeries {
 };
 
 export type LineStyle = '-'|':';
+
+export interface IHandlers {
+  onClick?: (x:number, y: number) => void,
+  onRelease?: (x: number,y: number) => void,
+  onPlotLeave?: (x: number, y:number) => void
+}

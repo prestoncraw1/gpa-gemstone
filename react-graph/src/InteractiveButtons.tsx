@@ -66,7 +66,7 @@ const InteractiveButtons: React.FunctionComponent<IProps> = (props) => {
             onMouseDown={(evt) => evt.stopPropagation()}
             onMouseUp={(evt) => evt.stopPropagation()} />
           <text fill={'black'} style={{ fontSize: '1em', textAnchor: 'middle', dominantBaseline: 'middle' }} x={props.x} y={props.y}>
-            {props.currentSelection === 'zoom' ? MagnifyingGlass : props.currentSelection === 'pan'? FourWayArrow : House}
+            {props.currentSelection === 'zoom' ? MagnifyingGlass : props.currentSelection === 'pan'? FourWayArrow : Flag}
           </text>
         </g>)
 
