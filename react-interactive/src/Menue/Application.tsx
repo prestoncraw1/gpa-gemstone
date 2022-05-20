@@ -85,9 +85,10 @@ const Applications: React.FunctionComponent<IProps> = (props) => {
     const [ignored, forceUpdate] = React.useReducer((x: number) => x + 1, 0); // integer state for resize renders
 
     React.useEffect(() => {
-        window.addEventListener('resize', (evt) => forceUpdate());
+        const listener = (evt: any) => forceUpdate();
+        window.addEventListener('resize', listener);
 
-        return () => window.removeEventListener('resize', (evt) => { });
+        return () => window.removeEventListener('resize', listener);
     
     }, []);
 
