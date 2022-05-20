@@ -52,7 +52,7 @@ export interface TableProps<T> {
      * Boolen to indicate whether the sort is ascending or descending
      */
     ascending: boolean;
-    onSort(data: { colKey: string; colField?: keyof T; ascending: boolean }): void;
+    onSort(data: { colKey: string; colField?: keyof T; ascending: boolean }, event: any): void;
     tableClass?: string;
     tableStyle?: React.CSSProperties;
     theadStyle?: React.CSSProperties;
@@ -78,7 +78,7 @@ export default function Table<T>(props: TableProps<T>) {
         event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>,
     ) {
         if (data.colKey !== null)
-            props.onSort(data);
+            props.onSort(data,event);
     }
 }
 
