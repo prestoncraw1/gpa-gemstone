@@ -82,6 +82,15 @@ const Applications: React.FunctionComponent<IProps> = (props) => {
     const showOpen = props.AllowCollapsed !== undefined && props.AllowCollapsed && collapsed;
     const showClose = props.AllowCollapsed !== undefined && props.AllowCollapsed && !collapsed;
 
+    const [ignored, forceUpdate] = React.useReducer((x: number) => x + 1, 0); // integer state for resize renders
+
+    React.useEffect(() => {
+        window.addEventListener('resize', (evt) => forceUpdate());
+
+        return () => window.removeEventListener('resize', (evt) => { });
+    
+    }, []);
+
     function GetContext(): IContext {
         return {
             homePath: props.HomePath,
