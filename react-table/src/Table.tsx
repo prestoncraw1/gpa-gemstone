@@ -75,7 +75,7 @@ export default function Table<T>(props: TableProps<T>) {
         <table className={props.tableClass !== undefined ? props.tableClass : ''} style={props.tableStyle}>
             <Header<T> Class={props.theadClass} Style={props.theadStyle} Cols={props.cols} SortKey={props.sortKey} Ascending={props.ascending} Click={(d, e) => handleSort(d, e)} />
             <Rows<T> Data={props.data} Cols={props.cols} RowStyle={props.rowStyle} BodyStyle={props.tbodyStyle} BodyClass={props.tbodyClass} Click={(data, e) => (props.onClick === undefined? null : props.onClick(data, e))} Selected={props.selected} KeySelector={props.keySelector} />
-            {props.lastRow != undefined? <tr style={(props.rowStyle !== undefined) ? { ...props.rowStyle } : {}} key={-1}>
+            {props.lastRow !== undefined? <tr style={(props.rowStyle !== undefined) ? { ...props.rowStyle } : {}} key={-1}>
                 {props.lastRow}
             </tr> : null}
         </table>

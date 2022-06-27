@@ -375,9 +375,9 @@ interface IFilterRowProps<T> {
 }
 function FilterRow<T>(props: IFilterRowProps<T>) {
     
-    const column = props.Collumns.find(c => c.key == props.Filter.FieldName);
+    const column = props.Collumns.find(c => c.key === props.Filter.FieldName);
     return <tr>
-        <td>{column == undefined ? props.Filter.FieldName : column.label }</td>
+        <td>{column === undefined ? props.Filter.FieldName : column.label }</td>
         <td>{props.Filter.Operator}</td>
         <td>{props.Filter.SearchText}</td>
         <td>
