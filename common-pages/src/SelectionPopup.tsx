@@ -74,7 +74,7 @@ export namespace DefaultSelects {
     /** This Implements a standard User Selection Modal */
     export function User (props: IProps<Application.Types.iUserAccount>) {
         return <SelectPopup<Application.Types.iUserAccount>{...props} Searchbar={(children) => <DefaultSearch.User Slice={props.Slice} GetAddlFields={props.GetAddlFields} GetEnum={props.GetEnum}>{children}</DefaultSearch.User>}></SelectPopup>
-
+    }
     /** This Implements a standard Customer Selection Modal */
     export function Customer (props: IProps<OpenXDA.Types.Customer>) {
         return <SelectPopup<OpenXDA.Types.Customer>{...props} Searchbar={(children) => <DefaultSearch.Customer Slice={props.Slice} GetAddlFields={props.GetAddlFields} GetEnum={props.GetEnum}>{children}</DefaultSearch.Customer>}></SelectPopup>
