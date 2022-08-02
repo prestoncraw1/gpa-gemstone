@@ -24,9 +24,8 @@
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-export interface IProps {}
 
-const Content: React.FunctionComponent<IProps> = (props) => {
+const Content: React.FunctionComponent<{}> = (props) => {
     const params = useParams();
 
     return (
