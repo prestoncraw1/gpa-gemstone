@@ -41,14 +41,19 @@ export default function DateRangePicker<T>(props: {
   // Range box vars, need a secondary var to avoid looping react hooks
   const [formRange, setFormRange] = React.useState<Duration>('Custom');
   const [range, setRange] = React.useState<Duration>('Custom');
+  
+  const boxFormat = "YYYY-MM-DD" + (props.Type === undefined || props.Type === 'date' ? "" : "[T]hh:mm:ss.SSS");
+  const recordFormat = props.Format !== undefined ? props.Format : "YYYY-MM-DD" + (props.Type === undefined || props.Type === 'date' ? "" : "[T]hh:mm:ss.SSS[Z]");
 
   React.useEffect(() => {
-    setRange(ToRange(moment(props.Record[props.ToField]).diff(props.Record[props.FromField], 'days')));
+    setRange(ToRange(moment(props.Record[props.ToField], recordFormat).diff(moment(props.Record[props.FromField], recordFormat), 'days')));
   },[props.Record]);
 
   React.useEffect(() => {
+    const record: T = { ...props.Record };
     setRange(formRange);
-    RecordSetter(moment(props.Record[props.FromField]).add(GetDays(formRange), 'days').toString(), props.ToField);
+    record[props.ToField] = moment(props.Record[props.FromField], recordFormat).add(GetDays(formRange), 'days').format(recordFormat) as any;
+    props.Setter(record);
   }, [formRange]);
 
   function GetDays(val: Duration) {
@@ -77,29 +82,24 @@ export default function DateRangePicker<T>(props: {
     else return('Custom');
   }
 
-  function RecordSetter(val : string, field: keyof T) {
-    const record: T = { ...props.Record };
-    if (val !== '') {
-      if (props.Format === null) record[field] = val as any;
-      else record[field] = moment(val).format(props.Format) as any;
-    }
-    else record[field] = null as any;
-    props.Setter(record);
-  }
-
   function dateBox(field: keyof T): any {
     return <div className="col">
       <input
         className={"form-control" + (props.Valid(props.FromField, props.ToField) ? '' : ' is-invalid')}
         type={props.Type === undefined ? 'date' : props.Type}
         onChange={(evt) => {
-          RecordSetter(evt.target.value, field);
+          const record: T = { ...props.Record };
+          if (evt.target.value !== '')
+            record[field] = moment(evt.target.value, boxFormat).format(recordFormat) as any;
+          else
+            record[field] = null as any;
+          props.Setter(record);
         }}
         value={
           props.Record[field] === null ? '' :
-             moment(props.Record[field] as any).format("YYYY-MM-DD" + (props.Type === undefined || props.Type === 'date' ? "" : "Thh:mm"))
+             moment(props.Record[field] as any, recordFormat).format(boxFormat)
         }
-        disabled={props.Disabled === null ? false : props.Disabled}
+        disabled={props.Disabled === undefined ? false : props.Disabled}
       />
       {field !== props.FromField ? null :
       <div className="invalid-feedback">
