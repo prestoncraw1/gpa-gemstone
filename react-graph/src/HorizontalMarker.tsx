@@ -94,8 +94,8 @@ function HorizontalMarker(props: IProps) {
    }
 
    function onClick(_: number, y: number) {
-        let yP = context.YTransformation(props.Value);
-        let yT = context.YTransformation(y);
+        const yP = context.YTransformation(props.Value);
+        const yT = context.YTransformation(y);
         if (yT <= yP + (props.width/2) && yT >= yP - (props.width/2))
           setSelected(true);
    }

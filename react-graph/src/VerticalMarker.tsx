@@ -94,8 +94,8 @@ function VerticalMarker(props: IProps) {
    }
 
    function onClick(x: number, _: number) {
-       let xP = context.XTransformation(props.Value);
-       let xT = context.XTransformation(x);
+       const xP = context.XTransformation(props.Value);
+       const xT = context.XTransformation(x);
         if (xT <= xP + (props.width/2) && xT >= xP - (props.width/2))
           setSelected(true);
    }

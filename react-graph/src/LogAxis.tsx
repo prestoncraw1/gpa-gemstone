@@ -87,9 +87,9 @@ function LogAxis(props: IProps) {
       context.XDomain[1] = Math.pow(10, (Math.ceil(Math.log10(Math.abs(context.XDomain[1]))) * -1) + 1);
     }
     let newTicks;
-    let XMax = Math.ceil(Math.max(Math.log10(context.XDomain[0]), Math.log10(context.XDomain[1])));
-    let XMin = Math.floor(Math.min(Math.log10(context.XDomain[0]), Math.log10(context.XDomain[1])));
-    let dV = XMax - (XMin);
+    const XMax = Math.ceil(Math.max(Math.log10(context.XDomain[0]), Math.log10(context.XDomain[1])));
+    const XMin = Math.floor(Math.min(Math.log10(context.XDomain[0]), Math.log10(context.XDomain[1])));
+    const dV = XMax - (XMin);
 
     if (dV === 0){
       if (context.XDomain[0] < 0)
@@ -106,7 +106,7 @@ function LogAxis(props: IProps) {
       if (dV >= 3 && dV < 6)
         scale = 0.5;
 
-      let offset = Math.floor(dV / 4);
+      const offset = Math.floor(dV / 4);
       newTicks = [Math.pow(10, XMin)];
       if (dV >= 6) {
         for (let i = Math.floor(Math.log10(context.XDomain[0])) + (scale*offset); i <= Math.ceil(Math.log10(context.XDomain[1])) + scale; i+=(scale*offset)) {
@@ -116,8 +116,8 @@ function LogAxis(props: IProps) {
       if (dV < 6 && dV >= 3) {
         for (let i = XMin + (scale); i <= XMax; i+=(scale)) {
           if (!Number.isInteger(i) && i > 1) {
-            let lower = Math.floor(Math.pow(10, i) / Math.pow(10, Math.ceil(i))) * Math.pow(10, Math.ceil(i));
-            let upper = Math.ceil(Math.pow(10, i) / Math.pow(10, Math.floor(i))) * Math.pow(10, Math.floor(i));
+            const lower = Math.floor(Math.pow(10, i) / Math.pow(10, Math.ceil(i))) * Math.pow(10, Math.ceil(i));
+            const upper = Math.ceil(Math.pow(10, i) / Math.pow(10, Math.floor(i))) * Math.pow(10, Math.floor(i));
             if (Math.abs(upper - Math.pow(10, i)) < Math.abs(lower - Math.pow(10, i)))
               newTicks.push(upper);
             else
