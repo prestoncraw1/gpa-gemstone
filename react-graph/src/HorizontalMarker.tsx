@@ -63,7 +63,7 @@ function HorizontalMarker(props: IProps) {
             onRelease: (_) => setSelected(false),
             onPlotLeave: (_) => setSelected(false)
         } as IHandlers)
-    }, [props.width, props.Value, context.YScale])
+    }, [props.width, props.Value, ])
 
    React.useEffect(() => {
       setValue(props.Value);
@@ -89,13 +89,14 @@ function HorizontalMarker(props: IProps) {
    function generateData(v: number) {
        const x1 = (props.start === undefined? context.XDomain[0] : props.start);
        const x2 = (props.end === undefined? context.XDomain[1] : props.end);
-
-       return `M ${x1 * context.XScale + context.XOffset} ${v * context.YScale + context.YOffset} L ${x2 * context.XScale + context.XOffset} ${v * context.YScale + context.YOffset}`;
+       
+       return `M ${context.XTransformation(x1)} ${context.YTransformation(v)} L ${context.XTransformation(x2)} ${context.YTransformation(v)}`;
    }
 
    function onClick(_: number, y: number) {
-       const d = Math.abs(props.width / context.YScale);
-        if (Math.abs(y - props.Value) < d)
+        let yP = context.YTransformation(props.Value);
+        let yT = context.YTransformation(y);
+        if (yT <= yP + (props.width/2) && yT >= yP - (props.width/2))
           setSelected(true);
    }
 
