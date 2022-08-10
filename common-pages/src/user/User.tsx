@@ -30,6 +30,7 @@ import AdditionalField from './AdditionalField'
 import { IAdditionalFieldSlice, IGenericSlice, ISecurityRoleSlice, IUserAccountSlice } from '../SliceInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
 import { CheckBox } from '@gpa-gemstone/react-forms';
+import { Dispatch } from '@reduxjs/toolkit';
 
 interface IProps {
 	UserID: string,
@@ -42,7 +43,7 @@ interface IProps {
 }
 
 function User(props: IProps)  {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<Dispatch<any>>();
 
 	const user: Application.Types.iUserAccount = useSelector(props.UserSlice.CurrentUser);
 	const status: Application.Types.Status = useSelector(props.UserSlice.Status);

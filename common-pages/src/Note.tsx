@@ -29,6 +29,7 @@ import { Application, OpenXDA } from '@gpa-gemstone/application-typings';
 import moment = require('moment');
 import { IGenericSlice } from './SliceInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch } from '@reduxjs/toolkit';
 
 interface IProps {
 		NoteTypes: OpenXDA.Types.NoteType[],
@@ -46,7 +47,7 @@ interface IProps {
 
 
 function Note(props: IProps)  {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<Dispatch<any>>();
 
   const [showEdit, setEdit] = React.useState<boolean>(false);
 	const [hover, setHover] = React.useState<'add'|'clear'|'none'>('none')

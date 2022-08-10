@@ -28,6 +28,7 @@ import { SystemCenter, Application } from '@gpa-gemstone/application-typings';
 import GroupForm  from './GroupForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { IGenericSlice, ISearchableSlice } from '../SliceInterfaces';
+import { Dispatch } from '@reduxjs/toolkit';
 
 interface IProps {
 	OnValueListSelect: (id: number) => void,
@@ -36,7 +37,7 @@ interface IProps {
 }
 
 function ByValueListGroup(props: IProps)  {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<Dispatch<any>>();
 
 	const data: SystemCenter.Types.ValueListGroup[] = useSelector(props.ValueListSlice.SearchResults);
   const dataStatus: Application.Types.Status = useSelector(props.ValueListSlice.SearchStatus);

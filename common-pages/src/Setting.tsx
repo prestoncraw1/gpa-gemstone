@@ -28,6 +28,7 @@ import { SearchBar, Search, Modal, Warning, LoadingScreen, ServerErrorIcon } fro
 import { ISearchableSlice } from './SliceInterfaces';
 import { Application, SystemCenter } from '@gpa-gemstone/application-typings';
 import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch } from '@reduxjs/toolkit';
 
 interface IProps {
 	SettingsSlice: ISearchableSlice<SystemCenter.Types.Setting>
@@ -36,7 +37,7 @@ interface IProps {
 
 
 function Setting(props: IProps)  {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<Dispatch<any>>();
 
   const search: Search.IFilter<SystemCenter.Types.Setting>[] = useSelector(props.SettingsSlice.SearchFilters);
 	const searchStatus: Application.Types.Status =  useSelector(props.SettingsSlice.SearchStatus);

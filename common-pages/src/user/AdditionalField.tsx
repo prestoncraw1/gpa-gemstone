@@ -30,6 +30,7 @@ import { CheckBox, Input, Select } from '@gpa-gemstone/react-forms';
 import {IAdditionalFieldSlice, IGenericSlice} from '../SliceInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
 import { IsInteger, IsNumber } from '@gpa-gemstone/helper-functions';
+import { Dispatch } from '@reduxjs/toolkit';
 
 interface IField {
 	FieldName: string,
@@ -56,7 +57,7 @@ interface IProps<Field extends IField, Value extends IValue> {
 }
 
 function AdditionalField<Field extends IField, Value extends IValue>(props: IProps<Field, Value>)  {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<Dispatch<any>>();
 
 	const valueListItems: SystemCenter.Types.ValueListItem[]  = useSelector(props.ValueListItemSlice.Data);
  	const valueListItemStatus: Application.Types.Status = useSelector(props.ValueListItemSlice.Status);

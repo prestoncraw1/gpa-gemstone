@@ -26,6 +26,7 @@ import * as _ from 'lodash';
 import { CheckBox } from '@gpa-gemstone/react-forms';
 import { ISecurityRoleSlice } from '../SliceInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch } from '@reduxjs/toolkit';
 
 interface IProps {
 	UserID: string,
@@ -33,7 +34,7 @@ interface IProps {
 }
 
 function UserPermission(props: IProps)  {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<Dispatch<any>>();
 
 	const currentRoles: Application.Types.iApplicationRoleUserAccount[] = useSelector(props.RoleSlice.Roles);
 	const allRoleStatus: Application.Types.Status = useSelector(props.RoleSlice.Status)

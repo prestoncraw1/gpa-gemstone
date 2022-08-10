@@ -30,6 +30,7 @@ import * as _ from 'lodash';
 import UserForm from './UserForm';
 import { IAdditionalFieldSlice, IGenericSlice, IUserAccountSlice, UserValidation } from '../SliceInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch } from '@reduxjs/toolkit';
 
 interface IProps {
 	UserSlice: IUserAccountSlice,
@@ -51,7 +52,7 @@ const defaultSearchcols: Search.IField<Application.Types.iUserAccount>[] = [
 
 
 function ByUser(props: IProps)  {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<Dispatch<any>>();
 
 	const search: Search.IFilter<Application.Types.iUserAccount>[] = useSelector(props.UserSlice.SearchFilters);
 

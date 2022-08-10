@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GenericSlice, Modal, SearchBar, Search } from "@gpa-gemstone/react-interactive";
 import _ = require("lodash");
 import { CrossMark } from "@gpa-gemstone/gpa-symbols";
+import { Dispatch } from "@reduxjs/toolkit";
 
 interface U { ID: number|string }
 
@@ -43,7 +44,7 @@ interface IProps<T extends U> {
 
 
 export default function SelectPopup<T extends U>(props: IProps<T>) {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<Dispatch<any>>();
     const sortField = useSelector(props.Slice.SortField) as keyof T;
     const ascending = useSelector(props.Slice.Ascending);
     const data: T[] = useSelector(props.Slice.SearchResults);

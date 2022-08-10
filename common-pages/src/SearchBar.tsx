@@ -27,6 +27,7 @@ import { GenericSlice, SearchBar as GenericSearchBar, Search } from '@gpa-gemsto
 import { OpenXDA, SystemCenter, Application } from '@gpa-gemstone/application-typings';
 import { useDispatch, useSelector } from 'react-redux';
 import _ = require('lodash');
+import { Dispatch } from '@reduxjs/toolkit';
 
 interface U { ID: number|string }
 
@@ -57,7 +58,7 @@ export namespace DefaultSearch {
         { label: 'Number of Assets', key: 'MappedAssets', type: 'number', isPivotField: false },
       ];
 
-        const dispatch = useDispatch();
+        const dispatch = useDispatch<Dispatch<any>>();
 
         const [addlFieldCols, setAddlFieldCols] = React.useState<Search.IField<SystemCenter.Types.DetailedMeter>[]>([]);
         const searchStatus = useSelector(props.Slice.SearchStatus)
@@ -92,7 +93,7 @@ export namespace DefaultSearch {
         const standardSearch: Search.IField<SystemCenter.Types.DetailedLocation> = { label: 'Name', key: 'Name', type: 'string', isPivotField: false };
         const [addlFieldCols, setAddlFieldCols] = React.useState<Search.IField<SystemCenter.Types.DetailedLocation>[]>([]);
         
-        const dispatch = useDispatch();
+        const dispatch = useDispatch<Dispatch<any>>();
         const searchStatus = useSelector(props.Slice.SearchStatus)
         const sortField = useSelector(props.Slice.SortField)
         const ascending = useSelector(props.Slice.Ascending)
@@ -133,7 +134,7 @@ export namespace DefaultSearch {
         const standardSearch: Search.IField<SystemCenter.Types.DetailedAsset> = { label: 'Name', key: 'AssetName', type: 'string', isPivotField: false };
         const [addlFieldCols, setAddlFieldCols] = React.useState<Search.IField<SystemCenter.Types.DetailedAsset>[]>([]);
 
-        const dispatch = useDispatch();
+        const dispatch = useDispatch<Dispatch<any>>();
         const searchStatus = useSelector(props.Slice.SearchStatus)
         const sortField = useSelector(props.Slice.SortField)
         const ascending = useSelector(props.Slice.Ascending)
@@ -175,7 +176,7 @@ export namespace DefaultSearch {
         const standardSearch: Search.IField<OpenXDA.Types.AssetGroup> = { label: 'Name', key: 'AssetName', type: 'string', isPivotField: false };
         const [addlFieldCols, setAddlFieldCols] = React.useState<Search.IField<OpenXDA.Types.AssetGroup>[]>([]);
 
-        const dispatch = useDispatch();
+        const dispatch = useDispatch<Dispatch<any>>();
         const searchStatus = useSelector(props.Slice.SearchStatus)
         const sortField = useSelector(props.Slice.SortField)
         const ascending = useSelector(props.Slice.Ascending)
@@ -214,7 +215,7 @@ export namespace DefaultSearch {
         const standardSearch: Search.IField<Application.Types.iUserAccount> = { label: 'Username', key: 'Name', type: 'string', isPivotField: false };
         const [addlFieldCols, setAddlFieldCols] = React.useState<Search.IField<Application.Types.iUserAccount>[]>([]);
 
-        const dispatch = useDispatch();
+        const dispatch = useDispatch<Dispatch<any>>();
         const searchStatus = useSelector(props.Slice.SearchStatus)
         const sortField = useSelector(props.Slice.SortField)
         const ascending = useSelector(props.Slice.Ascending)
@@ -259,7 +260,7 @@ export namespace DefaultSearch {
         const standardSearch: Search.IField<OpenXDA.Types.Customer> = defaultSearchcols[0];
         const [addlFieldCols, setAddlFieldCols] = React.useState<Search.IField<OpenXDA.Types.Customer>[]>([]);
         
-        const dispatch = useDispatch();
+        const dispatch = useDispatch<Dispatch<any>>();
         const searchStatus = useSelector(props.Slice.SearchStatus)
         const sortField = useSelector(props.Slice.SortField)
         const ascending = useSelector(props.Slice.Ascending)

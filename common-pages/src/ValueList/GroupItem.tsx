@@ -28,6 +28,7 @@ import { SearchableTable } from '@gpa-gemstone/react-table';
 import { CrossMark } from '@gpa-gemstone/gpa-symbols';
 import { useDispatch, useSelector } from 'react-redux';
 import { IGenericSlice } from '../SliceInterfaces';
+import { Dispatch } from '@reduxjs/toolkit';
 
 interface IProps {
 		Record: SystemCenter.Types.ValueListGroup
@@ -36,7 +37,7 @@ interface IProps {
 
 
 export default function GroupItemsWindow(props: IProps) {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<Dispatch<any>>();
 
 	const recordStatus: Application.Types.Status = useSelector(props.ValueListItemSlice.Status);
 	const data: SystemCenter.Types.ValueListItem[] = useSelector(props.ValueListItemSlice.Data);

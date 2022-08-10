@@ -27,6 +27,7 @@ import InfoWindow from './GroupInfo';
 import GroupItemsWindow from './GroupItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { IGenericSlice } from '../SliceInterfaces';
+import { Dispatch } from '@reduxjs/toolkit';
 
 interface IProps {
 	Id: number;
@@ -36,7 +37,7 @@ interface IProps {
 }
 
 	export default function ValueListGroup (props: IProps) {
-			const dispatch = useDispatch();
+			const dispatch = useDispatch<Dispatch<any>>();
 
 	    const record: SystemCenter.Types.ValueListGroup|undefined = useSelector((state) => props.ValueListSlice.Data(state).find(i => i.ID === props.Id))
 			const recordStatus: Application.Types.Status = useSelector(props.ValueListSlice.Status)

@@ -26,6 +26,7 @@ import {Input, DatePicker, CheckBox} from '@gpa-gemstone/react-forms'
 import * as _ from 'lodash';
 import { IUserAccountSlice, UserValidation } from '../SliceInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch } from '@reduxjs/toolkit';
 
 interface IProps {
 	UserAccount: Application.Types.iUserAccount,
@@ -36,7 +37,7 @@ interface IProps {
 	}
 
 function UserForm(props: IProps)  {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<Dispatch<any>>();
 
   const [updatedAD, setUpdatedAD] = React.useState<boolean>(false);
 	const userValidation: UserValidation = useSelector(props.UserSlice.ADValidation);

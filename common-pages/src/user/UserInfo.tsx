@@ -29,13 +29,14 @@ import { ToolTip } from '@gpa-gemstone/react-interactive';
 import { Warning } from '@gpa-gemstone/gpa-symbols';
 import { IUserAccountSlice } from '../SliceInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch } from '@reduxjs/toolkit';
 
 interface IProps {
 	UserSlice: IUserAccountSlice
 }
 
 function UserInfo(props: IProps)  {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<Dispatch<any>>();
 
 	const currentUser = useSelector(props.UserSlice.CurrentUser);
 	const [user, setUser] = React.useState<Application.Types.iUserAccount>(currentUser);
