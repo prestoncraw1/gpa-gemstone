@@ -41,20 +41,37 @@ export default function DateRangePicker<T>(props: {
   // Range box vars, need a secondary var to avoid looping react hooks
   const [formRange, setFormRange] = React.useState<Duration>('Custom');
   const [range, setRange] = React.useState<Duration>('Custom');
+
+  // Tracks weather or not props.Record changes are due to internal input boxes or externally
+  const [internal, setInternal] = React.useState<boolean>(false);
+  // Adds a buffer between the outside props and what the box is reading to prevent box overwriting every render with a keystroke
+  const [boxRecord, setBoxRecord] = React.useState<T>(ParseRecord());
   
-  const boxFormat = "YYYY-MM-DD" + (props.Type === undefined || props.Type === 'date' ? "" : "[T]hh:mm:ss.SSS");
+  // Formats that will be used for dateBoxes
+  const boxFormat = "YYYY-MM-DD" + (props.Type === undefined || props.Type === 'date' ? "" : "[T]hh:mm:ss");
   const recordFormat = props.Format !== undefined ? props.Format : "YYYY-MM-DD" + (props.Type === undefined || props.Type === 'date' ? "" : "[T]hh:mm:ss.SSS[Z]");
 
   React.useEffect(() => {
     setRange(ToRange(moment(props.Record[props.ToField], recordFormat).diff(moment(props.Record[props.FromField], recordFormat), 'days')));
+    if (!internal)
+      setBoxRecord(ParseRecord());
+    setInternal(false);
   },[props.Record]);
 
   React.useEffect(() => {
-    const record: T = { ...props.Record };
     setRange(formRange);
-    record[props.ToField] = moment(props.Record[props.FromField], recordFormat).add(GetDays(formRange), 'days').format(recordFormat) as any;
-    props.Setter(record);
+    let toTime: moment.Moment =  moment(props.Record[props.FromField], recordFormat).add(GetDays(formRange), 'days');
+    props.Setter({...props.Record, [props.ToField]: toTime.format(recordFormat) as any});
+    setBoxRecord({...boxRecord, [props.ToField]: toTime.format(boxFormat) as any});
   }, [formRange]);
+
+  function ParseRecord(): T{
+    const record: T = { ...props.Record };
+    const ParseExternalField: (field: keyof T) => any = (field: keyof T) => {return props.Record[field] === null ? '' : moment(props.Record[field] as any, recordFormat).format(boxFormat)};
+    record[props.ToField] = ParseExternalField(props.ToField);
+    record[props.FromField] = ParseExternalField(props.FromField);
+    return record;
+  }
 
   function GetDays(val: Duration) {
     if (val === '1 Day')
@@ -93,12 +110,12 @@ export default function DateRangePicker<T>(props: {
             record[field] = moment(evt.target.value, boxFormat).format(recordFormat) as any;
           else
             record[field] = null as any;
+          // These two updates should be batched together
           props.Setter(record);
+          setBoxRecord({...boxRecord, [field]: evt.target.value});
+          setInternal(true);
         }}
-        value={
-          props.Record[field] === null ? '' :
-             moment(props.Record[field] as any, recordFormat).format(boxFormat)
-        }
+        value={boxRecord[field] as any}
         disabled={props.Disabled === undefined ? false : props.Disabled}
       />
       {field !== props.FromField ? null :
