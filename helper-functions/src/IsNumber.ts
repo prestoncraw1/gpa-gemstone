@@ -27,7 +27,7 @@
  * @returns Function will return true if value is an integer, false otherwise
  */
 function IsNumber(value: any): boolean {
-  const regex = /^-?[0-9]+(\.[0-9]+)?$/;
+  const regex = /^-?\d+\.?(\d+)?$/;
   return value.toString().match(regex) != null;
 }
 
