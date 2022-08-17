@@ -25,7 +25,7 @@
 
 import * as React from 'react';
 import HelperMessage from './HelperMessage';
-import { CreateGuid } from '@gpa-gemstone/helper-functions'
+import { CreateGuid, IsNumber } from '@gpa-gemstone/helper-functions'
 
 interface IProps<T> {
   Record: T;
@@ -43,26 +43,33 @@ interface IProps<T> {
 export default function Input<T>(props: IProps<T>) {
 	const [guid, setGuid] = React.useState<string>("");
 	const [showHelp, setShowHelp] = React.useState<boolean>(false);
-	const [heldVal, setHeldVal] = React.useState<string>('');
+	const [internal, setInternal] = React.useState<boolean>(false);
+	const [heldVal, setHeldVal] = React.useState<string>(''); // Need to buffer tha value because parseFloat will throw away trailing decimals or zeros
 	
 	 React.useEffect(() => {
 		setGuid(CreateGuid());
 	  }, []);
 	
     React.useEffect(() => {
-      setHeldVal(props.Record[props.Field] == null ? '' : (props.Record[props.Field] as any).toString());
+      if (!internal) {
+        setHeldVal(props.Record[props.Field] == null ? '' : (props.Record[props.Field] as any).toString());
+      }
+      setInternal(false);
      }, [props.Record[props.Field]]);
 
-	function valueChange(evt: any) {
+	function valueChange(value: string) {
+    setInternal(true);
     if (props.Type === 'number') {
-      if (parseFloat(heldVal) !== parseFloat(evt.target.value))
-        props.Setter({ ...props.Record, [props.Field]: evt.target.value !== '' ? parseFloat(evt.target.value) : null });
-      else
-        setHeldVal(evt.target.value);
+      if (IsNumber(value)) {
+        props.Setter({ ...props.Record, [props.Field]: value !== '' ? parseFloat(value) : null });
+        setHeldVal(value);
+      }
     }
-    else
-      props.Setter({ ...props.Record, [props.Field]: evt.target.value !== '' ? evt.target.value : null })
+    else {
+      props.Setter({ ...props.Record, [props.Field]: value !== '' ? value : null });
+      setHeldVal(value);
     }
+  }
     
   return (
     <div className="form-group">
@@ -79,7 +86,7 @@ export default function Input<T>(props: IProps<T>) {
 		    data-help={guid}
         type={props.Type === undefined ? 'text' : props.Type}
         className={props.Valid(props.Field) ? 'form-control' : 'form-control is-invalid'}
-        onChange={(evt) => valueChange(evt)}
+        onChange={(evt) => valueChange(evt.target.value)}
         value={heldVal}
         disabled={props.Disabled == null ? false : props.Disabled}
       />
