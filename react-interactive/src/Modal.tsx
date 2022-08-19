@@ -82,7 +82,7 @@ const Modal: React.FunctionComponent<IProps> = (props) => {
                         <h4 className="modal-title">{props.Title}</h4>
 						{props.ShowX? <button type="button" className="close" onClick={() => props.CallBack(false,false) }>&times;</button> : null}
                     </div>
-                    <div className="modal-body">
+                    <div className="modal-body" style={{ maxHeight: 'calc(100vh - 210px)', overflowY: 'auto' }}>
                         {props.Show? props.children : null}
                     </div>
                     <div className="modal-footer">
