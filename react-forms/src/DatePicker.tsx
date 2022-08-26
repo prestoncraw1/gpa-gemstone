@@ -24,48 +24,58 @@
 import * as React from 'react';
 import * as moment from 'moment';
 
-export default class DatePicker<T> extends React.Component<
-  { Record: T;
-    Field: keyof T;
-    Setter: (record: T) => void;
-    Label?: string;
-    Disabled?: boolean;
-    Feedback?: string;
-    Format?: string;
-    Valid: (field: keyof T) => boolean; },
-  {},
-  {}
-> {
-  render() {
-    return (
-      <div className="form-group">
-        {(this.props.Label !== "") ?
-        <label>{this.props.Label == null ? this.props.Field : this.props.Label}</label> : null}
-        <input
-          className={this.props.Valid(this.props.Field) ? 'form-control' : 'form-control is-invalid'}
-          type="date"
-          onChange={(evt) => {
-            const record: T = { ...this.props.Record };
-            if (evt.target.value !== '') {
-              if (this.props.Format === null) record[this.props.Field] = evt.target.value as any;
-              else record[this.props.Field] = moment(evt.target.value).format(this.props.Format) as any;
-            }
-            else record[this.props.Field] = null as any;
+export default function DatePicker<T>(props: {
+  Record: T;
+  Field: keyof T;
+  Setter: (record: T) => void;
+  Valid: (field: keyof T) => boolean;
+  Label?: string;
+  Disabled?: boolean;
+  Feedback?: string;
+  Format?: string;
+  Type?: ('datetime-local' | 'date'); //Default to date
+}) {
+  // Tracks weather or not props.Record changes are due to internal input boxes or externally
+  const [internal, setInternal] = React.useState<boolean>(false);
+  // Adds a buffer between the outside props and what the box is reading to prevent box overwriting every render with a keystroke
+  const [boxRecord, setBoxRecord] = React.useState<T>(ParseRecord());
+  
+  // Formats that will be used for dateBoxes
+  const boxFormat = "YYYY-MM-DD" + (props.Type === undefined || props.Type === 'date' ? "" : "[T]hh:mm:ss");
+  const recordFormat = props.Format !== undefined ? props.Format : "YYYY-MM-DD" + (props.Type === undefined || props.Type === 'date' ? "" : "[T]hh:mm:ss.SSS[Z]");
 
-            this.props.Setter(record);
-          }}
-          value={
-            this.props.Record[this.props.Field] == null ? '' : 
-             this.props.Format == null ? 
-              (this.props.Record[this.props.Field] as any).toString() :
-              moment(this.props.Record[this.props.Field] as any).format("YYYY-MM-DD")
-          }
-          disabled={this.props.Disabled == null ? false : this.props.Disabled}
-        />
-        <div className="invalid-feedback">
-        {this.props.Feedback == null ? this.props.Field + ' is a required field.' : this.props.Feedback}
-        </div>
+  function ParseRecord(): T {return {...props.Record, [props.Field]: [props.Field] === null ? '' : moment(props.Record[props.Field] as any, recordFormat).format(boxFormat)}};
+
+  React.useEffect(() => {
+    if (!internal)
+      setBoxRecord(ParseRecord());
+    setInternal(false);
+  },[props.Record]);
+
+  return (
+    <div className="form-group">
+      {(props.Label !== "") ?
+      <label>{props.Label == null ? props.Field : props.Label}</label> : null}
+      <input
+        className={"form-control" + (props.Valid(props.Field) ? '' : ' is-invalid')}
+        type={props.Type === undefined ? 'date' : props.Type}
+        onChange={(evt) => {
+          const record: T = { ...props.Record };
+          if (evt.target.value !== '')
+            record[props.Field] = moment(evt.target.value, boxFormat).format(recordFormat) as any;
+          else
+            record[props.Field] = null as any;
+          // These two updates should be batched together
+          props.Setter(record);
+          setBoxRecord({...boxRecord, [props.Field]: evt.target.value});
+          setInternal(true);
+        }}
+        value={boxRecord[props.Field] as any}
+        disabled={props.Disabled === undefined ? false : props.Disabled}
+      />
+      <div className="invalid-feedback">
+      {props.Feedback == null ? props.Field.toString() + ' is a required field.' : props.Feedback}
       </div>
-    );
-  }
+    </div>
+  );
 }

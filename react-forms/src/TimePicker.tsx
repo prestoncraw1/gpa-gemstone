@@ -23,44 +23,39 @@
 
 import * as React from 'react';
 
-export default class TimePicker<T> extends React.Component<
-  { Record: T;
-    Field: keyof T;
-    Setter: (record: T) => void;
-    Label?: string;
-    Disabled?: boolean;
-    Feedback?: string;
-    Step?: number;
-    Valid: (field: keyof T) => boolean;
-    },
-  {},
-  {}
-> {
-  render() {
-    return (
-      <div className="form-group">
-        {(this.props.Label !== "") ?
-        <label>{this.props.Label == null ? this.props.Field : this.props.Label}</label> : null}
-        <input
-          className={this.props.Valid(this.props.Field) ? 'form-control' : 'form-control is-invalid'}
-          type="time"
-          step={this.props.Step === null ? 60 : this.props.Step}
-          onChange={(evt) => {
-            const record: T = { ...this.props.Record };
-            if (evt.target.value !== '') record[this.props.Field] = evt.target.value as any;
-            else record[this.props.Field] = null as any;
+export default function DatePicker<T>(props: {
+  Record: T;
+  Field: keyof T;
+  Setter: (record: T) => void;
+  Valid: (field: keyof T) => boolean;
+  Label?: string;
+  Disabled?: boolean;
+  Feedback?: string;
+  Step?: number;
+}) {
+  return (
+    <div className="form-group">
+      {(props.Label !== "") ?
+      <label>{props.Label == null ? props.Field : props.Label}</label> : null}
+      <input
+        className={'form-control' + props.Valid(props.Field) ? '' : ' is-invalid'}
+        type="time"
+        step={props.Step === null ? 60 : props.Step}
+        onChange={(evt) => {
+          const record: T = { ...props.Record };
+          if (evt.target.value !== '') record[props.Field] = evt.target.value as any;
+          else record[props.Field] = null as any;
 
-            this.props.Setter(record);
-          }}
-          value={
-            this.props.Record[this.props.Field] == null ? '' : (this.props.Record[this.props.Field] as any).toString()
-          }
-          disabled={this.props.Disabled == null ? false : this.props.Disabled}
-        />
-        <div className="invalid-feedback">
-        {this.props.Feedback == null ? this.props.Field + ' is a required field.' : this.props.Feedback}
-      </div>
-      </div>
-    );
-  }
+          props.Setter(record);
+        }}
+        value={
+          props.Record[props.Field] == null ? '' : (props.Record[props.Field] as any).toString()
+        }
+        disabled={props.Disabled == null ? false : props.Disabled}
+      />
+      <div className="invalid-feedback">
+      {props.Feedback == null ? props.Field.toString() + ' is a required field.' : props.Feedback}
+    </div>
+    </div>
+  );
 }
