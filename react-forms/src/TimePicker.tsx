@@ -38,7 +38,7 @@ export default function DatePicker<T>(props: {
       {(props.Label !== "") ?
       <label>{props.Label == null ? props.Field : props.Label}</label> : null}
       <input
-        className={'form-control' + props.Valid(props.Field) ? '' : ' is-invalid'}
+        className={'form-control' + (props.Valid(props.Field) ? '' : ' is-invalid')}
         type="time"
         step={props.Step === null ? 60 : props.Step}
         onChange={(evt) => {
