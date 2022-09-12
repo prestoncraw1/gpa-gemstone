@@ -33,7 +33,7 @@ export default function DatePicker<T>(props: {
   Disabled?: boolean;
   Feedback?: string;
   Format?: string;
-  Type?: ('datetime-local' | 'date'); //Default to date
+  Type?: ('datetime-local' | 'date'); // Default to date
 }) {
   // Tracks weather or not props.Record changes are due to internal input boxes or externally
   const [internal, setInternal] = React.useState<boolean>(false);
