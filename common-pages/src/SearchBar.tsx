@@ -37,8 +37,9 @@ interface IProps<T extends U> {
     /** Functions that gets available values for any ENUM Types */
     GetEnum: (setOptions: (options: IOptions[]) => void, field: Search.IField<T>) => () => void,
     /** Function that Grabs any additional Filters that shoudl be available (such as Addl Fields) */
-    GetAddlFields: (setAddlFields: (cols: Search.IField<T>[]) => void) => () => void
+    GetAddlFields: (setAddlFields: (cols: Search.IField<T>[]) => void) => () => void,
     children: React.ReactNode,
+    AddlFilters?: Search.IFilter<T>[]
 }
 
 interface IOptions {Value: string, Label: string}
@@ -74,7 +75,7 @@ export namespace DefaultSearch {
 
         return <GenericSearchBar<SystemCenter.Types.DetailedMeter>
             CollumnList={[...defaultSearchcols, ...addlFieldCols]}
-            SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: flds, sortField, ascending }))}
+            SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: (props.AddlFilters === undefined ? flds : [...flds, ...props.AddlFilters]), sortField, ascending }))} 
             Direction={'left'}
             defaultCollumn={standardSearch}
             Width={'50%'}
@@ -115,7 +116,7 @@ export namespace DefaultSearch {
 
         return <GenericSearchBar<SystemCenter.Types.DetailedLocation> 
             CollumnList={[...defaultSearchcols, ...addlFieldCols]}
-            SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: flds, sortField, ascending }))}
+            SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: (props.AddlFilters === undefined ? flds : [...flds, ...props.AddlFilters]), sortField, ascending }))} 
             Direction={'left'} 
             defaultCollumn={standardSearch} 
             Width={'50%'} 
@@ -157,7 +158,7 @@ export namespace DefaultSearch {
 
         return <GenericSearchBar<SystemCenter.Types.DetailedAsset> 
             CollumnList={[...defaultSearchcols, ...addlFieldCols]}
-            SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: flds, sortField, ascending }))} 
+            SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: (props.AddlFilters === undefined ? flds : [...flds, ...props.AddlFilters]), sortField, ascending }))} 
             Direction={'left'} 
             defaultCollumn={standardSearch} 
             Width={'50%'} 
@@ -196,7 +197,7 @@ export namespace DefaultSearch {
         
         return <GenericSearchBar<OpenXDA.Types.AssetGroup> 
             CollumnList={[...defaultSearchcols, ...addlFieldCols]}
-            SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: flds, sortField, ascending }))} 
+            SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: (props.AddlFilters === undefined ? flds : [...flds, ...props.AddlFilters]), sortField, ascending }))} 
             Direction={'left'} 
             defaultCollumn={standardSearch} 
             Width={'50%'} 
@@ -233,7 +234,7 @@ export namespace DefaultSearch {
         
         return <GenericSearchBar<Application.Types.iUserAccount> 
             CollumnList={[...defaultSearchcols, ...addlFieldCols]}
-            SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: flds, sortField, ascending }))} 
+            SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: (props.AddlFilters === undefined ? flds : [...flds, ...props.AddlFilters]), sortField, ascending }))} 
             Direction={'left'} 
             defaultCollumn={standardSearch} 
             Width={'50%'} 
@@ -272,7 +273,7 @@ export namespace DefaultSearch {
         
         return <GenericSearchBar<OpenXDA.Types.Customer> 
             CollumnList={[...defaultSearchcols, ...addlFieldCols]}
-            SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: flds, sortField, ascending }))} 
+            SetFilter={(flds) => dispatch(props.Slice.DBSearch({ filter: (props.AddlFilters === undefined ? flds : [...flds, ...props.AddlFilters]), sortField, ascending }))} 
             Direction={'left'} 
             defaultCollumn={standardSearch} 
             Width={'50%'} 
