@@ -33,6 +33,7 @@ import ArrayCheckBoxes from './ArrayCheckBoxes';
 import MultiCheckBoxSelect from './MutliCheckBoxSelect';
 import DoubleInput from './DoubleInput';
 import TimePicker from './TimePicker';
+import StylableSelect from './StylableSelect';
 
 export {
   CheckBox,
@@ -46,5 +47,6 @@ export {
   ArrayCheckBoxes,
   MultiCheckBoxSelect,
   DoubleInput,
-  TimePicker
+  TimePicker,
+  StylableSelect
 };
