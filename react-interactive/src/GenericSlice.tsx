@@ -71,6 +71,7 @@ export default class GenericSlice<T extends U> {
     APIPath: string = "";
     Slice: ( Slice<IState<T>> );
     Fetch: (AsyncThunk<any, void | number | string, {}>);
+    SetChanged: (AsyncThunk<any, void, {}>);
     DBAction: (AsyncThunk<any, { verb: 'POST' | 'DELETE' | 'PATCH', record: T }, {}> );
     DBSearch: (AsyncThunk<any, { filter: Search.IFilter<T>[], sortField?: keyof T, ascending?: boolean }, {}> );
     Sort: (AsyncThunk<any, {SortField: keyof T, Ascending: boolean}, {}>);
@@ -121,8 +122,7 @@ export default class GenericSlice<T extends U> {
 
 
         const additionalThunks: {[key: string]: any} = {};
-        let additionalBuilder: (builder: ActionReducerMapBuilder<IState<T>>) => void;
-        additionalBuilder = () => {_.noop; };
+        let additionalBuilder: (builder: ActionReducerMapBuilder<IState<T>>) => void = () => { _.noop(); };
 
         if (options !== null && options.AddionalThunks !== undefined) {
 
@@ -251,6 +251,8 @@ export default class GenericSlice<T extends U> {
             
             return await handle
           });
+
+        const setChanged = createAsyncThunk(`${name}/SetChanged${name}`, async (args: void, {}) => { return; });
           
         const slice = createSlice({
             name: this.Name,
@@ -385,6 +387,10 @@ export default class GenericSlice<T extends U> {
                     if (this.actionFullfilledDependency !== null)
                         this.actionFullfilledDependency(state as IState<T>,`${name}/DBSort${name}`, action.meta.arg, action.meta.requestId)
                 });
+                builder.addCase(setChanged.pending,(state: WritableDraft<IState<T>>) => {
+                    state.Status = 'changed';
+                    state.SearchStatus = 'changed';
+                } )
 
                 additionalBuilder(builder);
             }
@@ -398,6 +404,7 @@ export default class GenericSlice<T extends U> {
         this.DBSearch = dBSearch;
         this.Sort = dBSort;
         this.Reducer = slice.reducer;
+        this.SetChanged = setChanged;
     }
 
 
