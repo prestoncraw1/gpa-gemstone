@@ -32,15 +32,15 @@ interface IOptions<T extends U> {
     ActionPendingDependencies? : (state: IState<T>, action: string , arg: any, requestID: string) => void,
     ActionErrorDependencies? : (state: IState<T>, action: string , arg: any, requestID: string) => void,
     ActionFullfilledDependencies? : (state: IState<T>, action: string , arg: any, requestID: string) => void,
-    AddionalThunks?: IAdditionalThunk[]
+    AddionalThunks?: IAdditionalThunk<T>[]
 }
 
-interface IAdditionalThunk {
+interface IAdditionalThunk<T extends U> {
     Name: string,
-    Fetch: () => void,
-    OnSuccess?: () => void,
-    OnFailure?: () => void,
-    OnPending?: () => void
+    Fetch: (state: IState<T>, args: any|void) => null|JQuery.jqXHR<any>,
+    OnSuccess?: (state: WritableDraft<IState<T>>, requestId: string, data: any, args: any|void) => void,
+    OnFailure?: (state: WritableDraft<IState<T>>, requestId: string, args: any|void, error: any) => void,
+    OnPending?: (state: WritableDraft<IState<T>>, requestId: string, args: any|void) => void
 }
 
 
@@ -74,6 +74,7 @@ export default class GenericSlice<T extends U> {
     DBAction: (AsyncThunk<any, { verb: 'POST' | 'DELETE' | 'PATCH', record: T }, {}> );
     DBSearch: (AsyncThunk<any, { filter: Search.IFilter<T>[], sortField?: keyof T, ascending?: boolean }, {}> );
     Sort: (AsyncThunk<any, {SortField: keyof T, Ascending: boolean}, {}>);
+    AdditionalThunk: {[key: string]: AsyncThunk<any, any, {}>};
     Reducer: any;
 
     private fetchHandle: JQuery.jqXHR<any>|null;
@@ -106,17 +107,61 @@ export default class GenericSlice<T extends U> {
         this.actionFullfilledDependency = null;
         this.actionErrorDependency = null;
 
-        if (options !== null && options.ActionDependencies != undefined)
+        if (options !== null && options.ActionDependencies !== undefined)
             this.actionDependency = options.ActionDependencies;
 
-        if (options !== null && options.ActionPendingDependencies != undefined)
+        if (options !== null && options.ActionPendingDependencies !== undefined)
             this.actionPendingDependency = options.ActionPendingDependencies;
 
-        if (options !== null && options.ActionFullfilledDependencies != undefined)
+        if (options !== null && options.ActionFullfilledDependencies !== undefined)
             this.actionFullfilledDependency = options.ActionFullfilledDependencies;
 
-        if (options !== null && options.ActionErrorDependencies != undefined)
+        if (options !== null && options.ActionErrorDependencies !== undefined)
             this.actionErrorDependency = options.ActionErrorDependencies;
+
+
+        const additionalThunks: {[key: string]: any} = {};
+        let additionalBuilder: (builder: ActionReducerMapBuilder<IState<T>>) => void;
+        additionalBuilder = () => {_.noop; };
+
+        if (options !== null && options.AddionalThunks !== undefined) {
+
+            options.AddionalThunks.forEach((thunk) => {
+                additionalThunks[thunk.Name] = createAsyncThunk(`${name}/${thunk.Name}`, async (arg: any|void, { getState }) => {
+                    const state = (getState() as any)[name] as IState<T>;
+                    if (this.actionDependency !== null)
+                        this.actionDependency(state,`${name}/${thunk.Name}`, arg)
+
+                    const handle = thunk.Fetch(state,arg);
+                    if (handle != null)
+                        return await handle;
+                    return;
+                });
+            });
+
+            additionalBuilder = (builder) => {
+                 options.AddionalThunks?.forEach((thunk) => {
+                        builder.addCase(fetch.fulfilled, (state: WritableDraft<IState<T>>, action: PayloadAction<any, string, {requestId: string, arg: any|void }, never>) => {
+                            if (thunk.OnSuccess !== undefined)
+                                thunk.OnSuccess(state,action.meta.requestId,action.payload,action.meta.arg);
+                            if (this.actionFullfilledDependency !== null)
+                                this.actionFullfilledDependency(state as IState<T>,`${name}/${thunk.Name}`, action.meta.arg, action.meta.requestId)
+                        });                    
+                        builder.addCase(fetch.pending, (state: WritableDraft<IState<T>>, action: PayloadAction<undefined, string,  {arg: any | void, requestId: string},never>) => {
+                            if (thunk.OnPending !== undefined)
+                                thunk.OnPending(state,action.meta.requestId,action.meta.arg);
+                            if (this.actionPendingDependency !== null)
+                                this.actionPendingDependency(state as IState<T>,`${name}/${thunk.Name}`, action.meta.arg, action.meta.requestId)
+                        });
+                        builder.addCase(fetch.rejected, (state: WritableDraft<IState<T>>, action: PayloadAction<unknown, string,  {arg: number | string | void, requestId: string},SerializedError>) => {
+                            if (thunk.OnFailure !== undefined)
+                                thunk.OnFailure(state,action.meta.requestId,action.payload,action.meta.arg);
+                            if (this.actionErrorDependency !== null)
+                                this.actionErrorDependency(state as IState<T>,`${name}/${thunk.Name}`, action.meta.arg, action.meta.requestId)
+                        });
+                });
+            }
+        }
 
         const fetch = createAsyncThunk(`${name}/Fetch${name}`, async (parentID:number | void | string, { signal, getState }) => {
             
@@ -340,11 +385,13 @@ export default class GenericSlice<T extends U> {
                     if (this.actionFullfilledDependency !== null)
                         this.actionFullfilledDependency(state as IState<T>,`${name}/DBSort${name}`, action.meta.arg, action.meta.requestId)
                 });
+
+                additionalBuilder(builder);
             }
 
         });
 
-
+        this.AdditionalThunk = additionalThunks;
         this.Fetch = fetch;
         this.DBAction = dBAction;
         this.Slice = slice;
