@@ -99,7 +99,7 @@ export default function ConfigurableTable<T>(props: IProps<T>) {
                 rowStyle={props.rowStyle}
                 keySelector={props.keySelector}
             />
-            {props.settingsPortal == undefined?
+            {props.settingsPortal === undefined?
             <Modal Title={'Table Columns'} Show={showSettings} ShowX={true} ShowCancel={false}
                 CallBack={(conf: boolean) => {
                     setShowSettings(false);
