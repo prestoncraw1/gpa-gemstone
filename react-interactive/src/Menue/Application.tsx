@@ -41,6 +41,7 @@ interface IProps {
     Version?: string,
     UserRoles?: Application.Types.SecurityRoleName[]
     AllowCollapsed?: boolean
+    NavBarContent?: React.ReactNode
 }
 
 interface INavProps { collapsed: boolean }
@@ -125,6 +126,7 @@ const Applications: React.FunctionComponent<IProps> = (props) => {
                             {props.OnSignOut !== undefined ? <a className="nav-link" onClick={props.OnSignOut} >Sign out</a> : null}
                         </li>
                     </ul>
+                    {props.NavBarContent}
                 </nav>
                     <SidebarNav className={"bg-light"} collapsed={collapsed}>
                         <SidebarDiv>
