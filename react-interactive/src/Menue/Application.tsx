@@ -41,10 +41,12 @@ interface IProps {
     Version?: string,
     UserRoles?: Application.Types.SecurityRoleName[]
     AllowCollapsed?: boolean
-    NavBarContent?: React.ReactNode
+    NavBarContent?: React.ReactNode,
+    HideSideBar?: boolean
 }
 
 interface INavProps { collapsed: boolean }
+interface IMainDivProps {w: number}
 const SidebarNav = styled.nav <INavProps>`
   & {
     position: fixed;
@@ -64,14 +66,14 @@ const SidebarDiv = styled.div`
     height: calc( 100% - 35px);
   }`;
 
-const MainDiv = styled.div<INavProps>`
+const MainDiv = styled.div<IMainDivProps>`
 & {
     top: 40px;
     position: absolute;
-    width: calc(100% - ${props => props.collapsed ? 50 : 200}px);
+    width: calc(100% - ${props => props.w}px);
     height: calc(100% - 48px);
     overflow: hidden;
-    left: ${props => props.collapsed ? 50 : 200}px;
+    left: ${props => props.w}px;
 }
 & svg {
     user-select: none;
@@ -108,6 +110,8 @@ const Applications: React.FunctionComponent<IProps> = (props) => {
         return <Route path={`${props.HomePath}${element.props.Name}`} element={<Content>{element.props.children}</Content>} />
     }
 
+    const hideSide = props.HideSideBar == undefined? false : props.HideSideBar;
+
     return <React.Suspense fallback={<LoadingScreen Show={true} />}>
         <Context.Provider value={GetContext()}>
         <Router>
@@ -128,7 +132,7 @@ const Applications: React.FunctionComponent<IProps> = (props) => {
                     </ul>
                     {props.NavBarContent}
                 </nav>
-                    <SidebarNav className={"bg-light"} collapsed={collapsed}>
+                    {hideSide? null : <SidebarNav className={"bg-light"} collapsed={collapsed}>
                         <SidebarDiv>
                         <ul className="navbar-nav px-3">
                             {React.Children.map(props.children, (e) => {
@@ -153,9 +157,8 @@ const Applications: React.FunctionComponent<IProps> = (props) => {
                                 <br />
                                 <span></span>
                             </div> : null}
-                    </SidebarNav>
-                    <MainDiv collapsed={collapsed}>
-                   
+                    </SidebarNav>}
+                    <MainDiv w={hideSide? 0 : (collapsed ? 50 : 200)}>
                         <Routes>
                             <Route path={`${props.HomePath}`}>
                                 <Route index element={<Navigate to={`${props.HomePath}${props.DefaultPath}`} />} />
