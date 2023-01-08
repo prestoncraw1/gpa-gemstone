@@ -21,9 +21,8 @@
 // ******************************************************************************************************
 
 import * as React from 'react';
-import Modal from './Modal';
 import styled from "styled-components";
-import { GetNodeSize, CreateGuid } from '@gpa-gemstone/helper-functions'
+import { GetNodeSize } from '@gpa-gemstone/helper-functions'
 import { Portal } from 'react-portal';
 
 interface IProps {
@@ -31,7 +30,7 @@ interface IProps {
 	  Position?: ('top'|'bottom'|'left'|'right'),
     Theme?: ('dark'|'light'),
     Target?: string,
-	Zindex?: number,
+	  Zindex?: number,
 }
 
 interface IWrapperProps {
@@ -121,59 +120,81 @@ const WrapperDiv = styled.div<IWrapperProps>`
 
 // The other element needs to be labeld as data-tooltip that will only be used for positioning
 const ToolTip: React.FunctionComponent<IProps> = (props) => {
+  const toolTip = React.useRef(null);
+
   const [top, setTop] = React.useState<number>(0);
   const [left, setLeft] = React.useState<number>(0);
-  const [guid, setGuid] = React.useState<string>("");
+
+  const [targetLeft, setTargetLeft] = React.useState<number>(0);
+  const [targetTop, setTargetTop] = React.useState<number>(0);
+  const [targetWidth, setTargetWidth] = React.useState<number>(0);
+  const [targetHeight, setTargetHeight] = React.useState<number>(0);
+
+  const [x,setX] = React.useState<boolean>(false);
+
 
   React.useEffect(() => {
-    setGuid(CreateGuid());
-  }, []);
+    const target = document.querySelectorAll(`[data-tooltip${ props.Target === undefined? '' : `="${props.Target}"`}]`)
 
-  React.useLayoutEffect(() => {
+    if (target.length === 0) {
+      setTargetHeight(0);
+      setTargetWidth(0);
+      setTargetLeft(-999);
+      setTargetTop(-999);
+    }
+    else {
+      const targetLocation = GetNodeSize(target[0] as HTMLElement);
+      setTargetHeight(targetLocation.height);
+      setTargetWidth(targetLocation.width);
+      setTargetLeft(targetLocation.left);
+      setTargetTop(targetLocation.top);
+    }
+
+    const h = setTimeout(() => {
+      setX((a) => !a)
+    }, 500);
+
+    return () => { if (h !== null) clearTimeout(h); };
+
+  }, [x])
+
+  React.useEffect(() => {
     const [t,l] = UpdatePosition();
-
     if (t !== top)
       setTop(t);
     if (l !== left)
-        setLeft(l);
+        setLeft(l); 
+   }, [targetLeft,targetTop,targetWidth,targetHeight]);
 
-  })
-
+   
   const zIndex = (props.Zindex === undefined? 2000: props.Zindex);
   
   function UpdatePosition() {
-    const target = document.querySelectorAll(`[data-tooltip${ props.Target === undefined? '' : `="${props.Target}"`}]`);
-
-    if (target.length === 0)
+   
+    if (toolTip.current === null)
       return [-999,-999];
-
-    const targetLocation = GetNodeSize(target[0] as HTMLElement);
-
-    const toolTip = document.getElementById(guid);
-
-    if (toolTip === null)
-      return [-999,-999];
-    const tipLocation = GetNodeSize(toolTip as HTMLElement);
+  
+    const tipLocation = GetNodeSize(toolTip.current);
 
     const offset = 5;
 
     const result: [number,number] = [0,0];
 
     if (props.Position === 'left') {
-      result[0] = targetLocation.top + 0.5*targetLocation.height - 0.5*tipLocation.height;
-      result[1] = targetLocation.left - tipLocation.width - offset;
+      result[0] = targetTop + 0.5*targetHeight - 0.5*tipLocation.height;
+      result[1] = targetLeft - tipLocation.width - offset;
     }
     else if (props.Position === 'right') {
-      result[0] = targetLocation.top + 0.5*targetLocation.height - 0.5*tipLocation.height
-      result[1] = targetLocation.left + targetLocation.width + offset;
+      result[0] = targetTop + 0.5*targetHeight - 0.5*tipLocation.height
+      result[1] = targetLeft + targetWidth + offset;
     }
     else if (props.Position === 'top' || props.Position === undefined) {
-      result[0] = targetLocation.top - tipLocation.height - offset;
-      result[1] = targetLocation.left + 0.5* targetLocation.width - 0.5* tipLocation.width;
+      result[0] = targetTop - tipLocation.height - offset;
+      result[1] = targetLeft + 0.5* targetWidth - 0.5* tipLocation.width;
     }
     else if (props.Position === 'bottom') {
-      result[0] = targetLocation.top + targetLocation.height + offset;
-      result[1] = targetLocation.left + 0.5* targetLocation.width - 0.5* tipLocation.width;
+      result[0] = targetTop + targetHeight + offset;
+      result[1] = targetLeft + 0.5* targetWidth - 0.5* tipLocation.width;
     }
 
     return result;
@@ -183,7 +204,7 @@ const ToolTip: React.FunctionComponent<IProps> = (props) => {
 
     return (
       <Portal>
-      <WrapperDiv Show={props.Show} Theme={theme} Top={top} Left={left} id={guid} Location={props.Position === undefined? 'top' : props.Position} Zindex={zIndex}>
+      <WrapperDiv Show={props.Show} Theme={theme} Top={top} Left={left} ref={toolTip} Location={props.Position === undefined? 'top' : props.Position} Zindex={zIndex}>
         {props.children}
       </WrapperDiv>
       </Portal>
