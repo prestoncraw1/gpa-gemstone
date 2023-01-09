@@ -225,7 +225,7 @@ interface IDividerProps {
 }
 const VerticalSplitDivider: React.FunctionComponent<IDividerProps> = (props) => {
 
-    const style = props.style == undefined? {float: 'left', background: '#6c757d', cursor: 'col-resize'} : props.style;
+    const style = props.style === undefined? {float: 'left', background: '#6c757d', cursor: 'col-resize'} : props.style;
 
     return <div style={{width: 5, height: '100%', ...style}} onMouseDown={(evt: any) => props.onClick(evt.clientX)}></div>
 }
