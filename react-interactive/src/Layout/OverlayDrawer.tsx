@@ -247,10 +247,10 @@ return <>
                 if (props.OnChange !== undefined)
                     props.OnChange(false);
         }} Location={props.Location}
-         Height={(props.Location == 'top' || props.Location == 'bottom'? height : containerHeight)}
-         Left={(props.Location == 'top' || props.Location == 'bottom'? containerLeft : containerLeft + (props.Location == 'left'? containerWidth : -(width)))}
-         Top={(props.Location == 'left' || props.Location == 'right'? containerTop : containerTop + (props.Location == 'top'? containerHeight : -(height)))}
-         Width={(props.Location == 'left' || props.Location == 'right'? width : containerWidth)}
+         Height={(props.Location === 'top' || props.Location === 'bottom'? height : containerHeight)}
+         Left={(props.Location === 'top' || props.Location === 'bottom'? containerLeft : containerLeft + (props.Location === 'left'? containerWidth : -(width)))}
+         Top={(props.Location === 'left' || props.Location === 'right'? containerTop : containerTop + (props.Location === 'top'? containerHeight : -(height)))}
+         Width={(props.Location === 'left' || props.Location === 'right'? width : containerWidth)}
           >{props.Title}</ClosedOverlayDiv>}
         <OpenOverlayDiv Location={props.Location} Left={containerLeft} Top={containerTop} Open={open} ref={divRef} style={{minHeight: height, minWidth: width}}>{props.children}</OpenOverlayDiv>
 
