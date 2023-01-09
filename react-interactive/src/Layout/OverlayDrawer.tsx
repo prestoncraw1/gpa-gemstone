@@ -180,11 +180,11 @@ const OverlayDrawer: React.FunctionComponent<IProps> = (props) => {
     React.useEffect(() => {
         let l = 0;
 
-        if (props.Location == 'bottom' || props.Location == 'top') 
+        if (props.Location === 'bottom' || props.Location === 'top') 
             l = left + 0.5*width - 0.5*containerWidth;
-        if (props.Location == 'right') 
+        if (props.Location === 'right') 
            l = left + width - containerWidth;
-        if (props.Location == 'left') 
+        if (props.Location === 'left') 
            l = left;
         setContainerLeft(l);
     },[props.Location,left,containerWidth, width])
