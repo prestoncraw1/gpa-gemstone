@@ -199,9 +199,9 @@ const VerticalSplit: React.FunctionComponent<IProps> = (props) => {
         });
     }
 
-    function ToggleDrawer(index: number, width: number) {
+    function ToggleDrawer(index: number, drawerWidth: number) {
         if (LeftDrawerWidth[index] === 0)
-            setLeftDrawerWidth(s => {const u = [...s]; u[index] = width; return u;});
+            setLeftDrawerWidth(s => {const u = [...s]; u[index] = drawerWidth; return u;});
         else
             setLeftDrawerWidth(s => {const u = [...s]; u[index] = 0; return u;})
     }
