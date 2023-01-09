@@ -46,10 +46,10 @@ interface IClosedOverlayProps {
 /* top-left | top-right | bottom-right | bottom-left */
 const ClosedOverlayDiv = styled.div<IClosedOverlayProps>`
   & {
-    border-radius: ${props => props.Location == 'bottom' || props.Location == 'right'? 4 : 0}px
-    ${props => props.Location == 'bottom' || props.Location == 'left'? 4 : 0}px
-    ${props => props.Location == 'top' || props.Location == 'left'? 4 : 0}px
-    ${props => props.Location == 'top' || props.Location == 'right'? 4 : 0}px;
+    border-radius: ${props => props.Location === 'bottom' || props.Location === 'right'? 4 : 0}px
+    ${props => props.Location === 'bottom' || props.Location === 'left'? 4 : 0}px
+    ${props => props.Location === 'top' || props.Location === 'left'? 4 : 0}px
+    ${props => props.Location === 'top' || props.Location === 'right'? 4 : 0}px;
     display: inline-block;
     font-size: 13px;
     position: fixed;
@@ -57,11 +57,11 @@ const ClosedOverlayDiv = styled.div<IClosedOverlayProps>`
     opacity: 0.6;
     color: #fff;
     background: #222;
-    top: ${props => props.Location == 'top' ? Math.floor(props.Top) : Math.ceil(props.Top)}px;
-    left: ${props => props.Location == 'left' ? Math.floor(props.Left) : Math.floor(props.Left)}px;
-    height: ${props => props.Location == 'bottom' ? Math.ceil(props.Height) : Math.floor(props.Height)}px;
-    width: ${props => props.Location == 'right' ? Math.ceil(props.Width) : Math.floor(props.Width)}px;
-    writing-Mode: ${props => props.Location == 'bottom' || props.Location == 'top' ? 'horizontal-tb' : 'vertical-rl' };
+    top: ${props => props.Location === 'top' ? Math.floor(props.Top) : Math.ceil(props.Top)}px;
+    left: ${props => props.Location === 'left' ? Math.floor(props.Left) : Math.floor(props.Left)}px;
+    height: ${props => props.Location === 'bottom' ? Math.ceil(props.Height) : Math.floor(props.Height)}px;
+    width: ${props => props.Location === 'right' ? Math.ceil(props.Width) : Math.floor(props.Width)}px;
+    writing-Mode: ${props => props.Location === 'bottom' || props.Location == 'top' ? 'horizontal-tb' : 'vertical-rl' };
     text-Orientation: upright;
     cursor: pointer;
     vertical-align: middle;
