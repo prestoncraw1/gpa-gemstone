@@ -162,9 +162,9 @@ const VerticalSplit: React.FunctionComponent<IProps> = (props) => {
         const isRightDrawer = activeSlider < (LeftDrawer.length-1);
 
         let indexLeft = (isLeftDrawer? activeSlider : activeSlider - LeftDrawer.length);
-        const indexRight = (isRightDrawer == isLeftDrawer? (indexLeft + 1) : 0);
+        const indexRight = (isRightDrawer === isLeftDrawer? (indexLeft + 1) : 0);
 
-        while (isLeftDrawer && LeftDrawerWidth[indexLeft] == 0)
+        while (isLeftDrawer && LeftDrawerWidth[indexLeft] === 0)
             indexLeft = indexLeft -1;
             
         const newLeft = Math.floor((isLeftDrawer? LeftDrawerWidth[indexLeft] : width[indexLeft]) + dPercent);
