@@ -61,7 +61,7 @@ const ClosedOverlayDiv = styled.div<IClosedOverlayProps>`
     left: ${props => props.Location === 'left' ? Math.floor(props.Left) : Math.floor(props.Left)}px;
     height: ${props => props.Location === 'bottom' ? Math.ceil(props.Height) : Math.floor(props.Height)}px;
     width: ${props => props.Location === 'right' ? Math.ceil(props.Width) : Math.floor(props.Width)}px;
-    writing-Mode: ${props => props.Location === 'bottom' || props.Location == 'top' ? 'horizontal-tb' : 'vertical-rl' };
+    writing-Mode: ${props => props.Location === 'bottom' || props.Location === 'top' ? 'horizontal-tb' : 'vertical-rl' };
     text-Orientation: upright;
     cursor: pointer;
     vertical-align: middle;

@@ -110,7 +110,7 @@ const Applications: React.FunctionComponent<IProps> = (props) => {
         return <Route path={`${props.HomePath}${element.props.Name}`} element={<Content>{element.props.children}</Content>} />
     }
 
-    const hideSide = props.HideSideBar == undefined? false : props.HideSideBar;
+    const hideSide = props.HideSideBar === undefined? false : props.HideSideBar;
 
     return <React.Suspense fallback={<LoadingScreen Show={true} />}>
         <Context.Provider value={GetContext()}>

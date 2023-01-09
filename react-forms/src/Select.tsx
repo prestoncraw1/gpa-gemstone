@@ -52,6 +52,7 @@ export default function Select<T>(props: IProps<T>) {
     const currentValue: string = GetRecordValue();
     if (!(props.EmptyOption ?? false) && props.Options.length > 0 && props.Options.findIndex((option) => option.Value === currentValue) === -1) {
       SetRecord(props.Options[0].Value);
+      // tslint:disable-next-line
       console.warn("The current value is not available as an option. Specify EmptyOption=true if the value should be allowed.")
     }
       
