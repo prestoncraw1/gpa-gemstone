@@ -156,7 +156,7 @@ const VerticalSplit: React.FunctionComponent<IProps> = (props) => {
         const availableWidth = currentWidth - reduction;
         const totalPercentage = sections.reduce((acc,child) => acc + child.props.width,0) + LeftDrawer.reduce((acc, d, index) => acc + LeftDrawerWidth[index] > 0?  d.props.width : 0,0);
         const scale = totalPercentage/availableWidth;
-        let dPercent = deltaX* scale;
+        const dPercent = deltaX* scale;
 
         const isLeftDrawer = activeSlider < LeftDrawer.length;
         const isRightDrawer = activeSlider < (LeftDrawer.length-1);
