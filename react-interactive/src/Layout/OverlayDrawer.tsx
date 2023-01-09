@@ -192,11 +192,11 @@ const OverlayDrawer: React.FunctionComponent<IProps> = (props) => {
     React.useEffect(() => {
         let t = 0;
 
-        if (props.Location == 'right' || props.Location == 'left') 
+        if (props.Location === 'right' || props.Location === 'left') 
             t = top + 0.5*height - 0.5*containerHeight;
-        if (props.Location == 'top') 
+        if (props.Location === 'top') 
            t = top;
-        if (props.Location == 'bottom') 
+        if (props.Location === 'bottom') 
            t = top + height - containerHeight;
         setContainerTop(t);
     },[props.Location,top,containerHeight, height])
