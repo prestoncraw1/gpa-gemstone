@@ -212,24 +212,24 @@ const OverlayDrawer: React.FunctionComponent<IProps> = (props) => {
         let l = 0
         let t = 0
 
-        if (props.Location == 'bottom' || props.Location == 'top') {
+        if (props.Location === 'bottom' || props.Location === 'top') {
             w = targetWidth
             h = 15;
         }
-        if (props.Location == 'left' || props.Location == 'right') {
+        if (props.Location === 'left' || props.Location === 'right') {
             h = targetHeight
             w = 15;
         }
 
-        if (props.Location == 'bottom' || props.Location == 'left' || props.Location == 'top') 
+        if (props.Location === 'bottom' || props.Location === 'left' || props.Location === 'top') 
             l = targetLeft
-        if (props.Location == 'right') 
+        if (props.Location === 'right') 
            l = targetLeft + targetWidth - w;
         
 
-        if (props.Location == 'right' || props.Location == 'left' || props.Location == 'top') 
+        if (props.Location === 'right' || props.Location === 'left' || props.Location === 'top') 
             t = targetTop
-        if (props.Location == 'bottom') 
+        if (props.Location === 'bottom') 
            t = targetTop + targetHeight - h;
         
 
