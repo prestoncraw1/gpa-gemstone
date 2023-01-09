@@ -84,14 +84,14 @@ const VerticalSplit: React.FunctionComponent<IProps> = (props) => {
                 if (w.length < LeftDrawer.length)
                     wupdated = [...w,...LeftDrawer.slice(w.length,undefined).map((s) => (s.props as any).open ? (s.props as any).width as number : 0)];
                 
-                return wupdated.map((width,index) => {
-                    if (width == 0)
+                return wupdated.map((wupdatedWidth,index) => {
+                    if (wupdatedWidth === 0)
                         return 0;
-                    if (width < (LeftDrawer[index].props as any).minWidth)
+                    if (wupdatedWidth < (LeftDrawer[index].props as any).minWidth)
                         return (LeftDrawer[index].props as any).minWidth as number
-                    if (width > (LeftDrawer[index].props as any).maxWidth)
+                    if (wupdatedWidth > (LeftDrawer[index].props as any).maxWidth)
                         return (LeftDrawer[index].props as any).maxWidth as number
-                    return width;
+                    return wupdatedWidth;
                 }) })
     },[ LeftDrawer ])
 
