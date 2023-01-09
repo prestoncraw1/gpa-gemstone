@@ -5,4 +5,4 @@ import HorizontalMarker from './HorizontalMarker';
 import Button from './Button';
 import VerticalMarker from './VerticalMarker';
 
-export {Plot, Line, LineWithThreshold, Button, HorizontalMarker, VerticalMarker};
+export { Plot, Line, LineWithThreshold, Button, HorizontalMarker, VerticalMarker };

@@ -41,7 +41,7 @@ import SplitSection from './Layout/SplitSection';
 import VerticalSplit from './Layout/VerticalSplit';
 import SplitDrawer from './Layout/SplitDrawer';
 import OverlayDrawer from './Layout/OverlayDrawer';
-
+import ProgressBar from './ProgressBar';
 
 export {
   Modal,
@@ -63,5 +63,6 @@ export {
   SplitSection,
   VerticalSplit,
   SplitDrawer,
-  OverlayDrawer
+  OverlayDrawer,
+  ProgressBar
 };
