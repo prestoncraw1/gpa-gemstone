@@ -43,7 +43,7 @@ namespace OpenXDA {
         export type MeasurementTypeName = PqDiff.Types.MeasurementType | 'Digital';
         export type MeasurementCharacteristicName = PqDiff.Types.MeasurementCharacteristic | 'BreakerStatus' | 'TCE';
         export type PhaseName = PqDiff.Types.Phase;
-        export type EventTypeName = 'Sag' | 'Swell' | 'Transient' | 'Fault' | 'Interruption'
+        export type EventTypeName = 'Sag' | 'Swell' | 'Transient' | 'Fault' | 'Interruption' | 'RecloseIntoFault' | 'BreakerOpen' | 'Other' | 'Test' | 'Snapshot'
         export type NoteTypeName = 'Meter' | 'Event' | 'Asset' | 'Location' | 'Customer' | 'User' | 'Company'
         export type NoteApplicationName = 'OpenMIC' | 'OpenXDA' | 'MiMD' | 'SystemCenter' | 'OpenHistorian' | 'All' | 'SEbrowser'
 
@@ -51,7 +51,7 @@ namespace OpenXDA {
         export type DetailedAsset = (Breaker | Bus | CapBank | Line | Transformer | CapBankRelay | DER)
 
         // Tables
-        export interface EventType { ID: number, Name: EventTypeName, Description: string, Selected?: boolean }
+        export interface EventType { ID: number, Name: EventTypeName, Description: string, Selected?: boolean, ShowInFilter: boolean, Category?: string  }
         export interface Meter { ID: number, AssetKey: string, Alias: string, Make: string, Model: string, Name: string, ShortName: string, TimeZone: string, LocationID: number, Description: string, Selected?: boolean }
         export interface Location { ID: number, LocationKey: string, Name: string, Alias: string, ShortName: string, Latitude: number, Longitude: number, Description: string }
         export interface Disturbance { ID: number, EventID: number, PhaseID: number, Magnitude: number, PerUnitMagnitude: number, DurationSeconds: number }
