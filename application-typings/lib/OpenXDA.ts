@@ -31,8 +31,8 @@ namespace OpenXDA {
         export const MeasurementTypes: Types.MeasurementTypeName[] = (PqDiff.Lists.MeasurementTypes as Types.MeasurementTypeName[]).concat(['Digital']);
         export const MeasurementCharacteristics: Types.MeasurementCharacteristicName[] = (PqDiff.Lists.MeasurementCharacteristics as Types.MeasurementCharacteristicName[]).concat(['BreakerStatus', 'TCE']);
         export const Phases: Types.PhaseName[] = PqDiff.Lists.Phases;
-        export const EventTypes: Types.EventTypeName[] = ['Sag', 'Swell', 'Transient', 'Fault', 'Interruption']
-        export const NoteTypes = ['Meter', 'Event', 'Asset', 'Location', 'Customer', 'User', 'Company'] as Types.NoteTypeName[];
+        export const EventTypes: Types.EventTypeName[] = ['Sag', 'Swell', 'Transient', 'Fault', 'Interruption','RecloseIntoFault','BreakerOpen','Other','Test','Snapshot']
+                export const NoteTypes = ['Meter', 'Event', 'Asset', 'Location', 'Customer', 'User', 'Company'] as Types.NoteTypeName[];
         export const NoteApplications = ['OpenMIC', 'OpenXDA', 'MiMD', 'SystemCenter', 'OpenHistorian', 'All'] as Types.NoteApplicationName[];
         export const NoteTags = ['General', 'Configuration', 'Diagnostic', 'Compliance'] as Types.NoteTagName[];
     }
@@ -51,8 +51,7 @@ namespace OpenXDA {
         export type DetailedAsset = (Breaker | Bus | CapBank | Line | Transformer | CapBankRelay | DER)
 
         // Tables
-
-        export interface EventType { ID: number, Name: EventTypeName, Description: string, Selected?: boolean, ShowInFilter: boolean, Category?: string }
+        export interface EventType { ID: number, Name: EventTypeName, Description: string, Selected?: boolean, ShowInFilter: boolean, Category?: string  }
         export interface Meter { ID: number, AssetKey: string, Alias: string, Make: string, Model: string, Name: string, ShortName: string, TimeZone: string, LocationID: number, Description: string, Selected?: boolean }
         export interface Location { ID: number, LocationKey: string, Name: string, Alias: string, ShortName: string, Latitude: number, Longitude: number, Description: string }
         export interface Disturbance { ID: number, EventID: number, PhaseID: number, Magnitude: number, PerUnitMagnitude: number, DurationSeconds: number }
