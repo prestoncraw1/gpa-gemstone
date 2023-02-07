@@ -51,12 +51,12 @@ namespace OpenXDA {
         export type DetailedAsset = (Breaker | Bus | CapBank | Line | Transformer | CapBankRelay | DER)
 
         // Tables
-        export interface EventType { ID: number, Name: EventTypeName, Description: string, Selected?: boolean }
+        export interface EventType { ID: number, Name: EventTypeName, Description: string, Selected?: boolean, ShowInFilter: boolean, Category?: string }
         export interface Meter { ID: number, AssetKey: string, Alias: string, Make: string, Model: string, Name: string, ShortName: string, TimeZone: string, LocationID: number, Description: string, Selected?: boolean }
         export interface Location { ID: number, LocationKey: string, Name: string, Alias: string, ShortName: string, Latitude: number, Longitude: number, Description: string }
         export interface Disturbance { ID: number, EventID: number, PhaseID: number, Magnitude: number, PerUnitMagnitude: number, DurationSeconds: number }
         export interface EDNAPoint { ID: number, BreakerID: number, Point: string }
-        export interface Channel { ID: number, Meter: string, Asset: string, MeasurementType: string, MeasurementCharacteristic: string, Phase: string, Name: string, Adder: number, Multiplier: number, SamplesPerHour: number, PerUnitValue: number, HarmonicGroup: number, Description: string, Enabled: boolean, Series: Series[], ConnectionPriority: number }
+        export interface Channel { ID: number, Meter: string, Asset: string, MeasurementType: string, MeasurementCharacteristic: string, Phase: string, Name: string, Adder: number, Multiplier: number, SamplesPerHour: number, PerUnitValue: number, HarmonicGroup: number, Description: string, Enabled: boolean, Series: Series[], ConnectionPriority: number, Trend: boolean }
         export interface Series { ID: number, ChannelID: number, SeriesType: string, SourceIndexes: string }
         export interface Note { ID: number, NoteTypeID: number, ReferenceTableID: number, Note: string, UserAccount?: string, Timestamp: string, NoteApplicationID: number, NoteTagID : number }
         export interface NoteApplication { ID: number, Name: NoteApplicationName }
@@ -77,11 +77,14 @@ namespace OpenXDA {
         }
         export interface CapBankRelay extends Asset { OnVoltageThreshhold: number;  CapBankNumber: number }
         export interface Line extends Asset { MaxFaultDistance: number, MinFaultDistance: number, Detail: LineDetail }
-        export interface LineSegment extends Asset { R0: number, X0: number, R1: number, X1: number, ThermalRating: number, Length: number, IsEnd: boolean, fromBus?: string, ToBus?: string }      
+        export interface LineSegment extends Asset { R0: number, X0: number, R1: number, X1: number, ThermalRating: number, Length: number, IsEnd: boolean, FromBus?: string, ToBus?: string, Warnings: string[] }      
         export interface LineSegmentConnections {ID: number, ParentSegment: number, ChildSegment: number}
+        export interface SourceImpedance { ID: number, AssetLocationID: number, RSrc: number, XSrc: number }
         export interface Transformer extends Asset { R0: number, X0: number, R1: number, X1: number, ThermalRating: number, PrimaryVoltageKV: number, SecondaryVoltageKV: number, Tap: number, TertiaryVoltageKV: number, SecondaryWinding: number, PrimaryWinding: number, TertiaryWinding: number }
         export interface LineDetail { R0: number, X0: number, R1: number, X1: number, ThermalRating: number, Length: number }
         export interface DER extends Asset { FullRatedOutputCurrent: number; VoltageLevel: 'Low' | 'Medium' }
+        export interface AssetLocation { ID: number, AssetID: number, LocationID: number }
+        export interface EventTypeAssetType { ID: number, EventTypeID: number, AssetTypeID: number }
 
         // Links
         export interface AssetConnection { ID: number, AssetRelationshipTypeID: number, Parent: string, Child: string }
